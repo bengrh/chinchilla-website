@@ -26,9 +26,9 @@
   <meta name="twitter:description" content="A multidisciplinary creative studio in Vancouver specializing in digital fabrication, CNC woodworking, interior design, and brand identity.">
   <meta name="twitter:image" content="https://chinchilla.design/images/ids-pavilion/IDS%20Pavilion.jpg">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="images/logo.png">
-  <link rel="apple-touch-icon" href="images/logo.png">
+  <!-- Favicon (black circle SVG) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='black'/></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='black'/></svg>">
 
   <!-- Geo & Business -->
   <meta name="geo.region" content="CA-BC">
@@ -1532,10 +1532,14 @@
           <a href="#brand-identity" class="staggered-sub-link" data-nav>Brand Identity</a>
         </div>
       </div>
-      <a href="#about" class="staggered-item" data-nav>
+      <div class="staggered-item staggered-item--has-sub" id="studioItem">
         <span class="staggered-item-number">02</span>
         <span class="staggered-item-label">Studio</span>
-      </a>
+        <div class="staggered-sub">
+          <a href="#about" class="staggered-sub-link" data-nav>About</a>
+          <a href="#about" class="staggered-sub-link" data-nav id="menuTeamLink">Team</a>
+        </div>
+      </div>
       <a href="#contact" class="staggered-item" data-nav>
         <span class="staggered-item-number">03</span>
         <span class="staggered-item-label">Connect</span>
@@ -1680,12 +1684,12 @@
     <div class="project-category" id="product-design">
       <div class="projects-header">
         <span class="projects-title">Product Design</span>
-        <span class="projects-count">(01)</span>
+        <span class="projects-count">(02)</span>
       </div>
       <div class="projects-grid">
         <article class="project-item" data-project="wall-art">
           <div class="project-image">
-            <img src="images/wall-art/detail.jpg" alt="Wall Art">
+            <img src="images/wall-art/front.jpg" alt="Wall Art">
           </div>
           <div class="project-overlay">
             <div class="project-arrow">
@@ -1701,6 +1705,26 @@
               <span>Product Design</span>
             </div>
             <span class="project-year">2026</span>
+          </div>
+        </article>
+
+        <article class="project-item" data-project="chair">
+          <div class="project-image" style="background: linear-gradient(135deg, #3a3a3a 0%, #1a1a1a 100%); aspect-ratio: 4/3;">
+          </div>
+          <div class="project-overlay">
+            <div class="project-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="project-meta">
+            <div class="project-info">
+              <h3>Chair</h3>
+              <span>Product Design</span>
+            </div>
+            <span class="project-year">2025</span>
           </div>
         </article>
       </div>
@@ -1819,9 +1843,6 @@
               <h3 class="team-name">Ben Hayward</h3>
               <span class="team-role">Founder & Lead Designer</span>
               <p class="team-bio">Designer and builder specializing in digital fabrication and traditional craftsmanship. Graduate of Architectural Studies from Carleton University, known for innovative tiny house designs featured on HGTV's "Tiny House Big Living."</p>
-              <div class="team-links">
-                <a href="https://instagram.com/benhaywarddesign" target="_blank">Instagram</a>
-              </div>
             </div>
           </div>
           <div class="team-card">
@@ -1830,9 +1851,6 @@
               <h3 class="team-name">Jamil Kabani</h3>
               <span class="team-role">Shop Manager</span>
               <p class="team-bio">Oversees day-to-day operations of the fabrication shop, managing CNC machinery, material sourcing, and production workflows. Ensures precision and quality in every piece.</p>
-              <div class="team-links">
-                <a href="https://instagram.com/benhaywarddesign" target="_blank">Instagram</a>
-              </div>
             </div>
           </div>
         </div>
@@ -2125,6 +2143,19 @@
       });
     });
 
+    // Menu "Team" link: scroll to about + open team panel
+    document.getElementById('menuTeamLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      playClose();
+      setTimeout(() => {
+        document.querySelector('#about').scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+          aboutContainer.classList.add('show-team');
+        }, 600);
+      }, 500);
+    });
+
     // Cursor hover effects on menu elements
     document.querySelectorAll('.staggered-toggle, .staggered-item, .staggered-social-link, .staggered-sub-link').forEach(el => {
       el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
@@ -2205,6 +2236,17 @@
           'images/wall-art/workshop.jpg',
           'images/wall-art/angle.jpg'
         ],
+        externalMedia: []
+      },
+      'chair': {
+        title: 'Chair',
+        category: 'Product Design',
+        year: '2025',
+        client: 'Private',
+        services: 'CNC Milling, Woodworking, Product Design',
+        status: 'In Progress',
+        description: 'Project details coming soon.',
+        images: [],
         externalMedia: []
       },
       'sage-hayward': {
