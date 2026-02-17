@@ -2,7 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://chinchilla.design/</loc>
-    <lastmod>2026-02-15</lastmod>
+    <lastmod>2026-02-17</lastmod>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://chinchilla.design/#design-build</loc>
+    <lastmod>2026-02-17</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chinchilla.design/#product-design</loc>
+    <lastmod>2026-02-17</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chinchilla.design/#brand-identity</loc>
+    <lastmod>2026-02-17</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chinchilla.design/#about</loc>
+    <lastmod>2026-02-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://chinchilla.design/#contact</loc>
+    <lastmod>2026-02-17</lastmod>
+    <priority>0.7</priority>
   </url>
 </urlset>
