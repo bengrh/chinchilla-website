@@ -726,6 +726,25 @@
       color: var(--gray);
     }
 
+    .project-summary {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--gray-light);
+      margin-top: 6px;
+      max-width: 36ch;
+    }
+
+    .modal-image-caption {
+      font-size: 12px;
+      font-family: monospace;
+      letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.55);
+      text-align: center;
+      padding: 10px 16px 0;
+      min-height: 1.6em;
+      transition: opacity 0.3s ease;
+    }
+
     /* Footer */
     footer {
       background: var(--footer-bg);
@@ -1659,6 +1678,7 @@
           <div class="project-meta">
             <div class="project-info">
               <h3>IDS Pavilion 2025</h3>
+              <p class="project-summary">A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.</p>
               <span>Design/Build</span>
             </div>
             <span class="project-year">2025</span>
@@ -1680,6 +1700,7 @@
           <div class="project-meta">
             <div class="project-info">
               <h3>Digital Fabrication Tiny House</h3>
+              <p class="project-summary">A fully functional tiny house with every surface CNC-milled from sustainable plywood, as seen on HGTV.</p>
               <span>Design/Build</span>
             </div>
             <span class="project-year">2023</span>
@@ -1710,6 +1731,7 @@
           <div class="project-meta">
             <div class="project-info">
               <h3>Wall Art</h3>
+              <p class="project-summary">Sculptural cedar wall piece with burl inlays, shaped parametrically and finished by hand.</p>
               <span>Product Design</span>
             </div>
             <span class="project-year">2026</span>
@@ -1731,6 +1753,7 @@
           <div class="project-meta">
             <div class="project-info">
               <h3>Chair</h3>
+              <p class="project-summary">Solid white oak dining chair with a hand-shaped wraparound back and cognac leather seat.</p>
               <span>Product Design</span>
             </div>
             <span class="project-year">2025</span>
@@ -1761,6 +1784,7 @@
           <div class="project-meta">
             <div class="project-info">
               <h3>Sage Hayward Vineyards</h3>
+              <p class="project-summary">Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.</p>
               <span>Brand Identity</span>
             </div>
             <span class="project-year">2024</span>
@@ -1786,6 +1810,7 @@
           </div>
           <button class="modal-gallery-btn" id="nextBtn" aria-label="Next image">&rarr;</button>
         </div>
+        <p class="modal-image-caption" id="modalImageCaption"></p>
       </div>
       <div class="modal-info">
         <span class="modal-category" id="modalCategory">Exhibition Design</span>
@@ -2228,13 +2253,20 @@
         client: 'Interior Design Show',
         services: 'Spatial Design, Fabrication',
         status: 'Completed',
-        description: 'A striking pavilion designed for the Interior Design Show 2025, featuring innovative woven textures and a dramatic canopy structure. The design explores the intersection of traditional craft techniques and contemporary digital fabrication.',
+        description: 'A pavilion for IDS 2025 exploring the meeting point of traditional weaving and digital fabrication — CNC-milled panels arranged to create two distinct surface textures beneath a dramatic canopy structure.',
         images: [
           'images/ids-pavilion/IDS%20Pavilion.jpg',
           'images/ids-pavilion/IDS%20Canopy.jpg',
           'images/ids-pavilion/IDS%20Counter.jpg',
           'images/ids-pavilion/IDS%20Basket%20Texture.jpg',
           'images/ids-pavilion/IDS%20Flame%20Texture.jpg'
+        ],
+        imageCaptions: [
+          'Full pavilion view at IDS 2025',
+          'Canopy structure detail — CNC-milled slats in a radial arrangement',
+          'Reception counter with integrated woven-panel facade',
+          'Basket-weave texture panel — alternating raised and recessed strips',
+          'Flame texture panel — flowing carved relief pattern'
         ],
         externalMedia: []
       },
@@ -2245,13 +2277,20 @@
         client: 'Research Project',
         services: 'Digital Fabrication, Interior Design, CNC Milling',
         status: 'Completed',
-        description: 'A fully functional tiny house built using digital fabrication techniques. Every curved surface, from the flowing kitchen counter to the organic ceiling forms, was designed parametrically and CNC-milled from sustainable plywood. Features include custom tilework, an ornate laser-cut door panel, and integrated living spaces that maximize the compact footprint.',
+        description: 'Every curved surface — kitchen counter, ceiling forms, cabinetry — was designed parametrically and CNC-milled from sustainable plywood. Custom tilework, a laser-cut door panel, and integrated storage make the most of a compact 200 sq ft footprint.',
         images: [
           'images/tiny-house/exterior.jpg',
           'images/tiny-house/walkthrough.mp4',
           'images/tiny-house/kitchen.jpg',
           'images/tiny-house/hallway.jpg',
           'images/tiny-house/counter.jpg'
+        ],
+        imageCaptions: [
+          'Exterior — cedar cladding and custom laser-cut entry door',
+          'Interior walkthrough',
+          'Kitchen — CNC-milled plywood counter with organic flowing profile',
+          'Hallway looking toward the living area',
+          'Counter detail — seamless CNC joinery and integrated sink'
         ],
         externalMedia: [
           { title: 'Carleton News: Olympic Hopeful Builds Unique Tiny House', url: 'https://carleton.ca/news/story/olympic-hopeful-builds-unique-tiny-house/' },
@@ -2267,12 +2306,18 @@
         client: 'Private',
         services: 'CNC Milling, Woodworking, Product Design',
         status: 'Completed',
-        description: 'A sculptural wall piece crafted from laminated cedar with burl wood inlays. Designed parametrically and CNC-milled to create flowing, organic topographic forms that celebrate the natural beauty of wood grain. The piece merges digital fabrication precision with the warmth and character of handcrafted woodworking.',
+        description: 'Laminated cedar with burl wood inlays, CNC-milled into flowing topographic relief. Digital precision in the toolpaths, hand-finishing in the final surface — the two approaches are left visible in the finished piece.',
         images: [
           'images/wall-art/detail.jpg',
           'images/wall-art/front.jpg',
           'images/wall-art/workshop.jpg',
           'images/wall-art/angle.jpg'
+        ],
+        imageCaptions: [
+          'Surface detail — burl inlay against the milled cedar grain',
+          'Installed view — full piece showing topographic relief profile',
+          'In the shop during finishing — toolpath lines still visible',
+          'Angled view highlighting the depth of the carved relief'
         ],
         externalMedia: []
       },
@@ -2283,11 +2328,16 @@
         client: 'Private',
         services: 'Furniture Design, Woodworking, Upholstery',
         status: 'Completed',
-        description: 'A custom dining chair handcrafted from solid white oak, designed to balance sculptural form with everyday comfort. The defining feature is a continuous wraparound backrest that curves organically from back support to armrest, shaped entirely by hand and spokeshave. The angled rear legs echo the sweep of the back, giving the piece a sense of motion and lightness despite its solid construction. Seats are upholstered in a warm cognac leather. The chairs are shown installed in a private island residence on the BC coast, paired with a live-edge white oak dining table.',
+        description: 'Solid white oak dining chair with a continuous wraparound backrest shaped by hand and spokeshave. Angled rear legs echo the sweep of the back. Upholstered in cognac leather, installed in a private island residence on the BC coast.',
         images: [
           'images/chair/detail.jpg',
           'images/chair/installed.jpg',
           'images/chair/room.jpg'
+        ],
+        imageCaptions: [
+          'Chair detail — hand-shaped wraparound back transitioning to armrest',
+          'Chairs around the dining table — private island residence, BC coast',
+          'Full dining room — eight chairs with live-edge white oak table'
         ],
         externalMedia: []
       },
@@ -2298,12 +2348,18 @@
         client: 'Sage Hayward Vineyards',
         services: 'Brand Identity, Signage, Print, Packaging',
         status: 'Completed',
-        description: 'A comprehensive brand identity for a boutique vineyard in the Gulf Islands, BC. The visual language draws from the natural landscape, featuring hand-carved wooden signage with organic wave patterns, custom wine labels, menu design, and a distinctive bull horn motif that reflects the vineyard\'s heritage.',
+        description: 'Complete brand identity for a boutique Gulf Islands vineyard. The visual language draws from the land — hand-carved wooden signage, organic wave patterns, a bull horn motif, and custom wine labels that carry the same craft into every touchpoint.',
         images: [
           'images/sage-hayward/sign.jpg',
           'images/sage-hayward/tasting-room.jpg',
           'images/sage-hayward/bottles.jpg',
           'images/sage-hayward/menu.jpg'
+        ],
+        imageCaptions: [
+          'Hand-carved exterior signage — wave-pattern relief in solid wood',
+          'Tasting room interior with branded environmental graphics',
+          'Wine bottle labels carrying the bull horn motif',
+          'Menu design — print collateral using the full brand system'
         ],
         externalMedia: [
           { title: 'Nuvo Magazine: Saturna Island\'s Sage Hayward Vineyards', url: 'https://nuvomagazine.com/daily-edit/saturna-islands-sage-hayward-vineyards' }
@@ -2327,6 +2383,7 @@
     const modalServices = document.getElementById('modalServices');
     const modalStatus = document.getElementById('modalStatus');
     const modalExternalMedia = document.getElementById('modalExternalMedia');
+    const modalImageCaption = document.getElementById('modalImageCaption');
 
     let currentImageIndex = 0;
     let currentProject = null;
@@ -2378,6 +2435,7 @@
       modalClient.textContent = currentProject.client;
       modalServices.textContent = currentProject.services;
       modalStatus.textContent = currentProject.status;
+      modalImageCaption.textContent = (currentProject.imageCaptions && currentProject.imageCaptions[0]) || '';
 
       // Build gallery (support both images and videos)
       modalImages.innerHTML = currentProject.images.map((src, i) => {
@@ -2460,6 +2518,9 @@
       // Add active to new
       media[currentImageIndex].classList.add('active');
       dots[currentImageIndex].classList.add('active');
+
+      // Update caption
+      modalImageCaption.textContent = (currentProject.imageCaptions && currentProject.imageCaptions[currentImageIndex]) || '';
 
       // Update gallery size for new image
       updateGallerySize(currentProject.images[currentImageIndex]);
