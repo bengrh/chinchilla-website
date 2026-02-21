@@ -1942,17 +1942,35 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script>
-    // Parallax Dot Grid
+    // Parallax Dot Grid — with upward drift and cursor repulsion
     (function() {
       const canvas = document.getElementById('dotGrid');
       const ctx = canvas.getContext('2d');
 
-      // Single dot grid layer — original sketchbook sizing, fast parallax
-      const layers = [
-        { spacing: 28, radius: 1.2, opacity: 0.12, speed: 0.15, color: '255, 255, 255' },
-      ];
+      const layer = { spacing: 28, radius: 1.2, opacity: 0.12, speed: 0.15, color: '255, 255, 255' };
 
-      let width, height, scrollY = 0, ticking = false;
+      // Drift: dots move upward at this many px per second
+      const DRIFT_SPEED = 12;
+
+      // Repulsion: dots within this radius are pushed away from cursor
+      const REPEL_RADIUS = 80;
+      const REPEL_STRENGTH = 18;
+
+      let width, height;
+      let scrollY = 0;
+      let driftY = 0;       // autonomous upward drift accumulator
+      let lastTime = null;
+
+      // Smoothed cursor position (lerped toward raw mouse)
+      let mouseX = -9999, mouseY = -9999;
+      let cursorX = -9999, cursorY = -9999;
+
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
 
       function resize() {
         const dpr = window.devicePixelRatio || 1;
@@ -1963,50 +1981,65 @@
         canvas.style.width = width + 'px';
         canvas.style.height = height + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        draw();
       }
 
-      function draw() {
+      function draw(timestamp) {
+        // Delta time in seconds, capped to avoid jumps after tab switch
+        if (lastTime === null) lastTime = timestamp;
+        const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+        lastTime = timestamp;
+
+        // Advance drift and wrap within one grid cell
+        driftY = (driftY + DRIFT_SPEED * dt) % layer.spacing;
+
+        // Smoothly lerp cursor toward mouse (avoids jitter)
+        cursorX += (mouseX - cursorX) * 0.12;
+        cursorY += (mouseY - cursorY) * 0.12;
+
         ctx.clearRect(0, 0, width, height);
 
-        // Draw from deepest (back) to closest (front)
-        for (let l = layers.length - 1; l >= 0; l--) {
-          const layer = layers[l];
-          const offsetY = -(scrollY * layer.speed) % layer.spacing;
+        // Combined vertical offset: scroll parallax + upward drift
+        const baseOffsetY = (-(scrollY * layer.speed) - driftY) % layer.spacing;
 
-          ctx.fillStyle = `rgba(${layer.color}, ${layer.opacity})`;
-          ctx.beginPath();
+        ctx.fillStyle = `rgba(${layer.color}, ${layer.opacity})`;
+        ctx.beginPath();
 
-          const startX = -layer.spacing;
-          const startY = offsetY - layer.spacing;
-          const endX = width + layer.spacing;
-          const endY = height + layer.spacing;
+        const startX = -layer.spacing;
+        const startY = baseOffsetY - layer.spacing;
+        const endX = width + layer.spacing;
+        const endY = height + layer.spacing;
 
-          for (let x = startX; x < endX; x += layer.spacing) {
-            for (let y = startY; y < endY; y += layer.spacing) {
-              ctx.moveTo(x + layer.radius, y);
-              ctx.arc(x, y, layer.radius, 0, Math.PI * 2);
+        const repelR2 = REPEL_RADIUS * REPEL_RADIUS;
+
+        for (let gx = startX; gx < endX; gx += layer.spacing) {
+          for (let gy = startY; gy < endY; gy += layer.spacing) {
+
+            // Repulsion: push dot away from cursor
+            const dx = gx - cursorX;
+            const dy = gy - cursorY;
+            const dist2 = dx * dx + dy * dy;
+
+            let px = gx, py = gy;
+            if (dist2 < repelR2 && dist2 > 0) {
+              const dist = Math.sqrt(dist2);
+              // Falloff: full strength at centre, zero at edge
+              const force = REPEL_STRENGTH * (1 - dist / REPEL_RADIUS);
+              px += (dx / dist) * force;
+              py += (dy / dist) * force;
             }
+
+            ctx.moveTo(px + layer.radius, py);
+            ctx.arc(px, py, layer.radius, 0, Math.PI * 2);
           }
-
-          ctx.fill();
         }
-      }
 
-      function onScroll() {
-        scrollY = window.scrollY;
-        if (!ticking) {
-          requestAnimationFrame(() => {
-            draw();
-            ticking = false;
-          });
-          ticking = true;
-        }
+        ctx.fill();
+        requestAnimationFrame(draw);
       }
 
       window.addEventListener('resize', resize);
-      window.addEventListener('scroll', onScroll, { passive: true });
       resize();
+      requestAnimationFrame(draw);
     })();
 
     // Custom Cursor
