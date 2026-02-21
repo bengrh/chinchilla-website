@@ -30,7 +30,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='black'/></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='black'/></svg>">
 
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#0A0A0A">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
   <!-- Geo & Business -->
@@ -48,12 +48,12 @@
     }
 
     :root {
-      --white: #FFFFFF;
-      --black: #000000;
-      --gray: #525252;
-      --gray-light: #737373;
-      --border: rgba(0, 0, 0, 0.1);
-      --footer-bg: #0A0A0A;
+      --white: #0A0A0A;
+      --black: #FFFFFF;
+      --gray: #ADADAD;
+      --gray-light: #909090;
+      --border: rgba(255, 255, 255, 0.1);
+      --footer-bg: #1A1A1A;
       --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -119,10 +119,10 @@
       align-items: center;
       gap: 12px;
       padding: 12px 20px;
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1.5px solid #ccc;
+      border: 1.5px solid #444;
       border-radius: 999px;
       color: var(--black);
       font-family: 'Inter', sans-serif;
@@ -135,7 +135,7 @@
     }
 
     .staggered-toggle:hover {
-      background: rgba(255, 255, 255, 0.75);
+      background: rgba(0, 0, 0, 0.75);
     }
 
     .staggered-toggle-label {
@@ -200,12 +200,12 @@
     }
 
     .staggered-prelayer-1 {
-      background: #0A0A0A;
+      background: #FFFFFF;
       z-index: 190;
     }
 
     .staggered-prelayer-2 {
-      background: #525252;
+      background: #ADADAD;
       z-index: 191;
     }
 
@@ -653,7 +653,7 @@
     }
 
     .project-item:hover::after {
-      background: rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.1);
       aspect-ratio: 3/2;
     }
 
@@ -851,14 +851,14 @@
     .modal-backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(255, 255, 255, 0.9);
     }
 
     .modal-content {
       position: relative;
       display: flex;
       flex-direction: row;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(0, 0, 0, 0.9);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 24px;
@@ -868,7 +868,7 @@
       max-height: 85vh;
       transform: translateY(40px) scale(0.95);
       transition: transform 0.5s var(--ease-premium);
-      box-shadow: 0 25px 80px -20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 25px 80px -20px rgba(255, 255, 255, 0.15);
     }
 
     .modal.active .modal-content {
@@ -890,7 +890,7 @@
       right: 20px;
       width: 44px;
       height: 44px;
-      background: rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.08);
       border: none;
       border-radius: 50%;
       display: flex;
@@ -902,7 +902,7 @@
     }
 
     .modal-close:hover {
-      background: rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.15);
     }
 
     .modal-close svg {
@@ -1189,8 +1189,8 @@
       justify-content: center;
       width: 72px;
       height: 72px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.15);
       border-radius: 50%;
       color: var(--white);
       font-family: 'Inter', sans-serif;
@@ -1245,8 +1245,8 @@
       flex-shrink: 0;
       width: 72px;
       height: 72px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.15);
       border-radius: 50%;
       color: var(--white);
       display: flex;
@@ -1281,7 +1281,7 @@
 
     .team-card {
       width: 340px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(0, 0, 0, 0.05);
       border-radius: 20px;
       overflow: hidden;
       flex-shrink: 0;
@@ -1880,7 +1880,7 @@
             </div>
           </div>
           <div class="team-card">
-            <div class="team-image" style="background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);"></div>
+            <div class="team-image" style="background: linear-gradient(135deg, #d0d0d0 0%, #b0b0b0 100%);"></div>
             <div class="team-info">
               <h3 class="team-name">Jamil Kabani</h3>
               <span class="team-role">Shop Manager</span>
@@ -1949,7 +1949,7 @@
 
       // Single dot grid layer — original sketchbook sizing, fast parallax
       const layers = [
-        { spacing: 28, radius: 1.2, opacity: 0.12, speed: 0.15, color: '0, 0, 0' },
+        { spacing: 28, radius: 1.2, opacity: 0.12, speed: 0.15, color: '255, 255, 255' },
       ];
 
       let width, height, scrollY = 0, ticking = false;
