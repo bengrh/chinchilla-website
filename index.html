@@ -754,9 +754,7 @@
     footer {
       background: rgba(14, 14, 14, 0.92);
       color: #E8E8E8;
-      padding: 0;
-      position: relative;
-      overflow: hidden;
+      padding: 80px 48px 40px;
     }
 
     .footer-grid {
@@ -1127,51 +1125,11 @@
       height: 16px;
     }
 
-    /* Waves canvas — sits behind content in about + footer */
-    .waves-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Dark text box — floats above the wave canvas */
-    .text-box {
-      position: relative;
-      z-index: 1;
-      background: rgba(20, 20, 20, 0.82);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 40px 48px;
-      color: #E8E8E8;
-    }
-
-    .text-box h2,
-    .text-box h3,
-    .text-box h4 {
-      color: #F0F0F0;
-    }
-
-    .text-box p,
-    .text-box span,
-    .text-box a {
-      color: #CACACA;
-    }
-
-    .text-box a:hover {
-      color: #F0F0F0;
-    }
-
     /* About Section */
     .about {
       padding: 120px 0;
       background: rgba(14, 14, 14, 0.92);
       color: #E8E8E8;
-      overflow: hidden;
-      position: relative;
     }
 
     .about-container {
@@ -1522,8 +1480,8 @@
         max-width: 100%;
       }
 
-      footer .text-box {
-        padding: 60px 24px 32px !important;
+      footer {
+        padding: 60px 24px 32px;
       }
 
       /* Hide custom cursor on touch devices */
@@ -1888,18 +1846,15 @@
 
   <!-- About Section -->
   <section class="about" id="about">
-    <canvas class="waves-canvas" id="aboutWaves"></canvas>
     <div class="about-container">
       <div class="about-inner">
         <div class="about-text-section">
-          <div class="text-box">
           <h2 class="about-title">About</h2>
           <div class="about-paragraphs">
             <p>Chinchilla Design is a multidisciplinary studio at the intersection of digital fabrication and traditional craftsmanship. Founded with the belief that technology should enhance rather than replace human creativity, we create work that pushes the boundaries of what's possible while honoring time-tested techniques passed down through generations.</p>
             <p>Our approach combines parametric design and CNC precision with hands-on woodworking and material expertise. From architectural installations and exhibition pavilions to brand identities and spatial experiences, every project begins with deep research and ends with meticulous execution. We believe constraints breed creativity, and we embrace the challenge of making the complex feel effortless.</p>
             <p>Based in Vancouver and working globally, we partner with clients who share our passion for meaningful design. Whether it's a tiny house that redefines sustainable living or a vineyard brand rooted in place, we bring the same level of care and craft to every collaboration.</p>
           </div>
-          </div><!-- /.text-box -->
         </div>
         <div class="team-reveal-wrapper">
           <button class="team-reveal-btn" id="teamRevealBtn">
@@ -1951,8 +1906,6 @@
 
   <!-- Footer -->
   <footer>
-    <canvas class="waves-canvas" id="footerWaves"></canvas>
-    <div class="text-box" style="margin:0; border-radius:0; padding: 80px 48px 40px;">
     <div class="footer-grid">
       <div class="footer-brand">
         <h2>Chinchilla<br>Design</h2>
@@ -1988,7 +1941,6 @@
       <span>&copy; 2026 Chinchilla Design</span>
       <span>Vancouver, BC</span>
     </div>
-    </div><!-- /.text-box -->
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -2091,172 +2043,6 @@
       window.addEventListener('resize', resize);
       resize();
       requestAnimationFrame(draw);
-    })();
-
-    // ─── Interactive Waves Background (Perlin noise, ported from React component) ───
-    (function() {
-      // Perlin noise implementation
-      function makeNoise(seed) {
-        const grad3 = [
-          [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
-          [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],
-          [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]
-        ];
-        const p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
-        const perm = new Array(512);
-        const gradP = new Array(512);
-        let s = seed || Math.random() * 65536;
-        s = Math.floor(s); if (s < 256) s |= s << 8;
-        for (let i = 0; i < 256; i++) {
-          const v = i & 1 ? p[i] ^ (s & 255) : p[i] ^ ((s >> 8) & 255);
-          perm[i] = perm[i+256] = v;
-          gradP[i] = gradP[i+256] = grad3[v % 12];
-        }
-        function fade(t) { return t*t*t*(t*(t*6-15)+10); }
-        function lerp(a,b,t) { return (1-t)*a+t*b; }
-        function dot2(g,x,y) { return g[0]*x+g[1]*y; }
-        return function perlin2(x,y) {
-          let X=Math.floor(x),Y=Math.floor(y);
-          x-=X; y-=Y; X&=255; Y&=255;
-          const n00=dot2(gradP[X+perm[Y]],x,y);
-          const n01=dot2(gradP[X+perm[Y+1]],x,y-1);
-          const n10=dot2(gradP[X+1+perm[Y]],x-1,y);
-          const n11=dot2(gradP[X+1+perm[Y+1]],x-1,y-1);
-          const u=fade(x);
-          return lerp(lerp(n00,n10,u),lerp(n01,n11,u),fade(y));
-        };
-      }
-
-      function initWaves(canvasEl, cfg) {
-        if (!canvasEl) return;
-        const section = canvasEl.parentElement;
-        const ctx = canvasEl.getContext('2d');
-        const noise = makeNoise(Math.random() * 65536);
-
-        const mouse = { x:-10, y:0, lx:0, ly:0, sx:0, sy:0, v:0, vs:0, a:0, set:false };
-        let lines = [];
-        let frameId = null;
-
-        function setSize() {
-          const r = section.getBoundingClientRect();
-          canvasEl.width  = r.width;
-          canvasEl.height = r.height;
-          buildLines();
-        }
-
-        function buildLines() {
-          lines = [];
-          const W = canvasEl.width, H = canvasEl.height;
-          const oW = W + 200, oH = H + 30;
-          const totalLines  = Math.ceil(oW / cfg.xGap);
-          const totalPoints = Math.ceil(oH / cfg.yGap);
-          const xStart = (W - cfg.xGap * totalLines)  / 2;
-          const yStart = (H - cfg.yGap * totalPoints) / 2;
-          for (let i = 0; i <= totalLines; i++) {
-            const pts = [];
-            for (let j = 0; j <= totalPoints; j++) {
-              pts.push({ x: xStart + cfg.xGap*i, y: yStart + cfg.yGap*j,
-                wave:{x:0,y:0}, cursor:{x:0,y:0,vx:0,vy:0} });
-            }
-            lines.push(pts);
-          }
-        }
-
-        function movePoints(t) {
-          lines.forEach(pts => {
-            pts.forEach(p => {
-              const move = noise((p.x + t*cfg.waveSpeedX)*0.002, (p.y + t*cfg.waveSpeedY)*0.0015) * 12;
-              p.wave.x = Math.cos(move) * cfg.waveAmpX;
-              p.wave.y = Math.sin(move) * cfg.waveAmpY;
-              const dx = p.x - mouse.sx, dy = p.y - mouse.sy;
-              const dist = Math.hypot(dx, dy);
-              const l = Math.max(175, mouse.vs);
-              if (dist < l) {
-                const s = 1 - dist/l;
-                const f = Math.cos(dist*0.001)*s;
-                p.cursor.vx += Math.cos(mouse.a)*f*l*mouse.vs*0.00065;
-                p.cursor.vy += Math.sin(mouse.a)*f*l*mouse.vs*0.00065;
-              }
-              p.cursor.vx += (0 - p.cursor.x) * cfg.tension;
-              p.cursor.vy += (0 - p.cursor.y) * cfg.tension;
-              p.cursor.vx *= cfg.friction;
-              p.cursor.vy *= cfg.friction;
-              p.cursor.x += p.cursor.vx * 2;
-              p.cursor.y += p.cursor.vy * 2;
-              p.cursor.x = Math.min(cfg.maxCursorMove, Math.max(-cfg.maxCursorMove, p.cursor.x));
-              p.cursor.y = Math.min(cfg.maxCursorMove, Math.max(-cfg.maxCursorMove, p.cursor.y));
-            });
-          });
-        }
-
-        function moved(p, withCursor) {
-          const x = p.x + p.wave.x + (withCursor ? p.cursor.x : 0);
-          const y = p.y + p.wave.y + (withCursor ? p.cursor.y : 0);
-          return { x: Math.round(x*10)/10, y: Math.round(y*10)/10 };
-        }
-
-        function drawLines() {
-          const W = canvasEl.width, H = canvasEl.height;
-          ctx.clearRect(0, 0, W, H);
-          ctx.beginPath();
-          ctx.strokeStyle = cfg.lineColor;
-          ctx.lineWidth = 1;
-          lines.forEach(points => {
-            const p0 = moved(points[0], false);
-            ctx.moveTo(p0.x, p0.y);
-            points.forEach((p, idx) => {
-              const isLast = idx === points.length - 1;
-              const p1 = moved(p, !isLast);
-              ctx.lineTo(p1.x, p1.y);
-            });
-          });
-          ctx.stroke();
-        }
-
-        function onMouseMove(e) {
-          const r = section.getBoundingClientRect();
-          const x = e.clientX - r.left;
-          const y = e.clientY - r.top;
-          mouse.x = x; mouse.y = y;
-          if (!mouse.set) { mouse.sx=x; mouse.sy=y; mouse.lx=x; mouse.ly=y; mouse.set=true; }
-        }
-
-        function tick(t) {
-          mouse.sx += (mouse.x - mouse.sx) * 0.1;
-          mouse.sy += (mouse.y - mouse.sy) * 0.1;
-          const dx = mouse.x - mouse.lx, dy = mouse.y - mouse.ly;
-          mouse.v = Math.hypot(dx, dy);
-          mouse.vs += (mouse.v - mouse.vs) * 0.1;
-          mouse.vs = Math.min(100, mouse.vs);
-          mouse.lx = mouse.x; mouse.ly = mouse.y;
-          mouse.a = Math.atan2(dy, dx);
-          movePoints(t);
-          drawLines();
-          frameId = requestAnimationFrame(tick);
-        }
-
-        window.addEventListener('resize', setSize);
-        window.addEventListener('mousemove', onMouseMove);
-        setSize();
-        frameId = requestAnimationFrame(tick);
-      }
-
-      // Shared config — dark, subtle lines
-      const waveCfg = {
-        lineColor:     'rgba(255, 255, 255, 0.09)',
-        waveSpeedX:    0.0125,
-        waveSpeedY:    0.005,
-        waveAmpX:      32,
-        waveAmpY:      16,
-        xGap:          12,
-        yGap:          36,
-        friction:      0.925,
-        tension:       0.005,
-        maxCursorMove: 100
-      };
-
-      initWaves(document.getElementById('aboutWaves'),  waveCfg);
-      initWaves(document.getElementById('footerWaves'), waveCfg);
     })();
 
     // Custom Cursor
