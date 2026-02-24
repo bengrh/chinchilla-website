@@ -591,12 +591,12 @@
         width: 40px;
         height: 40px;
         margin-top: 12px;
-        background: var(--black);
-        color: var(--white);
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
 
       .project-arrow svg {
-        stroke: var(--white);
+        stroke: #FFFFFF;
       }
 
       .project-meta {
@@ -607,25 +607,26 @@
 
     .project-item {
       position: relative;
-      transition: transform 0.6s var(--ease-premium);
+      background: #111111;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.6s var(--ease-premium), border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
     .project-item:hover {
       transform: scale(1.03);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     }
 
     .project-image {
       position: relative;
       aspect-ratio: 4/3;
       overflow: hidden;
-      border-radius: 8px;
-      transition: aspect-ratio 0.6s var(--ease-premium), border-radius 0.6s var(--ease-premium);
+      border-radius: 0;
+      transition: aspect-ratio 0.6s var(--ease-premium);
     }
-
-    /* Rotating radial corner clips — mirrors the marquee card style */
-    .project-item:nth-child(3n+1) .project-image { border-top-left-radius: 100px; }
-    .project-item:nth-child(3n+2) .project-image { border-top-right-radius: 100px; border-bottom-left-radius: 40px; }
-    .project-item:nth-child(3n)   .project-image { border-radius: 40px; }
 
     .project-item:hover .project-image {
       aspect-ratio: 3/2;
@@ -652,13 +653,12 @@
       right: 0;
       aspect-ratio: 4/3;
       background: rgba(0, 0, 0, 0);
-      border-radius: 8px;
       transition: background 0.5s var(--ease-premium), aspect-ratio 0.6s var(--ease-premium);
       pointer-events: none;
     }
 
     .project-item:hover::after {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
       aspect-ratio: 3/2;
     }
 
@@ -668,18 +668,21 @@
 
     .project-arrow {
       position: absolute;
-      top: 24px;
-      right: 24px;
-      width: 48px;
-      height: 48px;
-      background: var(--white);
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
-      transform: translateY(10px) rotate(-45deg);
-      transition: opacity 0.5s var(--ease-premium), transform 0.5s var(--ease-premium);
+      transform: translateY(6px) rotate(-45deg);
+      transition: opacity 0.5s var(--ease-premium), transform 0.5s var(--ease-premium), background 0.3s ease;
       z-index: 2;
     }
 
@@ -691,21 +694,21 @@
     .project-arrow svg {
       width: 20px;
       height: 20px;
+      stroke: #FFFFFF;
     }
 
     .project-meta {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      padding: 20px 0 0 0;
-      margin-top: 20px;
-      border-top: 1px solid var(--border);
-      background: var(--white);
+      padding: 20px 20px 20px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      background: transparent;
       transition: padding 0.6s var(--ease-premium);
     }
 
     .project-item:hover .project-meta {
-      padding: 24px 16px 8px 16px;
+      padding: 20px 20px 20px 20px;
     }
 
     .project-info h3 {
@@ -1851,9 +1854,11 @@
         <div class="about-text-section">
           <h2 class="about-title">About</h2>
           <div class="about-paragraphs">
-            <p>Chinchilla Design is a multidisciplinary studio at the intersection of digital fabrication and traditional craftsmanship. Founded with the belief that technology should enhance rather than replace human creativity, we create work that pushes the boundaries of what's possible while honoring time-tested techniques passed down through generations.</p>
-            <p>Our approach combines parametric design and CNC precision with hands-on woodworking and material expertise. From architectural installations and exhibition pavilions to brand identities and spatial experiences, every project begins with deep research and ends with meticulous execution. We believe constraints breed creativity, and we embrace the challenge of making the complex feel effortless.</p>
-            <p>Based in Vancouver and working globally, we partner with clients who share our passion for meaningful design. Whether it's a tiny house that redefines sustainable living or a vineyard brand rooted in place, we bring the same level of care and craft to every collaboration.</p>
+            <p>Chinchilla Design is a multidisciplinary design and fabrication studio specializing in complex woodwork, digital fabrication, and precision craft.</p>
+            <p>We operate at the intersection of advanced design technology and traditional making, helping designers and clients realize ambitious ideas that would otherwise be difficult to build. Contemporary design software and CNC technologies are expanding what is possible in wood and material fabrication and in turn, a new design language is emerging. To best explore this language, we believe it is best achieved through a company with a fluency in design and a deep understanding of material.</p>
+            <p>Our role is often that of a bridge. We help connect design intent and physical execution, digital models and real materials, and creative ambition and manufacturing reality. We specialize in projects where standard fabrication methods fall short.</p>
+            <p>We frequently work in a design-assist capacity, advising on material strategy, fabrication logic, and production methods early in the design process to ensure efficiency, feasibility, and design integrity.</p>
+            <p>Based in Vancouver and working internationally, we partner with designers and clients who are pursuing technically ambitious, materially expressive, and carefully executed projects.</p>
           </div>
         </div>
         <div class="team-reveal-wrapper">
