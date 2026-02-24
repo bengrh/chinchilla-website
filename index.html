@@ -523,6 +523,7 @@
     .projects {
       padding: 80px 0 0;
       position: relative;
+      overflow: hidden; /* clips balls above the section during drop */
     }
 
     .projects-label {
@@ -541,7 +542,7 @@
     #ball-pit {
       position: relative;
       width: 100%;
-      overflow: hidden;
+      /* no overflow:hidden here — balls start above and fall in */
       cursor: grab;
       min-height: 560px;
     }
@@ -1768,7 +1769,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script>
     // ── Ball-pit Projects ──────────────────────────────────────────────
-    (function () {
+    window.addEventListener('load', function () {
       const PIT = document.getElementById('ball-pit');
       if (!PIT || typeof Matter === 'undefined') return;
 
@@ -1910,9 +1911,10 @@
         });
 
         // Click = open modal only if it wasn't a drag
+        // dispatch custom event so openModal (defined later) handles it
         el.addEventListener('click', () => {
           if (isDragging) return;
-          openModal(el.dataset.project);
+          document.dispatchEvent(new CustomEvent('ballpit:open', { detail: el.dataset.project }));
         });
       });
 
@@ -1934,7 +1936,9 @@
       window.addEventListener('scroll', updateMouseOffset, { passive: true });
       updateMouseOffset();
 
-    })();
+      // Wire up modal open from bubble clicks (openModal defined later in script)
+      document.addEventListener('ballpit:open', e => openModal(e.detail));
+    });
 
     // Parallax Dot Grid — with upward drift and cursor repulsion
     (function() {
