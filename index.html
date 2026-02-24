@@ -1781,58 +1781,48 @@
         { key: 'sage-hayward', title: 'Winery Branding', photo: 'images/sage-hayward/sign.jpg',           desc: 'Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.' }
       ];
 
-      const { Engine, Runner, Bodies, Body, Events, World, Composite, Mouse, MouseConstraint } = Matter;
+      const { Engine, Runner, Bodies, Body, Events, World, Mouse, MouseConstraint } = Matter;
 
       const isMobile = window.innerWidth < 768;
-      // Scale radius so 5 balls fit comfortably side-by-side with padding
-      // Target: 2 balls across minimum, ~2.5 across on desktop
-      const W  = PIT.offsetWidth;
-      const R  = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
-      const ER = Math.round(R * 1.42);  // expanded radius (~42% bigger)
-      const D  = R * 2;
-      // Height: 3 rows of balls + generous padding
+      const W    = PIT.offsetWidth;
+      const R    = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
+      const ER   = Math.round(R * 1.42);
+      const D    = R * 2;
       const PIT_H = R * 7;
-      PIT.style.height = PIT_H + 'px';
-      // Contain balls — pit clips anything outside its bounds
+      PIT.style.height   = PIT_H + 'px';
       PIT.style.overflow = 'hidden';
 
       // ── Engine
       const engine = Engine.create({ gravity: { x: 0, y: 1.6 } });
       const world  = engine.world;
 
-      // ── Walls & floor (static, invisible)
+      // ── Static boundaries
       const T = 80;
-      function makeBounds(w, h) {
-        return [
-          Bodies.rectangle(w / 2,     h + T / 2,  w + T * 2, T, { isStatic: true, restitution: 0.3, friction: 0.4, label: 'floor' }),
-          Bodies.rectangle(-T / 2,    h / 2,       T, h * 3,    { isStatic: true, restitution: 0.2, friction: 0.1, label: 'wallL' }),
-          Bodies.rectangle(w + T / 2, h / 2,       T, h * 3,    { isStatic: true, restitution: 0.2, friction: 0.1, label: 'wallR' }),
-        ];
-      }
-      const bounds = makeBounds(W, PIT_H);
-      World.add(world, bounds);
+      World.add(world, [
+        Bodies.rectangle(W / 2,     PIT_H + T/2, W + T*2, T,      { isStatic:true, restitution:0.3, friction:0.4 }),
+        Bodies.rectangle(-T/2,      PIT_H / 2,   T,       PIT_H*3, { isStatic:true, restitution:0.2, friction:0.1 }),
+        Bodies.rectangle(W + T/2,   PIT_H / 2,   T,       PIT_H*3, { isStatic:true, restitution:0.2, friction:0.1 }),
+      ]);
 
-      // ── Drop positions: staggered columns, all starting near top
+      // ── Bodies
       const dropX = [0.15, 0.35, 0.55, 0.75, 0.45];
-      const dropY = [R * 0.6, R * 1.5, R * 0.3, R * 1.2, R * 2.2];
-
+      const dropY = [R*0.6, R*1.5, R*0.3, R*1.2, R*2.2];
       const bodies = PROJECTS.map((p, i) =>
-        Bodies.circle(dropX[i] * W, dropY[i], R, {
-          restitution: 0.4, friction: 0.05, frictionAir: 0.014, density: 0.003, label: p.key
+        Bodies.circle(dropX[i]*W, dropY[i], R, {
+          restitution:0.4, friction:0.05, frictionAir:0.014, density:0.003, label:p.key
         })
       );
       World.add(world, bodies);
 
       // ── DOM bubbles
       let expandedIdx = -1;
-
       const bubbleEls = PROJECTS.map((p, i) => {
         const el = document.createElement('div');
         el.className = 'bubble';
         el.dataset.project = p.key;
         el.style.width  = D + 'px';
         el.style.height = D + 'px';
-        el.style.left   = (dropX[i] * W - R) + 'px';
+        el.style.left   = (dropX[i]*W - R) + 'px';
         el.style.top    = (dropY[i] - R) + 'px';
         el.innerHTML = `
           <img class="bubble-photo" src="${p.photo}" alt="${p.title}" draggable="false">
@@ -1847,26 +1837,28 @@
         return el;
       });
 
-      // ── Physics → DOM sync
       Events.on(engine, 'afterUpdate', () => {
         bodies.forEach((b, i) => {
-          const r  = (i === expandedIdx) ? ER : R;
+          const r = (i === expandedIdx) ? ER : R;
           bubbleEls[i].style.left = (b.position.x - r) + 'px';
           bubbleEls[i].style.top  = (b.position.y - r) + 'px';
         });
       });
 
-      const runner = Runner.create();
-      Runner.run(runner, engine);
+      Runner.run(Runner.create(), engine);
 
-      // ── Mouse / touch constraint for dragging + flicking
-      // Matter needs mouse coords relative to the PIT element origin
+      // ── Mouse constraint
+      // Mouse.create(PIT) gives coords relative to PIT's top-left.
+      // We also need to tell Matter to subtract the PIT's page offset
+      // so that when the page is scrolled, coordinates stay correct.
       const mouse = Mouse.create(PIT);
-      // Remove Matter's built-in wheel listener (interferes with page scroll)
-      mouse.element.removeEventListener('mousewheel', mouse.mousewheel);
-      mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
-      // Remove Matter's touchmove listener so mobile scroll works freely
-      mouse.element.removeEventListener('touchmove', mouse.mousemove);
+
+      // Strip Matter's own wheel/touch listeners — they break page scroll
+      mouse.element.removeEventListener('mousewheel',    mouse.mousewheel);
+      mouse.element.removeEventListener('DOMMouseScroll',mouse.mousewheel);
+      mouse.element.removeEventListener('touchstart',    mouse.mousedown);
+      mouse.element.removeEventListener('touchmove',     mouse.mousemove);
+      mouse.element.removeEventListener('touchend',      mouse.mouseup);
 
       const mc = MouseConstraint.create(engine, {
         mouse,
@@ -1874,74 +1866,122 @@
       });
       World.add(world, mc);
 
-      // Re-add touchmove only when a ball is grabbed — otherwise let scroll through
-      let touchGrabbed = false;
-      PIT.addEventListener('touchstart', e => {
-        // Check if touch lands on a physics body
+      // Translate raw page-coord mouse events → PIT-local coords for Matter
+      function pitLocal(clientX, clientY) {
         const rect = PIT.getBoundingClientRect();
-        const tx = e.touches[0].clientX - rect.left;
-        const ty = e.touches[0].clientY - rect.top;
-        touchGrabbed = bodies.some(b => {
-          const dx = b.position.x - tx, dy = b.position.y - ty;
-          return Math.sqrt(dx*dx + dy*dy) < R + 10;
-        });
-        // Don't call preventDefault here — let Matter handle it if grabbing
-      }, { passive: true });
+        return { x: clientX - rect.left, y: clientY - rect.top };
+      }
 
-      PIT.addEventListener('touchmove', e => {
+      // Desktop mouse — fully manual so offset is always correct
+      PIT.addEventListener('mousedown', e => {
+        const p = pitLocal(e.clientX, e.clientY);
+        mouse.position.x = p.x; mouse.position.y = p.y;
+        mouse.mousedownPosition.x = p.x; mouse.mousedownPosition.y = p.y;
+        mouse.button = 0;
+        Events.trigger(mc, 'mousedown', { mouse });
+      });
+      PIT.addEventListener('mousemove', e => {
+        const p = pitLocal(e.clientX, e.clientY);
+        mouse.position.x = p.x; mouse.position.y = p.y;
+        Events.trigger(mc, 'mousemove', { mouse });
+      });
+      PIT.addEventListener('mouseup', e => {
+        const p = pitLocal(e.clientX, e.clientY);
+        mouse.position.x = p.x; mouse.position.y = p.y;
+        mouse.button = -1;
+        Events.trigger(mc, 'mouseup', { mouse });
+      });
+
+      // Touch — manual feed; only block scroll when a ball is grabbed
+      let touchGrabbed = false;
+      let touchStartPos = null;
+      let touchMoved = false;
+
+      PIT.addEventListener('touchstart', e => {
+        const t = e.touches[0];
+        const p = pitLocal(t.clientX, t.clientY);
+        touchStartPos = { x: t.clientX, y: t.clientY };
+        touchMoved = false;
+
+        // Hit-test against physics bodies
+        touchGrabbed = bodies.some(b => {
+          const dx = b.position.x - p.x, dy = b.position.y - p.y;
+          return Math.sqrt(dx*dx + dy*dy) < R + 12;
+        });
+
         if (touchGrabbed) {
-          e.stopPropagation(); // prevent scroll only when dragging a ball
-          // Manually fire Matter's mousemove equivalent
-          const rect = PIT.getBoundingClientRect();
-          mouse.position.x = e.touches[0].clientX - rect.left;
-          mouse.position.y = e.touches[0].clientY - rect.top;
+          mouse.position.x = p.x; mouse.position.y = p.y;
+          mouse.mousedownPosition.x = p.x; mouse.mousedownPosition.y = p.y;
+          mouse.button = 0;
+          Events.trigger(mc, 'mousedown', { mouse });
         }
       }, { passive: true });
 
-      PIT.addEventListener('touchend', () => { touchGrabbed = false; }, { passive: true });
+      PIT.addEventListener('touchmove', e => {
+        const t = e.touches[0];
+        if (touchStartPos) {
+          const dx = t.clientX - touchStartPos.x, dy = t.clientY - touchStartPos.y;
+          if (dx*dx + dy*dy > 25) touchMoved = true;
+        }
+        if (!touchGrabbed) return;           // not on a ball → let page scroll
+        e.preventDefault();                  // block scroll while dragging ball
+        const p = pitLocal(t.clientX, t.clientY);
+        mouse.position.x = p.x; mouse.position.y = p.y;
+        Events.trigger(mc, 'mousemove', { mouse });
+      }, { passive: false });                // must be non-passive to call preventDefault
 
-      // Keep mouse coords correct as user scrolls (Matter coords are local to PIT)
-      function syncMouseOffset() {
-        const rect = PIT.getBoundingClientRect();
-        Mouse.setOffset(mouse, { x: -rect.left, y: -rect.top });
-      }
-      window.addEventListener('scroll', syncMouseOffset, { passive: true });
-      window.addEventListener('resize', syncMouseOffset, { passive: true });
-      syncMouseOffset();
+      PIT.addEventListener('touchend', e => {
+        if (touchGrabbed) {
+          const t = e.changedTouches[0];
+          const p = pitLocal(t.clientX, t.clientY);
+          mouse.position.x = p.x; mouse.position.y = p.y;
+          mouse.button = -1;
+          Events.trigger(mc, 'mouseup', { mouse });
 
-      // ── Drag vs click discrimination (desktop)
+          // Tap (no significant movement) → open modal
+          if (!touchMoved) {
+            const key = bodies.reduce((hit, b, i) => {
+              if (hit) return hit;
+              const dx = b.position.x - p.x, dy = b.position.y - p.y;
+              return Math.sqrt(dx*dx + dy*dy) < R + 12 ? PROJECTS[i].key : null;
+            }, null);
+            if (key) setTimeout(() => openModal(key), 10);
+          }
+        }
+        touchGrabbed = false;
+        touchStartPos = null;
+      }, { passive: true });
+
+      // ── Desktop drag vs click
       let pointerDown = null, wasDrag = false;
-      PIT.addEventListener('mousedown', e => { pointerDown = { x: e.clientX, y: e.clientY }; wasDrag = false; });
+      PIT.addEventListener('mousedown', e => { pointerDown = { x:e.clientX, y:e.clientY }; wasDrag = false; }, true);
       PIT.addEventListener('mousemove', e => {
         if (!pointerDown) return;
         const dx = e.clientX - pointerDown.x, dy = e.clientY - pointerDown.y;
         if (dx*dx + dy*dy > 25) wasDrag = true;
-      });
-      PIT.addEventListener('mouseup', () => { pointerDown = null; });
+      }, true);
+      PIT.addEventListener('mouseup', () => { pointerDown = null; }, true);
 
-      // ── Hover: expand circle, collapse on leave
+      // ── Hover expand (desktop only)
       bubbleEls.forEach((el, idx) => {
         el.addEventListener('mouseenter', () => {
-          if (wasDrag || mc.body) return; // skip if dragging
+          if (wasDrag || mc.body) return;
           if (expandedIdx !== -1 && expandedIdx !== idx) collapseBubble(expandedIdx);
           if (expandedIdx === idx) return;
           expandedIdx = idx;
           el.classList.add('expanded');
           el.style.transition = 'width 0.5s cubic-bezier(0.16,1,0.3,1), height 0.5s cubic-bezier(0.16,1,0.3,1)';
-          el.style.width  = (ER * 2) + 'px';
-          el.style.height = (ER * 2) + 'px';
+          el.style.width  = (ER*2) + 'px';
+          el.style.height = (ER*2) + 'px';
         });
         el.addEventListener('mouseleave', () => collapseBubble(idx));
         el.addEventListener('click', () => {
           if (wasDrag) return;
-          document.dispatchEvent(new CustomEvent('ballpit:open', { detail: el.dataset.project }));
+          openModal(el.dataset.project);
         });
       });
 
-      // Collapse when mc grabs a body (user started dragging)
-      Events.on(mc, 'startdrag', () => {
-        if (expandedIdx !== -1) collapseBubble(expandedIdx);
-      });
+      Events.on(mc, 'startdrag', () => { if (expandedIdx !== -1) collapseBubble(expandedIdx); });
 
       function collapseBubble(idx) {
         if (idx < 0 || idx >= bubbleEls.length) return;
@@ -1953,7 +1993,6 @@
         el.style.height = D + 'px';
       }
 
-      // Wire modal
       document.addEventListener('ballpit:open', e => openModal(e.detail));
     });
 
