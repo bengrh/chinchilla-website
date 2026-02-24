@@ -1774,59 +1774,66 @@
       if (!PIT || typeof Matter === 'undefined') return;
 
       const PROJECTS = [
-        { key: 'ids-pavilion', title: 'IDS Pavilion',    photo: 'images/ids-pavilion/IDS%20Pavilion.jpg', desc: 'A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.' },
-        { key: 'tiny-house',   title: 'Tiny House',       photo: 'images/tiny-house/exterior.jpg',          desc: 'Every surface CNC-milled from sustainable plywood — a fully functional tiny house as seen on HGTV.' },
-        { key: 'wall-art',     title: 'Wall Art',         photo: 'images/wall-art/front.jpg',               desc: 'Sculptural cedar wall piece with burl inlays, shaped parametrically and finished by hand.' },
-        { key: 'chair',        title: 'Chair',            photo: 'images/chair/installed.jpg',              desc: 'Solid white oak dining chair with a hand-shaped wraparound back and cognac leather seat.' },
-        { key: 'sage-hayward', title: 'Winery Branding',  photo: 'images/sage-hayward/sign.jpg',            desc: 'Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.' }
+        { key: 'ids-pavilion', title: 'IDS Pavilion',   photo: 'images/ids-pavilion/IDS%20Pavilion.jpg', desc: 'A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.' },
+        { key: 'tiny-house',   title: 'Tiny House',      photo: 'images/tiny-house/exterior.jpg',         desc: 'Every surface CNC-milled from sustainable plywood — a fully functional tiny house as seen on HGTV.' },
+        { key: 'wall-art',     title: 'Wall Art',        photo: 'images/wall-art/front.jpg',              desc: 'Sculptural cedar wall piece with burl inlays, shaped parametrically and finished by hand.' },
+        { key: 'chair',        title: 'Chair',           photo: 'images/chair/installed.jpg',             desc: 'Solid white oak dining chair with a hand-shaped wraparound back and cognac leather seat.' },
+        { key: 'sage-hayward', title: 'Winery Branding', photo: 'images/sage-hayward/sign.jpg',           desc: 'Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.' }
       ];
 
+      const { Engine, Runner, Bodies, Body, Events, World, Composite, Mouse, MouseConstraint } = Matter;
+
       const isMobile = window.innerWidth < 768;
-      const R  = isMobile ? 100 : 140;   // physics + visual radius
-      const ER = isMobile ? 148 : 200;   // expanded radius on hover
-      const D  = R * 2;
+      // Scale radius so 5 balls fit comfortably side-by-side with padding
+      // Target: 2 balls across minimum, ~2.5 across on desktop
       const W  = PIT.offsetWidth;
-      // Height: enough for 3 stacked rows plus a little breathing room
-      const PIT_H = isMobile ? R * 9 : R * 6.8;
+      const R  = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
+      const ER = Math.round(R * 1.42);  // expanded radius (~42% bigger)
+      const D  = R * 2;
+      // Height: 3 rows of balls + generous padding
+      const PIT_H = R * 7;
       PIT.style.height = PIT_H + 'px';
+      // Contain balls — pit clips anything outside its bounds
+      PIT.style.overflow = 'hidden';
 
-      const { Engine, Runner, Bodies, Body, Events, World, Mouse, MouseConstraint } = Matter;
-
-      // ── Engine — lower gravity so drop feels floaty / ball-pit-like
-      const engine = Engine.create({ gravity: { x: 0, y: 1.4 } });
+      // ── Engine
+      const engine = Engine.create({ gravity: { x: 0, y: 1.6 } });
       const world  = engine.world;
 
-      // ── Boundaries — thick enough that fast balls can't tunnel through
-      const T = 120;
-      const floor  = Bodies.rectangle(W / 2,     PIT_H + T / 2, W + T * 2, T,        { isStatic: true, restitution: 0.35, friction: 0.3 });
-      const wallL  = Bodies.rectangle(-T / 2,    PIT_H / 2,     T,         PIT_H * 2, { isStatic: true, restitution: 0.35, friction: 0.1 });
-      const wallR  = Bodies.rectangle(W + T / 2, PIT_H / 2,     T,         PIT_H * 2, { isStatic: true, restitution: 0.35, friction: 0.1 });
-      World.add(world, [floor, wallL, wallR]);
+      // ── Walls & floor (static, invisible)
+      const T = 80;
+      function makeBounds(w, h) {
+        return [
+          Bodies.rectangle(w / 2,     h + T / 2,  w + T * 2, T, { isStatic: true, restitution: 0.3, friction: 0.4, label: 'floor' }),
+          Bodies.rectangle(-T / 2,    h / 2,       T, h * 3,    { isStatic: true, restitution: 0.2, friction: 0.1, label: 'wallL' }),
+          Bodies.rectangle(w + T / 2, h / 2,       T, h * 3,    { isStatic: true, restitution: 0.2, friction: 0.1, label: 'wallR' }),
+        ];
+      }
+      const bounds = makeBounds(W, PIT_H);
+      World.add(world, bounds);
 
-      // ── Drop positions — start inside the pit at the top, staggered
-      //    so they don't all collide at once
-      const dropX = [0.18, 0.38, 0.58, 0.78, 0.50];
-      const dropY = [R, R * 0.5, R * 1.2, R * 0.3, R * 1.8];
+      // ── Drop positions: staggered columns, all starting near top
+      const dropX = [0.15, 0.35, 0.55, 0.75, 0.45];
+      const dropY = [R * 0.6, R * 1.5, R * 0.3, R * 1.2, R * 2.2];
 
-      const bodies = PROJECTS.map((p, i) => {
-        const b = Bodies.circle(
-          dropX[i] * W,
-          dropY[i],
-          R,
-          { restitution: 0.42, friction: 0.06, frictionAir: 0.012, density: 0.003,
-            label: p.key }
-        );
-        return b;
-      });
+      const bodies = PROJECTS.map((p, i) =>
+        Bodies.circle(dropX[i] * W, dropY[i], R, {
+          restitution: 0.4, friction: 0.05, frictionAir: 0.014, density: 0.003, label: p.key
+        })
+      );
       World.add(world, bodies);
 
       // ── DOM bubbles
+      let expandedIdx = -1;
+
       const bubbleEls = PROJECTS.map((p, i) => {
         const el = document.createElement('div');
         el.className = 'bubble';
         el.dataset.project = p.key;
-        el.style.cssText = `width:${D}px;height:${D}px;left:${dropX[i]*W - R}px;top:${dropY[i] - R}px;`;
-
+        el.style.width  = D + 'px';
+        el.style.height = D + 'px';
+        el.style.left   = (dropX[i] * W - R) + 'px';
+        el.style.top    = (dropY[i] - R) + 'px';
         el.innerHTML = `
           <img class="bubble-photo" src="${p.photo}" alt="${p.title}" draggable="false">
           <div class="bubble-title-bg"></div>
@@ -1836,85 +1843,104 @@
             <div class="bubble-card-desc">${p.desc}</div>
             <span class="bubble-card-open">View project ↗</span>
           </div>`;
-
         PIT.appendChild(el);
         return el;
       });
 
-      // ── rAF sync loop — physics → DOM (position only; size is CSS)
-      let expandedIdx = -1;
-
-      function syncDOM() {
+      // ── Physics → DOM sync
+      Events.on(engine, 'afterUpdate', () => {
         bodies.forEach((b, i) => {
-          const el = bubbleEls[i];
           const r  = (i === expandedIdx) ? ER : R;
-          el.style.left = (b.position.x - r) + 'px';
-          el.style.top  = (b.position.y - r) + 'px';
+          bubbleEls[i].style.left = (b.position.x - r) + 'px';
+          bubbleEls[i].style.top  = (b.position.y - r) + 'px';
         });
-      }
-      Events.on(engine, 'afterUpdate', syncDOM);
+      });
 
       const runner = Runner.create();
       Runner.run(runner, engine);
 
-      // ── MouseConstraint — lets users drag & fling bubbles
+      // ── Mouse / touch constraint for dragging + flicking
+      // Matter needs mouse coords relative to the PIT element origin
       const mouse = Mouse.create(PIT);
-      // correct for any CSS pixel ratio / scroll offset
-      mouse.pixelRatio = window.devicePixelRatio || 1;
+      // Remove Matter's built-in wheel listener (interferes with page scroll)
+      mouse.element.removeEventListener('mousewheel', mouse.mousewheel);
+      mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
+      // Remove Matter's touchmove listener so mobile scroll works freely
+      mouse.element.removeEventListener('touchmove', mouse.mousemove);
+
       const mc = MouseConstraint.create(engine, {
         mouse,
-        constraint: {
-          stiffness: 0.08,
-          damping:   0.05,
-          render: { visible: false }
-        }
+        constraint: { stiffness: 0.06, damping: 0.0, render: { visible: false } }
       });
       World.add(world, mc);
 
-      // Keep mouse offset in sync with scroll
-      PIT.addEventListener('wheel', () => {
-        Mouse.setOffset(mouse, { x: 0, y: PIT.getBoundingClientRect().top + window.scrollY });
+      // Re-add touchmove only when a ball is grabbed — otherwise let scroll through
+      let touchGrabbed = false;
+      PIT.addEventListener('touchstart', e => {
+        // Check if touch lands on a physics body
+        const rect = PIT.getBoundingClientRect();
+        const tx = e.touches[0].clientX - rect.left;
+        const ty = e.touches[0].clientY - rect.top;
+        touchGrabbed = bodies.some(b => {
+          const dx = b.position.x - tx, dy = b.position.y - ty;
+          return Math.sqrt(dx*dx + dy*dy) < R + 10;
+        });
+        // Don't call preventDefault here — let Matter handle it if grabbing
       }, { passive: true });
 
-      // ── Drag vs click discrimination
-      let pointerDownPos = null;
-      let isDragging     = false;
+      PIT.addEventListener('touchmove', e => {
+        if (touchGrabbed) {
+          e.stopPropagation(); // prevent scroll only when dragging a ball
+          // Manually fire Matter's mousemove equivalent
+          const rect = PIT.getBoundingClientRect();
+          mouse.position.x = e.touches[0].clientX - rect.left;
+          mouse.position.y = e.touches[0].clientY - rect.top;
+        }
+      }, { passive: true });
 
-      PIT.addEventListener('mousedown',  e => { pointerDownPos = { x: e.clientX, y: e.clientY }; isDragging = false; });
-      PIT.addEventListener('mousemove',  e => {
-        if (!pointerDownPos) return;
-        const dx = e.clientX - pointerDownPos.x;
-        const dy = e.clientY - pointerDownPos.y;
-        if (dx * dx + dy * dy > 36) isDragging = true; // 6px threshold
+      PIT.addEventListener('touchend', () => { touchGrabbed = false; }, { passive: true });
+
+      // Keep mouse coords correct as user scrolls (Matter coords are local to PIT)
+      function syncMouseOffset() {
+        const rect = PIT.getBoundingClientRect();
+        Mouse.setOffset(mouse, { x: -rect.left, y: -rect.top });
+      }
+      window.addEventListener('scroll', syncMouseOffset, { passive: true });
+      window.addEventListener('resize', syncMouseOffset, { passive: true });
+      syncMouseOffset();
+
+      // ── Drag vs click discrimination (desktop)
+      let pointerDown = null, wasDrag = false;
+      PIT.addEventListener('mousedown', e => { pointerDown = { x: e.clientX, y: e.clientY }; wasDrag = false; });
+      PIT.addEventListener('mousemove', e => {
+        if (!pointerDown) return;
+        const dx = e.clientX - pointerDown.x, dy = e.clientY - pointerDown.y;
+        if (dx*dx + dy*dy > 25) wasDrag = true;
       });
-      PIT.addEventListener('mouseup', () => { pointerDownPos = null; });
+      PIT.addEventListener('mouseup', () => { pointerDown = null; });
 
-      // ── Hover expand/collapse — only while not dragging
+      // ── Hover: expand circle, collapse on leave
       bubbleEls.forEach((el, idx) => {
         el.addEventListener('mouseenter', () => {
-          if (isDragging) return;
+          if (wasDrag || mc.body) return; // skip if dragging
+          if (expandedIdx !== -1 && expandedIdx !== idx) collapseBubble(expandedIdx);
           if (expandedIdx === idx) return;
-          if (expandedIdx !== -1) collapseBubble(expandedIdx);
           expandedIdx = idx;
-
-          const body = bodies[idx];
           el.classList.add('expanded');
-          el.style.transition = 'width 0.55s cubic-bezier(0.16,1,0.3,1), height 0.55s cubic-bezier(0.16,1,0.3,1)';
+          el.style.transition = 'width 0.5s cubic-bezier(0.16,1,0.3,1), height 0.5s cubic-bezier(0.16,1,0.3,1)';
           el.style.width  = (ER * 2) + 'px';
           el.style.height = (ER * 2) + 'px';
-          // recentre immediately (syncDOM uses ER for this idx now)
         });
-
-        el.addEventListener('mouseleave', () => {
-          collapseBubble(idx);
-        });
-
-        // Click = open modal only if it wasn't a drag
-        // dispatch custom event so openModal (defined later) handles it
+        el.addEventListener('mouseleave', () => collapseBubble(idx));
         el.addEventListener('click', () => {
-          if (isDragging) return;
+          if (wasDrag) return;
           document.dispatchEvent(new CustomEvent('ballpit:open', { detail: el.dataset.project }));
         });
+      });
+
+      // Collapse when mc grabs a body (user started dragging)
+      Events.on(mc, 'startdrag', () => {
+        if (expandedIdx !== -1) collapseBubble(expandedIdx);
       });
 
       function collapseBubble(idx) {
@@ -1922,20 +1948,12 @@
         if (expandedIdx === idx) expandedIdx = -1;
         const el = bubbleEls[idx];
         el.classList.remove('expanded');
-        el.style.transition = 'width 0.5s cubic-bezier(0.16,1,0.3,1), height 0.5s cubic-bezier(0.16,1,0.3,1)';
+        el.style.transition = 'width 0.45s cubic-bezier(0.16,1,0.3,1), height 0.45s cubic-bezier(0.16,1,0.3,1)';
         el.style.width  = D + 'px';
         el.style.height = D + 'px';
       }
 
-      // Correct mouse position on scroll (Matter uses page coords)
-      function updateMouseOffset() {
-        const rect = PIT.getBoundingClientRect();
-        Mouse.setOffset(mouse, { x: -rect.left, y: -rect.top });
-      }
-      window.addEventListener('scroll', updateMouseOffset, { passive: true });
-      updateMouseOffset();
-
-      // Wire up modal open from bubble clicks (openModal defined later in script)
+      // Wire modal
       document.addEventListener('ballpit:open', e => openModal(e.detail));
     });
 
