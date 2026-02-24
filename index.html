@@ -646,11 +646,10 @@
       color: rgba(255,255,255,0.65);
     }
 
-    /* EXPANDED (hover) — becomes rounded rect so card text is fully legible */
+    /* EXPANDED (hover) — stays circular, grows larger */
     .bubble.expanded {
       z-index: 10;
       box-shadow: 0 20px 70px rgba(0,0,0,0.65);
-      border-radius: 20px;
     }
 
     .bubble.expanded .bubble-photo {
@@ -688,10 +687,9 @@
       font-size: 12px;
       font-family: monospace;
       letter-spacing: 0.04em;
-      color: rgba(255, 255, 255, 0.55);
-      text-align: center;
-      padding: 10px 16px 0;
-      min-height: 1.6em;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: left;
+      padding: 0 0 20px;
       transition: opacity 0.3s ease;
     }
 
@@ -836,37 +834,39 @@
 
     .modal-close {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 44px;
-      height: 44px;
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
+      top: 18px;
+      right: 18px;
+      width: 54px;
+      height: 54px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1.5px solid rgba(255, 255, 255, 0.55);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10;
-      color: var(--black);
-      transition: transform 0.3s var(--ease-premium), background 0.3s ease;
+      color: #ffffff;
+      transition: transform 0.3s var(--ease-premium), background 0.3s ease, border-color 0.3s ease;
     }
 
     .modal-close:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.75);
+      border-color: rgba(255, 255, 255, 0.85);
+      transform: scale(1.08);
     }
 
     .modal-close svg {
-      width: 22px;
-      height: 22px;
+      width: 26px;
+      height: 26px;
     }
 
     /* Modal Gallery */
     .modal-gallery {
       position: relative;
-      background: var(--black);
+      background: #000;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
       overflow: hidden;
       width: var(--gallery-width, 55%);
@@ -910,53 +910,55 @@
       opacity: 1;
     }
 
+    /* Nav lives in the text panel — inline flow between description and details */
     .modal-gallery-nav {
-      position: absolute;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
       display: flex;
-      gap: 12px;
+      gap: 14px;
       align-items: center;
-      z-index: 10;
+      padding: 18px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
     }
 
     .modal-gallery-btn {
-      width: 40px;
-      height: 40px;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 38px;
+      height: 38px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      color: rgba(255, 255, 255, 0.9);
-      transition: background 0.3s ease;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.85);
+      transition: background 0.25s ease, border-color 0.25s ease;
+      flex-shrink: 0;
     }
 
     .modal-gallery-btn:hover {
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.45);
     }
 
     .modal-gallery-dots {
       display: flex;
       gap: 6px;
+      flex: 1;
     }
 
     .modal-gallery-dot {
-      width: 8px;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.4);
+      width: 7px;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.3);
       border: none;
       border-radius: 50%;
       transition: background 0.3s ease, transform 0.3s ease;
     }
 
     .modal-gallery-dot.active {
-      background: var(--white);
-      transform: scale(1.25);
+      background: rgba(255, 255, 255, 0.9);
+      transform: scale(1.3);
     }
 
     /* Modal Info */
@@ -1624,12 +1626,18 @@
   <div class="modal" id="projectModal" role="dialog" aria-label="Project details">
     <div class="modal-backdrop"></div>
     <div class="modal-content">
-      <button class="modal-close"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      <button class="modal-close"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       <div class="modal-gallery">
         <div class="modal-gallery-images" id="modalImages">
           <!-- Images injected by JS -->
         </div>
-        <div class="modal-gallery-nav">
+      </div>
+      <div class="modal-info">
+        <span class="modal-category" id="modalCategory">Exhibition Design</span>
+        <h2 class="modal-title" id="modalTitle">Project Title</h2>
+        <p class="modal-description" id="modalDescription">Project description goes here.</p>
+        <!-- Navigation: sits between body text and the detail grid -->
+        <div class="modal-gallery-nav" id="galleryNav">
           <button class="modal-gallery-btn" id="prevBtn" aria-label="Previous image">&larr;</button>
           <div class="modal-gallery-dots" id="galleryDots">
             <!-- Dots injected by JS -->
@@ -1637,11 +1645,6 @@
           <button class="modal-gallery-btn" id="nextBtn" aria-label="Next image">&rarr;</button>
         </div>
         <p class="modal-image-caption" id="modalImageCaption"></p>
-      </div>
-      <div class="modal-info">
-        <span class="modal-category" id="modalCategory">Exhibition Design</span>
-        <h2 class="modal-title" id="modalTitle">Project Title</h2>
-        <p class="modal-description" id="modalDescription">Project description goes here.</p>
         <div class="modal-details">
           <div class="modal-detail-item">
             <h4>Year</h4>
@@ -1789,9 +1792,9 @@
       const isMobile = window.innerWidth < 768;
       const W     = PIT.offsetWidth;
       const R     = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
-      const ER    = Math.round(R * 1.45);   // expanded physics + visual radius
+      const ER    = Math.round(R * 1.7);    // expanded physics + visual radius
       const D     = R * 2;
-      const PIT_H = R * 5;
+      const PIT_H = R * 4;
       PIT.style.height    = PIT_H + 'px';
       PIT.style.minHeight = '0';
       PIT.style.overflow  = 'visible';
@@ -2004,7 +2007,7 @@
         }
         const el = bubbleEls[idx];
         el.classList.add('expanded');
-        el.style.transition = 'width 0.5s cubic-bezier(0.16,1,0.3,1), height 0.5s cubic-bezier(0.16,1,0.3,1), border-radius 0.5s cubic-bezier(0.16,1,0.3,1)';
+        el.style.transition = 'width 0.5s cubic-bezier(0.16,1,0.3,1), height 0.5s cubic-bezier(0.16,1,0.3,1)';
         el.style.width  = (ER*2) + 'px';
         el.style.height = (ER*2) + 'px';
       }
@@ -2019,7 +2022,7 @@
         }
         const el = bubbleEls[idx];
         el.classList.remove('expanded');
-        el.style.transition = 'width 0.45s cubic-bezier(0.16,1,0.3,1), height 0.45s cubic-bezier(0.16,1,0.3,1), border-radius 0.45s cubic-bezier(0.16,1,0.3,1)';
+        el.style.transition = 'width 0.45s cubic-bezier(0.16,1,0.3,1), height 0.45s cubic-bezier(0.16,1,0.3,1)';
         el.style.width  = D + 'px';
         el.style.height = D + 'px';
       }
@@ -2595,6 +2598,7 @@
 
       // Show/hide nav if single image
       const hasMultiple = currentProject.images.length > 1;
+      document.getElementById('galleryNav').style.display = hasMultiple ? 'flex' : 'none';
       prevBtn.style.display = hasMultiple ? 'flex' : 'none';
       nextBtn.style.display = hasMultiple ? 'flex' : 'none';
       galleryDots.style.display = hasMultiple ? 'flex' : 'none';
