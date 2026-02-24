@@ -523,7 +523,7 @@
     .projects {
       padding: 80px 0 0;
       position: relative;
-      overflow: hidden; /* clips balls above the section during drop */
+      z-index: 2;
     }
 
     .projects-label {
@@ -1798,16 +1798,15 @@
 
       // ── Boundaries — thick enough that fast balls can't tunnel through
       const T = 120;
-      const floor  = Bodies.rectangle(W / 2,        PIT_H + T / 2,  W + T * 2, T,     { isStatic: true, restitution: 0.4, friction: 0.3 });
-      const wallL  = Bodies.rectangle(-T / 2,       PIT_H / 2,      T,         PIT_H * 3, { isStatic: true, restitution: 0.4, friction: 0.1 });
-      const wallR  = Bodies.rectangle(W + T / 2,    PIT_H / 2,      T,         PIT_H * 3, { isStatic: true, restitution: 0.4, friction: 0.1 });
-      const ceil   = Bodies.rectangle(W / 2,        -T / 2,         W + T * 2, T,     { isStatic: true });
-      World.add(world, [floor, wallL, wallR, ceil]);
+      const floor  = Bodies.rectangle(W / 2,     PIT_H + T / 2, W + T * 2, T,        { isStatic: true, restitution: 0.35, friction: 0.3 });
+      const wallL  = Bodies.rectangle(-T / 2,    PIT_H / 2,     T,         PIT_H * 2, { isStatic: true, restitution: 0.35, friction: 0.1 });
+      const wallR  = Bodies.rectangle(W + T / 2, PIT_H / 2,     T,         PIT_H * 2, { isStatic: true, restitution: 0.35, friction: 0.1 });
+      World.add(world, [floor, wallL, wallR]);
 
-      // ── Drop positions — spread across width, staggered heights so they
-      //    don't all collide at once and ricochet off screen
+      // ── Drop positions — start inside the pit at the top, staggered
+      //    so they don't all collide at once
       const dropX = [0.18, 0.38, 0.58, 0.78, 0.50];
-      const dropY = [-D, -D * 2.2, -D, -D * 2.2, -D * 3.5];
+      const dropY = [R, R * 0.5, R * 1.2, R * 0.3, R * 1.8];
 
       const bodies = PROJECTS.map((p, i) => {
         const b = Bodies.circle(
