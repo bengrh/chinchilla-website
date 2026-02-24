@@ -524,6 +524,8 @@
       padding: 80px 0 0;
       position: relative;
       z-index: 2;
+      overflow: visible; /* allow balls to fly above the section */
+      border-bottom: 3px solid rgba(255, 255, 255, 0.85);
     }
 
     .projects-label {
@@ -644,10 +646,11 @@
       color: rgba(255,255,255,0.65);
     }
 
-    /* EXPANDED (hover) — stays circular, grows */
+    /* EXPANDED (hover) — becomes rounded rect so card text is fully legible */
     .bubble.expanded {
       z-index: 10;
       box-shadow: 0 20px 70px rgba(0,0,0,0.65);
+      border-radius: 20px;
     }
 
     .bubble.expanded .bubble-photo {
@@ -798,7 +801,7 @@
     .modal-backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(0, 0, 0, 0.85);
     }
 
     .modal-content {
@@ -1788,9 +1791,10 @@
       const R     = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
       const ER    = Math.round(R * 1.45);   // expanded physics + visual radius
       const D     = R * 2;
-      const PIT_H = R * 7;
-      PIT.style.height   = PIT_H + 'px';
-      PIT.style.overflow = 'hidden';
+      const PIT_H = R * 5;
+      PIT.style.height    = PIT_H + 'px';
+      PIT.style.minHeight = '0';
+      PIT.style.overflow  = 'visible';
 
       // Distance from page top to pit top — used to place ceiling wall
       const pitPageTop = PIT.getBoundingClientRect().top + window.scrollY;
@@ -1827,6 +1831,9 @@
 
       // Track which body is currently scaled up for hover
       let expandedIdx = -1;
+      // physicsExpanded[i] = true when body[i] has been scaled up in Matter.
+      // Guards against double-scaling on rapid mouseenter/leave.
+      const physicsExpanded = new Array(PROJECTS.length).fill(false);
       const EXPAND_SCALE = ER / R;
 
       // ── DOM bubbles
@@ -1924,10 +1931,11 @@
         touchStartPos = { x: t.clientX, y: t.clientY };
         touchMoved = false;
 
-        // Hit-test against physics bodies
-        touchGrabbed = bodies.some(b => {
+        // Hit-test against physics bodies (use actual current radius)
+        touchGrabbed = bodies.some((b, i) => {
           const dx = b.position.x - p.x, dy = b.position.y - p.y;
-          return Math.sqrt(dx*dx + dy*dy) < R + 12;
+          const cr = physicsExpanded[i] ? ER : R;
+          return Math.sqrt(dx*dx + dy*dy) < cr + 12;
         });
 
         if (touchGrabbed) {
@@ -1964,9 +1972,10 @@
             const key = bodies.reduce((hit, b, i) => {
               if (hit) return hit;
               const dx = b.position.x - p.x, dy = b.position.y - p.y;
-              return Math.sqrt(dx*dx + dy*dy) < R + 12 ? PROJECTS[i].key : null;
+              const cr = physicsExpanded[i] ? ER : R;
+              return Math.sqrt(dx*dx + dy*dy) < cr + 12 ? PROJECTS[i].key : null;
             }, null);
-            if (key) setTimeout(() => openModal(key), 10);
+            if (key) setTimeout(() => openModal(key, R), 10);
           }
         }
         touchGrabbed = false;
@@ -1988,11 +1997,14 @@
         if (expandedIdx === idx) return;
         if (expandedIdx !== -1) collapseBubble(expandedIdx);
         expandedIdx = idx;
-        // Scale up the physics body — neighbouring bodies get pushed by collision
-        Body.scale(bodies[idx], EXPAND_SCALE, EXPAND_SCALE);
+        // Scale up physics body only once — guard prevents compounding on rapid hover
+        if (!physicsExpanded[idx]) {
+          Body.scale(bodies[idx], EXPAND_SCALE, EXPAND_SCALE);
+          physicsExpanded[idx] = true;
+        }
         const el = bubbleEls[idx];
         el.classList.add('expanded');
-        el.style.transition = 'width 0.5s cubic-bezier(0.16,1,0.3,1), height 0.5s cubic-bezier(0.16,1,0.3,1)';
+        el.style.transition = 'width 0.5s cubic-bezier(0.16,1,0.3,1), height 0.5s cubic-bezier(0.16,1,0.3,1), border-radius 0.5s cubic-bezier(0.16,1,0.3,1)';
         el.style.width  = (ER*2) + 'px';
         el.style.height = (ER*2) + 'px';
       }
@@ -2000,11 +2012,14 @@
       function collapseBubble(idx) {
         if (idx < 0 || idx >= bubbleEls.length) return;
         if (expandedIdx === idx) expandedIdx = -1;
-        // Scale physics body back to original radius
-        Body.scale(bodies[idx], 1 / EXPAND_SCALE, 1 / EXPAND_SCALE);
+        // Scale physics body back only if it was actually scaled up
+        if (physicsExpanded[idx]) {
+          Body.scale(bodies[idx], 1 / EXPAND_SCALE, 1 / EXPAND_SCALE);
+          physicsExpanded[idx] = false;
+        }
         const el = bubbleEls[idx];
         el.classList.remove('expanded');
-        el.style.transition = 'width 0.45s cubic-bezier(0.16,1,0.3,1), height 0.45s cubic-bezier(0.16,1,0.3,1)';
+        el.style.transition = 'width 0.45s cubic-bezier(0.16,1,0.3,1), height 0.45s cubic-bezier(0.16,1,0.3,1), border-radius 0.45s cubic-bezier(0.16,1,0.3,1)';
         el.style.width  = D + 'px';
         el.style.height = D + 'px';
       }
@@ -2018,7 +2033,7 @@
         el.addEventListener('mouseleave', () => collapseBubble(idx));
         el.addEventListener('click', () => {
           if (wasDrag) return;
-          openModal(el.dataset.project);
+          openModal(el.dataset.project, R);
         });
       });
 
@@ -2542,9 +2557,12 @@
     }
 
     // Open Modal
-    function openModal(projectKey) {
+    function openModal(projectKey, bubbleRadius) {
       currentProject = projectsData[projectKey];
       currentImageIndex = 0;
+
+      // Apply the clicked circle's radius as the modal corner radius
+      modal.querySelector('.modal-content').style.borderRadius = (bubbleRadius || 24) + 'px';
 
       // Update content
       modalTitle.textContent = currentProject.title;
