@@ -650,14 +650,19 @@
     .bubble.expanded {
       z-index: 10;
       box-shadow: 0 20px 70px rgba(0,0,0,0.65);
+      /* Remove circular clip so card text isn't cut off at the circle edge.
+         Photo and title-bg stay circular via their own clip-path. */
+      overflow: visible;
     }
 
     .bubble.expanded .bubble-photo {
       filter: grayscale(0%);
+      clip-path: circle(50%);
     }
 
     .bubble.expanded .bubble-title-bg {
       opacity: 0;
+      clip-path: circle(50%);
     }
 
     .bubble.expanded .bubble-title {
@@ -798,13 +803,13 @@
       background: rgba(0, 0, 0, 0.85);
     }
 
-    /* Right-anchored sliding panel */
+    /* Right-anchored sliding panel — 12px gap from all screen edges */
     .modal-frame {
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: min(calc(100vw - 48px), 1280px);
+      top: 12px;
+      right: 12px;
+      bottom: 12px;
+      width: min(calc(100vw - 72px), 1280px);
       transform: translateX(calc(100% + 40px));
       transition: transform 0.55s var(--ease-premium);
     }
@@ -813,7 +818,7 @@
       transform: translateX(0);
     }
 
-    /* Inner content: flex row, fills frame height, clipped on left corners */
+    /* Inner content: flex row, fills frame height, all corners rounded */
     .modal-content {
       position: absolute;
       inset: 0;
@@ -822,9 +827,9 @@
       background: rgba(28, 28, 28, 0.97);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-radius: 20px 0 0 20px;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: -24px 0 80px rgba(0, 0, 0, 0.55);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
     }
 
     /* Close button: child of modal-frame (NOT modal-content), so never clipped */
@@ -1796,7 +1801,7 @@
       const R     = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
       const ER    = Math.round(R * 1.7);    // expanded physics + visual radius
       const D     = R * 2;
-      const PIT_H = R * 4;
+      const PIT_H = R * 3;
       PIT.style.height    = PIT_H + 'px';
       PIT.style.minHeight = '0';
       PIT.style.overflow  = 'visible';
@@ -1994,7 +1999,13 @@
         const dx = e.clientX - pointerDown.x, dy = e.clientY - pointerDown.y;
         if (dx*dx + dy*dy > 25) wasDrag = true;
       }, true);
-      PIT.addEventListener('mouseup', () => { pointerDown = null; }, true);
+      PIT.addEventListener('mouseup', () => {
+        pointerDown = null;
+        // Reset wasDrag after the click event fires (setTimeout 0 puts it at end
+        // of this event-loop turn) so the click handler still sees wasDrag=true
+        // and correctly suppresses the modal, but subsequent hovers work normally.
+        setTimeout(() => { wasDrag = false; }, 0);
+      }, true);
 
       // ── Expand / collapse — scales the physics body so Matter pushes neighbours
       function expandBubble(idx) {
