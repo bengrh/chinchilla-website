@@ -519,222 +519,160 @@
       background-clip: text;
     }
 
-    /* Projects Grid */
+    /* ── Ball-pit Projects ── */
     .projects {
-      padding: 80px 48px;
+      padding: 80px 0 0;
+      position: relative;
     }
 
-    .projects-header {
+    .projects-label {
+      font-family: monospace;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray);
+      padding: 0 48px 40px;
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 60px;
-      padding-bottom: 24px;
       border-bottom: 1px solid var(--border);
-    }
-
-    .projects-title {
-      font-family: monospace;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--gray);
-    }
-
-    .projects-count {
-      font-family: monospace;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--gray);
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 48px;
-    }
-
-    .project-category {
-      margin-bottom: 80px;
-    }
-
-    .project-category:last-child {
       margin-bottom: 0;
     }
 
-    .projects-grid-empty {
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .coming-soon {
-      font-family: monospace;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--gray-light);
-    }
-
-    @media (max-width: 768px) {
-      .projects-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .project-item::after {
-        display: none;
-      }
-
-      .project-arrow {
-        position: static;
-        opacity: 1;
-        transform: rotate(-45deg);
-        width: 40px;
-        height: 40px;
-        margin-top: 12px;
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
-
-      .project-arrow svg {
-        stroke: #FFFFFF;
-      }
-
-      .project-meta {
-        padding-top: 12px;
-        margin-top: 12px;
-      }
-    }
-
-    .project-item {
+    #ball-pit {
       position: relative;
-      background: #111111;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      overflow: hidden;
-      transition: transform 0.6s var(--ease-premium), border-color 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .project-item:hover {
-      transform: scale(1.03);
-      border-color: rgba(255, 255, 255, 0.18);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-
-    .project-image {
-      position: relative;
-      aspect-ratio: 4/3;
-      overflow: hidden;
-      border-radius: 0;
-      transition: aspect-ratio 0.6s var(--ease-premium);
-    }
-
-    .project-item:hover .project-image {
-      aspect-ratio: 3/2;
-    }
-
-    .project-image img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: grayscale(100%);
-      transition: filter 0.7s var(--ease-premium), transform 0.7s var(--ease-premium);
+      overflow: hidden;
+      /* height set by JS after physics settle */
+      min-height: 520px;
     }
 
-    .project-item:hover .project-image img {
-      filter: grayscale(0%);
-      transform: scale(1.05);
-    }
-
-    .project-item::after {
-      content: '';
+    .bubble {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      aspect-ratio: 4/3;
-      background: rgba(0, 0, 0, 0);
-      transition: background 0.5s var(--ease-premium), aspect-ratio 0.6s var(--ease-premium);
+      border-radius: 50%;
+      cursor: pointer;
+      overflow: hidden;
+      /* size + position driven by JS */
+      transition: border-radius 0.7s var(--ease-premium),
+                  width 0.7s var(--ease-premium),
+                  height 0.7s var(--ease-premium),
+                  box-shadow 0.5s ease,
+                  z-index 0s;
+      will-change: transform, width, height;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.45);
+    }
+
+    /* orange-hue tinted overlay covers photo; fades out on hover */
+    .bubble-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      transition: opacity 0.7s var(--ease-premium);
+      z-index: 2;
       pointer-events: none;
     }
 
-    .project-item:hover::after {
-      background: rgba(255, 255, 255, 0.06);
-      aspect-ratio: 3/2;
-    }
-
-    .project-overlay {
-      display: none;
-    }
-
-    .project-arrow {
+    .bubble-photo {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 44px;
-      height: 44px;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(60%);
+      transition: filter 0.7s var(--ease-premium);
+      z-index: 1;
+    }
+
+    .bubble-title {
+      position: absolute;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0;
-      transform: translateY(6px) rotate(-45deg);
-      transition: opacity 0.5s var(--ease-premium), transform 0.5s var(--ease-premium), background 0.3s ease;
-      z-index: 2;
-    }
-
-    .project-item:hover .project-arrow {
-      opacity: 1;
-      transform: translateY(0) rotate(-45deg);
-    }
-
-    .project-arrow svg {
-      width: 20px;
-      height: 20px;
-      stroke: #FFFFFF;
-    }
-
-    .project-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding: 20px 20px 20px 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
-      background: transparent;
-      transition: padding 0.6s var(--ease-premium);
-    }
-
-    .project-item:hover .project-meta {
-      padding: 20px 20px 20px 20px;
-    }
-
-    .project-info h3 {
-      font-size: 24px;
-      font-weight: 600;
+      text-align: center;
+      font-size: clamp(15px, 2vw, 22px);
+      font-weight: 700;
       letter-spacing: -0.03em;
-      margin-bottom: 4px;
+      color: #fff;
+      z-index: 3;
+      padding: 16px;
+      line-height: 1.2;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
     }
 
-    .project-info span {
-      font-family: monospace;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--gray);
+    /* expanded card content — hidden until hovered */
+    .bubble-card {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 28px;
+      z-index: 4;
+      opacity: 0;
+      transition: opacity 0.5s var(--ease-premium);
+      pointer-events: none;
     }
 
-    .project-year {
+    .bubble-card-title {
+      font-size: clamp(18px, 2.2vw, 26px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .bubble-card-desc {
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.82);
+      max-width: 32ch;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+
+    .bubble-card-open {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
       font-family: monospace;
-      font-size: 14px;
+      font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--gray);
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* HOVER STATE */
+    .bubble.expanded {
+      border-radius: 20px !important;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.65);
+      z-index: 10;
+    }
+
+    .bubble.expanded .bubble-overlay {
+      opacity: 0;
+    }
+
+    .bubble.expanded .bubble-photo {
+      filter: grayscale(0%);
+    }
+
+    .bubble.expanded .bubble-title {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+
+    .bubble.expanded .bubble-card {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 768px) {
+      #ball-pit {
+        min-height: 900px;
+      }
+      .bubble-card-desc { display: none; }
     }
 
     .project-summary {
@@ -1663,143 +1601,14 @@
     </p>
   </section>
 
-  <!-- Projects Grid -->
+  <!-- Projects Ball-Pit -->
   <section class="projects" id="projects">
-    <!-- Design/Build Category -->
-    <div class="project-category" id="design-build">
-      <div class="projects-header">
-        <h2 class="projects-title">Design/Build</h2>
-        <span class="projects-count">(02)</span>
-      </div>
-      <div class="projects-grid">
-        <article class="project-item" data-project="ids-pavilion">
-          <div class="project-image">
-            <img loading="lazy" decoding="async" src="images/ids-pavilion/IDS%20Pavilion.jpg" alt="IDS Pavilion 2025">
-          </div>
-          <div class="project-overlay">
-            <div class="project-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </div>
-          </div>
-          <div class="project-meta">
-            <div class="project-info">
-              <h3>IDS Pavilion 2025</h3>
-              <p class="project-summary">A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.</p>
-              <span>Design/Build</span>
-            </div>
-            <span class="project-year">2025</span>
-          </div>
-        </article>
-
-        <article class="project-item" data-project="tiny-house">
-          <div class="project-image">
-            <img loading="lazy" decoding="async" src="images/tiny-house/exterior.jpg" alt="Digital Fabrication Tiny House">
-          </div>
-          <div class="project-overlay">
-            <div class="project-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </div>
-          </div>
-          <div class="project-meta">
-            <div class="project-info">
-              <h3>Digital Fabrication Tiny House</h3>
-              <p class="project-summary">A fully functional tiny house with every surface CNC-milled from sustainable plywood, as seen on HGTV.</p>
-              <span>Design/Build</span>
-            </div>
-            <span class="project-year">2023</span>
-          </div>
-        </article>
-      </div>
+    <div class="projects-label">
+      <span>Projects</span>
+      <span>(05)</span>
     </div>
-
-    <!-- Product Design Category -->
-    <div class="project-category" id="product-design">
-      <div class="projects-header">
-        <h2 class="projects-title">Product Design</h2>
-        <span class="projects-count">(02)</span>
-      </div>
-      <div class="projects-grid">
-        <article class="project-item" data-project="wall-art">
-          <div class="project-image">
-            <img loading="lazy" decoding="async" src="images/wall-art/front.jpg" alt="Wall Art">
-          </div>
-          <div class="project-overlay">
-            <div class="project-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </div>
-          </div>
-          <div class="project-meta">
-            <div class="project-info">
-              <h3>Wall Art</h3>
-              <p class="project-summary">Sculptural cedar wall piece with burl inlays, shaped parametrically and finished by hand.</p>
-              <span>Product Design</span>
-            </div>
-            <span class="project-year">2026</span>
-          </div>
-        </article>
-
-        <article class="project-item" data-project="chair">
-          <div class="project-image" style="aspect-ratio: 4/3;">
-            <img src="images/chair/installed.jpg" alt="Custom white oak dining chair" style="width:100%;height:100%;object-fit:cover;display:block;">
-          </div>
-          <div class="project-overlay">
-            <div class="project-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </div>
-          </div>
-          <div class="project-meta">
-            <div class="project-info">
-              <h3>Chair</h3>
-              <p class="project-summary">Solid white oak dining chair with a hand-shaped wraparound back and cognac leather seat.</p>
-              <span>Product Design</span>
-            </div>
-            <span class="project-year">2025</span>
-          </div>
-        </article>
-      </div>
-    </div>
-
-    <!-- Brand Identity Category -->
-    <div class="project-category" id="brand-identity">
-      <div class="projects-header">
-        <h2 class="projects-title">Brand Identity</h2>
-        <span class="projects-count">(01)</span>
-      </div>
-      <div class="projects-grid">
-        <article class="project-item" data-project="sage-hayward">
-          <div class="project-image">
-            <img loading="lazy" decoding="async" src="images/sage-hayward/sign.jpg" alt="Sage Hayward Vineyards Branding">
-          </div>
-          <div class="project-overlay">
-            <div class="project-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </div>
-          </div>
-          <div class="project-meta">
-            <div class="project-info">
-              <h3>Sage Hayward Vineyards</h3>
-              <p class="project-summary">Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.</p>
-              <span>Brand Identity</span>
-            </div>
-            <span class="project-year">2024</span>
-          </div>
-        </article>
-      </div>
+    <div id="ball-pit">
+      <!-- bubbles injected by JS -->
     </div>
   </section>
 
@@ -1959,7 +1768,249 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script>
+    // ── Ball-pit Projects ──────────────────────────────────────────────
+    (function () {
+      const PIT = document.getElementById('ball-pit');
+      if (!PIT || typeof Matter === 'undefined') return;
+
+      // Project data for bubbles
+      const PROJECTS = [
+        {
+          key: 'ids-pavilion',
+          title: 'IDS Pavilion',
+          photo: 'images/ids-pavilion/IDS%20Pavilion.jpg',
+          desc: 'A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.',
+          color: 'rgba(200,80,0,0.72)'
+        },
+        {
+          key: 'tiny-house',
+          title: 'Tiny House',
+          photo: 'images/tiny-house/exterior.jpg',
+          desc: 'Every surface CNC-milled from sustainable plywood — a fully functional tiny house as seen on HGTV.',
+          color: 'rgba(210,100,10,0.68)'
+        },
+        {
+          key: 'wall-art',
+          title: 'Wall Art',
+          photo: 'images/wall-art/front.jpg',
+          desc: 'Sculptural cedar wall piece with burl inlays, shaped parametrically and finished by hand.',
+          color: 'rgba(190,60,0,0.72)'
+        },
+        {
+          key: 'chair',
+          title: 'Chair',
+          photo: 'images/chair/installed.jpg',
+          desc: 'Solid white oak dining chair with a hand-shaped wraparound back and cognac leather seat.',
+          color: 'rgba(220,120,20,0.65)'
+        },
+        {
+          key: 'sage-hayward',
+          title: 'Winery Branding',
+          photo: 'images/sage-hayward/sign.jpg',
+          desc: 'Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.',
+          color: 'rgba(180,50,0,0.70)'
+        }
+      ];
+
+      // Desired resting layout: centre positions as fractions [cx, cy] of pit width/height
+      // arranged like the reference image: 2 top, 1 centre, 2 bottom
+      const LAYOUT = [
+        [0.22, 0.26],
+        [0.68, 0.22],
+        [0.46, 0.52],
+        [0.20, 0.76],
+        [0.72, 0.76]
+      ];
+
+      const isMobile = window.innerWidth < 768;
+      const R = isMobile ? 110 : 155; // bubble radius px
+      const DIAM = R * 2;
+
+      // pit height = enough for 3 rows
+      const PIT_H = isMobile ? R * 8.5 : R * 6.2;
+      PIT.style.height = PIT_H + 'px';
+
+      const W = PIT.offsetWidth;
+
+      // ── Create bubble DOM elements
+      const bubbleEls = PROJECTS.map((p, i) => {
+        const el = document.createElement('div');
+        el.className = 'bubble';
+        el.dataset.project = p.key;
+        el.style.width = DIAM + 'px';
+        el.style.height = DIAM + 'px';
+        // start above the pit
+        el.style.left = (LAYOUT[i][0] * W - R) + 'px';
+        el.style.top = (-DIAM - Math.random() * 300) + 'px';
+        el.style.transition = 'none'; // physics drives position initially
+
+        el.innerHTML = `
+          <img class="bubble-photo" src="${p.photo}" alt="${p.title}">
+          <div class="bubble-overlay" style="background:${p.color};"></div>
+          <div class="bubble-title">${p.title}</div>
+          <div class="bubble-card">
+            <div class="bubble-card-title">${p.title}</div>
+            <div class="bubble-card-desc">${p.desc}</div>
+            <span class="bubble-card-open">View project ↗</span>
+          </div>`;
+
+        PIT.appendChild(el);
+        return el;
+      });
+
+      // ── Matter.js physics
+      const { Engine, Render: MRender, Runner, Bodies, Body, Events, World, Mouse, MouseConstraint } = Matter;
+
+      const engine = Engine.create({ gravity: { y: 2.2 } });
+      const world = engine.world;
+
+      // Invisible floor + walls
+      const thickness = 60;
+      const floor   = Bodies.rectangle(W / 2, PIT_H + thickness / 2, W * 3, thickness, { isStatic: true, restitution: 0.35 });
+      const wallL   = Bodies.rectangle(-thickness / 2, PIT_H / 2, thickness, PIT_H * 3, { isStatic: true });
+      const wallR   = Bodies.rectangle(W + thickness / 2, PIT_H / 2, thickness, PIT_H * 3, { isStatic: true });
+      World.add(world, [floor, wallL, wallR]);
+
+      // One circular body per bubble, starting above
+      const bodies = PROJECTS.map((p, i) => {
+        const cx = LAYOUT[i][0] * W;
+        const cy = -DIAM - Math.random() * 350;
+        const b = Bodies.circle(cx, cy, R, {
+          restitution: 0.45,
+          friction: 0.05,
+          frictionAir: 0.018,
+          density: 0.002
+        });
+        return b;
+      });
+      World.add(world, bodies);
+
+      // Physics loop — sync DOM to physics bodies
+      let settled = false;
+      let settleTimer = null;
+      let expandedIdx = -1;
+
+      const runner = Runner.create();
+      Runner.run(runner, engine);
+
+      function syncDOM() {
+        bodies.forEach((b, i) => {
+          if (i === expandedIdx) return; // JS controls expanded bubble
+          const el = bubbleEls[i];
+          el.style.left = (b.position.x - R) + 'px';
+          el.style.top  = (b.position.y - R) + 'px';
+        });
+      }
+
+      Events.on(engine, 'afterUpdate', syncDOM);
+
+      // After ~2.4 s let physics settle: freeze bodies, enable CSS transitions
+      setTimeout(() => {
+        settled = true;
+        bodies.forEach(b => Body.setStatic(b, true));
+        bubbleEls.forEach(el => {
+          el.style.transition = ''; // restore CSS transitions
+        });
+        attachHover();
+      }, 2400);
+
+      // ── Hover / expand logic (after settle)
+      function attachHover() {
+        bubbleEls.forEach((el, idx) => {
+          el.addEventListener('mouseenter', () => expandBubble(idx));
+          el.addEventListener('mouseleave', () => collapseBubble(idx));
+          el.addEventListener('click', () => {
+            // open the modal (reuse existing modal logic)
+            const key = el.dataset.project;
+            const event = new CustomEvent('openProject', { detail: key });
+            document.dispatchEvent(event);
+          });
+        });
+      }
+
+      const EXPAND_R = isMobile ? 160 : 220; // expanded radius
+      const EXPAND_DIAM = EXPAND_R * 2;
+
+      function expandBubble(idx) {
+        if (expandedIdx === idx) return;
+        collapseBubble(expandedIdx);
+        expandedIdx = idx;
+
+        const el = bubbleEls[idx];
+        const body = bodies[idx];
+
+        el.classList.add('expanded');
+        el.style.width  = EXPAND_DIAM + 'px';
+        el.style.height = EXPAND_DIAM + 'px';
+        // keep centred on current position
+        const cx = body.position.x;
+        const cy = body.position.y;
+        el.style.left = (cx - EXPAND_R) + 'px';
+        el.style.top  = (cy - EXPAND_R) + 'px';
+
+        // Shove neighbours
+        bodies.forEach((b, i) => {
+          if (i === idx) return;
+          const dx = b.position.x - cx;
+          const dy = b.position.y - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const shove = Math.max(0, (EXPAND_R + R + 20 - dist)); // overlap amount
+          if (shove > 0) {
+            const nx = dx / dist;
+            const ny = dy / dist;
+            Body.setStatic(b, false);
+            Body.applyForce(b, b.position, { x: nx * shove * 0.0008, y: ny * shove * 0.0008 });
+            // re-freeze after brief physics run
+            setTimeout(() => {
+              Body.setVelocity(b, { x: 0, y: 0 });
+              Body.setStatic(b, true);
+              syncDOM();
+            }, 700);
+          }
+        });
+      }
+
+      function collapseBubble(idx) {
+        if (idx < 0 || idx >= bubbleEls.length) return;
+        expandedIdx = -1;
+        const el = bubbleEls[idx];
+        const body = bodies[idx];
+
+        el.classList.remove('expanded');
+        el.style.width  = DIAM + 'px';
+        el.style.height = DIAM + 'px';
+        const cx = body.position.x;
+        const cy = body.position.y;
+        el.style.left = (cx - R) + 'px';
+        el.style.top  = (cy - R) + 'px';
+
+        // Let shoved neighbours bounce back (brief physics)
+        bodies.forEach((b, i) => {
+          if (i === idx) return;
+          Body.setStatic(b, false);
+          setTimeout(() => {
+            Body.setVelocity(b, { x: 0, y: 0 });
+            Body.setStatic(b, true);
+            syncDOM();
+          }, 650);
+        });
+      }
+
+      // Listen for modal open events from bubble clicks
+      document.addEventListener('openProject', e => {
+        const key = e.detail;
+        const item = document.querySelector('[data-project="' + key + '"].bubble');
+        if (item) {
+          // Delegate to existing modal open handler
+          const fakeArticle = document.createElement('div');
+          fakeArticle.dataset.project = key;
+          fakeArticle.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        }
+      });
+    })();
+
     // Parallax Dot Grid — with upward drift and cursor repulsion
     (function() {
       const canvas = document.getElementById('dotGrid');
@@ -2085,7 +2136,7 @@
     animateCursor();
 
     // Cursor hover effect
-    const hoverElements = document.querySelectorAll('a, button, .project-item, .marquee-card, .team-card');
+    const hoverElements = document.querySelectorAll('a, button, .project-item, .bubble, .marquee-card, .team-card');
     hoverElements.forEach(el => {
       el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
@@ -2298,7 +2349,7 @@
     // Project Data
     const projectsData = {
       'ids-pavilion': {
-        title: 'IDS Pavilion 2025',
+        title: 'IDS Pavilion',
         category: 'Design/Build',
         year: '2025',
         client: 'Interior Design Show',
@@ -2322,7 +2373,7 @@
         externalMedia: []
       },
       'tiny-house': {
-        title: 'Digital Fabrication Tiny House',
+        title: 'Tiny House',
         category: 'Design/Build',
         year: '2023',
         client: 'Research Project',
@@ -2393,7 +2444,7 @@
         externalMedia: []
       },
       'sage-hayward': {
-        title: 'Sage Hayward Vineyards',
+        title: 'Winery Branding',
         category: 'Brand Identity',
         year: '2024',
         client: 'Sage Hayward Vineyards',
@@ -2585,8 +2636,8 @@
       goToImage(currentImageIndex - 1);
     }
 
-    // Event Listeners
-    document.querySelectorAll('.project-item').forEach(item => {
+    // Event Listeners — project-item (legacy) + bubble
+    document.querySelectorAll('.project-item, .bubble').forEach(item => {
       const projectKey = item.dataset.project;
       item.addEventListener('click', () => openModal(projectKey));
     });
