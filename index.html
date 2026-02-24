@@ -650,19 +650,15 @@
     .bubble.expanded {
       z-index: 10;
       box-shadow: 0 20px 70px rgba(0,0,0,0.65);
-      /* Remove circular clip so card text isn't cut off at the circle edge.
-         Photo and title-bg stay circular via their own clip-path. */
-      overflow: visible;
+      /* overflow:hidden inherited from .bubble — circular clip stays on */
     }
 
     .bubble.expanded .bubble-photo {
       filter: grayscale(0%);
-      clip-path: circle(50%);
     }
 
     .bubble.expanded .bubble-title-bg {
       opacity: 0;
-      clip-path: circle(50%);
     }
 
     .bubble.expanded .bubble-title {
@@ -673,6 +669,12 @@
     .bubble.expanded .bubble-card {
       opacity: 1;
       pointer-events: auto;
+      /* Center content vertically so text sits in the circle's widest zone.
+         22% side padding scales with bubble size to stay inside the curve. */
+      justify-content: center;
+      text-align: center;
+      padding: 16px 22%;
+      background: radial-gradient(ellipse at 50% 60%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.0) 72%);
     }
 
     @media (max-width: 768px) {
@@ -705,6 +707,84 @@
       padding: 80px 48px 40px;
     }
 
+    /* Outer flex: sliding panels left, calendar right */
+    .footer-main {
+      display: flex;
+      gap: 60px;
+      align-items: flex-start;
+    }
+
+    /* Panels wrap clips the sliding animation */
+    .footer-content-wrap {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Default footer content — slides right on CTA activation */
+    .footer-default {
+      transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+    }
+
+    footer.cta-active .footer-default {
+      transform: translateX(110%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* CTA panel — slides in from left */
+    .footer-cta {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transform: translateX(-100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+    }
+
+    footer.cta-active .footer-cta {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .footer-cta-title {
+      font-size: clamp(28px, 5vw, 60px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      margin-bottom: 40px;
+      color: #F0F0F0;
+    }
+
+    .footer-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 36px;
+      background: #F97316;
+      color: #fff;
+      border-radius: 100px;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      width: fit-content;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .footer-cta-btn:hover {
+      background: #ea6c0a;
+      transform: scale(1.03);
+    }
+
     .footer-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -713,6 +793,7 @@
     }
 
     @media (max-width: 768px) {
+      .footer-main { flex-direction: column; gap: 48px; }
       .footer-grid {
         grid-template-columns: 1fr;
         gap: 48px;
@@ -781,6 +862,44 @@
       font-size: 14px;
       color: #A0A0A0;
     }
+
+    /* Calendar */
+    .footer-calendar-wrap {
+      flex-shrink: 0;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 14px;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+
+    .footer-calendar-wrap:hover {
+      opacity: 0.75;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 13px);
+      gap: 7px;
+    }
+
+    .cal-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      transition: transform 0.2s ease;
+    }
+
+    .cal-dot:hover { transform: scale(1.35); }
+
+    /* Past days in month */
+    .cal-dot.cal-past   { background: #ffffff; }
+    /* Today */
+    .cal-dot.cal-today  { background: #F97316; }
+    /* Future days in month */
+    .cal-dot.cal-future { background: rgba(255, 255, 255, 0.25); }
+    /* Days outside current month */
+    .cal-dot.cal-outside { background: #2d2d2d; }
 
     /* Project Modal */
     .modal {
@@ -1136,6 +1255,7 @@
       flex-direction: column-reverse;
       align-items: center;
       gap: 16px;
+      align-self: center;
     }
 
     .team-reveal-btn {
@@ -1740,41 +1860,66 @@
   </section>
 
   <!-- Footer -->
-  <footer>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <h2>Chinchilla<br>Design</h2>
-        <p>A creative studio focused on interior design, digital fabrication, and art direction. Based in Vancouver.</p>
+  <footer id="siteFooter">
+    <div class="footer-main">
+
+      <!-- Sliding panels: default content + CTA -->
+      <div class="footer-content-wrap">
+
+        <!-- Default footer content -->
+        <div class="footer-default" id="footerDefault">
+          <div class="footer-grid">
+            <div class="footer-brand">
+              <h2>Chinchilla<br>Design</h2>
+              <p>A creative studio focused on interior design, digital fabrication, and art direction. Based in Vancouver.</p>
+            </div>
+            <div class="footer-col">
+              <h4>Contact</h4>
+              <ul>
+                <li>
+                  <a href="https://instagram.com/benhaywarddesign" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; font-size: 18px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                    Instagram
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:contact@chinchilla.design" style="display: inline-flex; align-items: center; gap: 10px; font-size: 18px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    contact@chinchilla.design
+                  </a>
+                </li>
+                <li id="footer-phone"></li>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <span>&copy; 2026 Chinchilla Design</span>
+            <span>Vancouver, BC</span>
+          </div>
+        </div>
+
+        <!-- CTA panel — revealed when calendar is clicked -->
+        <div class="footer-cta" id="footerCta">
+          <h2 class="footer-cta-title">What should we make today?</h2>
+          <a href="mailto:contact@chinchilla.design" class="footer-cta-btn">Book an Appointment</a>
+        </div>
+
       </div>
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <ul>
-          <li>
-            <a href="https://instagram.com/benhaywarddesign" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; font-size: 18px;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
-              Instagram
-            </a>
-          </li>
-          <li>
-            <a href="mailto:contact@chinchilla.design" style="display: inline-flex; align-items: center; gap: 10px; font-size: 18px;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-              contact@chinchilla.design
-            </a>
-          </li>
-          <li id="footer-phone"></li>
-        </ul>
+
+      <!-- Calendar — stays in place during slide -->
+      <div class="footer-calendar-wrap" id="footerCalendar" title="Click to get in touch">
+        <div class="cal-grid" id="calGrid">
+          <!-- 35 dots injected by JS -->
+        </div>
       </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 Chinchilla Design</span>
-      <span>Vancouver, BC</span>
+
     </div>
   </footer>
 
@@ -1801,7 +1946,7 @@
       const R     = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
       const ER    = Math.round(R * 1.7);    // expanded physics + visual radius
       const D     = R * 2;
-      const PIT_H = R * 3;
+      const PIT_H = R * 2.5;
       PIT.style.height    = PIT_H + 'px';
       PIT.style.minHeight = '0';
       PIT.style.overflow  = 'visible';
@@ -2683,6 +2828,49 @@
       btn.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
 
+  </script>
+
+  <!-- Footer Calendar -->
+  <script>
+  (function () {
+    var grid    = document.getElementById('calGrid');
+    var calWrap = document.getElementById('footerCalendar');
+    var footer  = document.getElementById('siteFooter');
+
+    function buildCalendar() {
+      var now     = new Date();
+      var todayMs = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+      var first   = new Date(now.getFullYear(), now.getMonth(), 1);
+      // Week starts Sunday
+      var startOffset = first.getDay(); // 0 = Sun
+      var start = new Date(first);
+      start.setDate(start.getDate() - startOffset);
+
+      grid.innerHTML = '';
+      for (var i = 0; i < 35; i++) {
+        var d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+        var dot = document.createElement('div');
+        dot.className = 'cal-dot';
+
+        if (d.getMonth() !== now.getMonth()) {
+          dot.classList.add('cal-outside');
+        } else {
+          var dMs = d.getTime();
+          if (dMs === todayMs)      dot.classList.add('cal-today');
+          else if (dMs < todayMs)   dot.classList.add('cal-past');
+          else                      dot.classList.add('cal-future');
+        }
+        grid.appendChild(dot);
+      }
+    }
+
+    buildCalendar();
+
+    // Toggle CTA panel when calendar is clicked
+    calWrap.addEventListener('click', function () {
+      footer.classList.toggle('cta-active');
+    });
+  })();
   </script>
 </body>
 </html>
