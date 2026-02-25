@@ -535,6 +535,7 @@
     }
 
     .projects-bottom {
+      position: relative;
       display: flex;
       flex-direction: column;
       background: rgba(0, 0, 0, 0.5);
@@ -546,12 +547,31 @@
       overflow: hidden;
       width: 100%;
       pointer-events: none; /* decorative only */
-      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .projects.hovered .projects-bottom {
-      border-radius: 20px;
+    /* "Projects" label shown at rest */
+    .projects-bottom::before {
+      content: 'Projects';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    /* Fade label out when a bubble is hovered */
+    .projects.hovered .projects-bottom::before {
+      opacity: 0;
     }
 
     /* Content inside the pill — revealed as pill expands */
@@ -561,6 +581,12 @@
       justify-content: center;
       padding: 12px 32px 16px;
       gap: 6px;
+      opacity: 0;
+      transition: opacity 0.2s ease 0.15s;
+    }
+
+    .projects.hovered .projects-hover-panel {
+      opacity: 1;
     }
 
     .projects-hover-title {
@@ -728,15 +754,6 @@
       max-width: 36ch;
     }
 
-    .modal-image-caption {
-      font-size: 12px;
-      font-family: monospace;
-      letter-spacing: 0.04em;
-      color: rgba(255, 255, 255, 0.5);
-      text-align: left;
-      padding: 0 0 20px;
-      transition: opacity 0.3s ease;
-    }
 
     /* Footer */
     footer {
@@ -1850,7 +1867,6 @@
             <span class="modal-category" id="modalCategory">Exhibition Design</span>
             <h2 class="modal-title" id="modalTitle">Project Title</h2>
             <p class="modal-description" id="modalDescription">Project description goes here.</p>
-            <p class="modal-image-caption" id="modalImageCaption"></p>
             <div class="modal-details">
               <div class="modal-detail-item">
                 <h4>Year</h4>
@@ -2850,7 +2866,6 @@
     const modalServices = document.getElementById('modalServices');
     const modalStatus = document.getElementById('modalStatus');
     const modalExternalMedia = document.getElementById('modalExternalMedia');
-    const modalImageCaption = document.getElementById('modalImageCaption');
 
     let currentImageIndex = 0;
     let currentProject = null;
@@ -2867,7 +2882,6 @@
       modalClient.textContent = currentProject.client;
       modalServices.textContent = currentProject.services;
       modalStatus.textContent = currentProject.status;
-      modalImageCaption.textContent = (currentProject.imageCaptions && currentProject.imageCaptions[0]) || '';
 
       // Build gallery (support both images and videos)
       modalImages.innerHTML = currentProject.images.map((src, i) => {
@@ -2948,8 +2962,6 @@
       media[currentImageIndex].classList.add('active');
       dots[currentImageIndex].classList.add('active');
 
-      // Update caption
-      modalImageCaption.textContent = (currentProject.imageCaptions && currentProject.imageCaptions[currentImageIndex]) || '';
     }
 
     function nextImage() {
