@@ -525,20 +525,49 @@
       position: relative;
       z-index: 2;
       overflow: visible; /* allow balls to fly above the section */
-      border-bottom: 3px solid rgba(255, 255, 255, 0.85);
+      /* border-bottom removed — the rule lives inside .projects-label */
     }
 
+    /* Label anchored to the bottom of the section, straddling the border line */
     .projects-label {
+      position: absolute;
+      bottom: -8px; /* push down so "j" descender hangs visibly below the rule */
+      left: 48px;
+      right: 48px;
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      overflow: visible;
+      padding: 0;
+      margin-bottom: 0;
+      z-index: 3;
+    }
+
+    .projects-label-text {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(16px, 2vw, 24px);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      color: #fff;
+      line-height: 1;
+      flex-shrink: 0;
+      overflow: visible;
+    }
+
+    .projects-label-rule {
+      flex: 1;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.85);
+      margin-bottom: 4px; /* positions rule at approximately text baseline */
+    }
+
+    .projects-label-count {
       font-family: monospace;
       font-size: 14px;
-      text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--gray);
-      padding: 0 48px 40px;
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 0;
+      flex-shrink: 0;
+      margin-bottom: 4px; /* aligns with the rule */
     }
 
     #ball-pit {
@@ -675,7 +704,7 @@
       justify-content: flex-start;
       text-align: left;
       padding: 0;
-      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.75) 50%);
+      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.38) 50%);
     }
 
     .bubble.expanded .bubble-card-title {
@@ -812,10 +841,48 @@
     }
 
     @media (max-width: 768px) {
-      .footer-main { flex-direction: column; gap: 48px; }
+      /* Tighter side padding on mobile to give content room */
+      footer { padding: 60px 24px 40px; }
+
+      /* Mobile footer: flex ROW — small calendar left, content right */
+      .footer-main {
+        flex-direction: row;
+        gap: 20px;
+        align-items: flex-start;
+        /* Clip container for the mobile slide animation */
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Remove relative from content-wrap on mobile so the CTA
+         positions itself relative to footer-main instead */
+      .footer-content-wrap {
+        position: static;
+        overflow: visible;
+      }
+
+      /* Calendar slides right along with footer-default on mobile */
+      .footer-calendar-wrap {
+        flex-shrink: 0;
+        padding: 6px;
+        transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+      }
+
+      footer.cta-active .footer-calendar-wrap {
+        transform: translateX(300%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
       .footer-grid {
         grid-template-columns: 1fr;
-        gap: 48px;
+        gap: 32px;
+        margin-bottom: 40px;
+      }
+
+      /* Brand heading smaller to fit the narrower column */
+      .footer-brand h2 {
+        font-size: clamp(22px, 6vw, 32px);
       }
     }
 
@@ -920,6 +987,18 @@
     /* Days outside current month */
     .cal-dot.cal-outside { background: #2d2d2d; }
 
+    /* Mobile: smaller calendar dots — must come after base definitions to win */
+    @media (max-width: 768px) {
+      .cal-grid {
+        grid-template-columns: repeat(7, 10px);
+        gap: 4px;
+      }
+      .cal-dot {
+        width: 10px;
+        height: 10px;
+      }
+    }
+
     /* Project Modal */
     .modal {
       position: fixed;
@@ -941,12 +1020,12 @@
       background: rgba(0, 0, 0, 0.85);
     }
 
-    /* Right-anchored sliding panel — 50px top/bottom, 12px right gap */
+    /* Right-anchored sliding panel — 100px top/bottom, 12px right gap */
     .modal-frame {
       position: absolute;
-      top: 50px;
+      top: 100px;
       right: 12px;
-      bottom: 50px;
+      bottom: 100px;
       width: min(calc(100vw - 72px), 1280px);
       transform: translateX(calc(100% + 40px));
       transition: transform 0.55s var(--ease-premium);
@@ -1751,8 +1830,9 @@
   <!-- Projects Ball-Pit -->
   <section class="projects" id="projects">
     <div class="projects-label">
-      <span>Projects</span>
-      <span>(05)</span>
+      <span class="projects-label-text">Projects</span>
+      <div class="projects-label-rule"></div>
+      <span class="projects-label-count">(05)</span>
     </div>
     <div id="ball-pit">
       <!-- bubbles injected by JS -->
