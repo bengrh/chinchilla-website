@@ -2927,9 +2927,12 @@
     }
 
     // Open Modal
-    function openModal(projectKey, bubbleRadius) {
+    function openModal(projectKey, bubbleRadius, startImageSrc) {
       currentProject = projectsData[projectKey];
-      currentImageIndex = 0;
+      const startIdx = startImageSrc
+        ? Math.max(0, currentProject.images.findIndex(s => s === startImageSrc))
+        : 0;
+      currentImageIndex = startIdx;
       modalFrame.style.width = '';
 
       // Update content
@@ -2945,14 +2948,14 @@
       modalImages.innerHTML = currentProject.images.map((src, i) => {
         const isVideo = src.endsWith('.mp4') || src.endsWith('.webm') || src.endsWith('.mov');
         if (isVideo) {
-          return `<video src="${src}" class="${i === 0 ? 'active' : ''}" autoplay loop muted playsinline></video>`;
+          return `<video src="${src}" class="${i === startIdx ? 'active' : ''}" autoplay loop muted playsinline></video>`;
         }
-        return `<img src="${src}" alt="${currentProject.title}" class="${i === 0 ? 'active' : ''}">`;
+        return `<img src="${src}" alt="${currentProject.title}" class="${i === startIdx ? 'active' : ''}">`;
       }).join('');
 
       // Build dots
       galleryDots.innerHTML = currentProject.images.map((_, i) =>
-        `<button class="modal-gallery-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></button>`
+        `<button class="modal-gallery-dot ${i === startIdx ? 'active' : ''}" data-index="${i}"></button>`
       ).join('');
 
       // Add dot listeners
@@ -3055,10 +3058,13 @@
       item.addEventListener('click', () => openModal(projectKey));
     });
 
-    // Marquee cards link to their respective projects
+    // Marquee cards link to their respective projects, opening at the clicked image
     document.querySelectorAll('.marquee-card').forEach(card => {
       card.style.cursor = 'none';
-      card.addEventListener('click', () => openModal(card.dataset.project));
+      card.addEventListener('click', () => {
+        const imgSrc = card.querySelector('img')?.getAttribute('src');
+        openModal(card.dataset.project, null, imgSrc);
+      });
     });
 
     modalClose.addEventListener('click', closeModal);
