@@ -669,12 +669,31 @@
     .bubble.expanded .bubble-card {
       opacity: 1;
       pointer-events: auto;
-      /* Center content vertically so text sits in the circle's widest zone.
-         22% side padding scales with bubble size to stay inside the curve. */
-      justify-content: center;
-      text-align: center;
-      padding: 16px 22%;
-      background: radial-gradient(ellipse at 50% 60%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.0) 72%);
+      /* Split layout: title in top 50%, description in bottom 50%.
+         Dark translucent bg on lower half; 24% side padding keeps text
+         safely inside the circular clip at all bubble sizes. */
+      justify-content: flex-start;
+      text-align: left;
+      padding: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.75) 50%);
+    }
+
+    .bubble.expanded .bubble-card-title {
+      flex: 0 0 50%;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 24% 10px;
+      margin-bottom: 0;
+    }
+
+    .bubble.expanded .bubble-card-desc {
+      flex: 1;
+      padding: 10px 24% 0;
+      overflow: hidden;
+    }
+
+    .bubble.expanded .bubble-card-open {
+      display: none;
     }
 
     @media (max-width: 768px) {
@@ -879,13 +898,13 @@
 
     .cal-grid {
       display: grid;
-      grid-template-columns: repeat(7, 13px);
+      grid-template-columns: repeat(7, 26px);
       gap: 7px;
     }
 
     .cal-dot {
-      width: 13px;
-      height: 13px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       transition: transform 0.2s ease;
     }
@@ -922,12 +941,12 @@
       background: rgba(0, 0, 0, 0.85);
     }
 
-    /* Right-anchored sliding panel — 12px gap from all screen edges */
+    /* Right-anchored sliding panel — 50px top/bottom, 12px right gap */
     .modal-frame {
       position: absolute;
-      top: 12px;
+      top: 50px;
       right: 12px;
-      bottom: 12px;
+      bottom: 50px;
       width: min(calc(100vw - 72px), 1280px);
       transform: translateX(calc(100% + 40px));
       transition: transform 0.55s var(--ease-premium);
@@ -1863,6 +1882,13 @@
   <footer id="siteFooter">
     <div class="footer-main">
 
+      <!-- Calendar — stays in place during slide -->
+      <div class="footer-calendar-wrap" id="footerCalendar" title="Click to get in touch">
+        <div class="cal-grid" id="calGrid">
+          <!-- 35 dots injected by JS -->
+        </div>
+      </div>
+
       <!-- Sliding panels: default content + CTA -->
       <div class="footer-content-wrap">
 
@@ -1911,13 +1937,6 @@
           <a href="mailto:contact@chinchilla.design" class="footer-cta-btn">Book an Appointment</a>
         </div>
 
-      </div>
-
-      <!-- Calendar — stays in place during slide -->
-      <div class="footer-calendar-wrap" id="footerCalendar" title="Click to get in touch">
-        <div class="cal-grid" id="calGrid">
-          <!-- 35 dots injected by JS -->
-        </div>
       </div>
 
     </div>
