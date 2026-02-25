@@ -823,12 +823,17 @@
         align-items: center;
       }
 
-      /* Calendar slides away on mobile when CTA is active */
-      #contact.cta-active .contact-calendar-wrap {
-        transform: translateX(300%);
-        opacity: 0;
-        pointer-events: none;
+      /* Shrink title so "Get in touch" fits on one line beside the calendar */
+      .contact-title {
+        font-size: 22px;
       }
+
+      /* CTA panel: remove left indent so content isn't pushed off-screen */
+      .contact-cta {
+        padding-left: 0;
+      }
+
+      /* Calendar stays put on mobile when CTA is active */
 
       .footer-grid {
         grid-template-columns: 1fr;
