@@ -821,6 +821,7 @@
       .contact-main {
         gap: 20px;
         align-items: center;
+        flex-wrap: wrap;
       }
 
       /* Shrink title so "Get in touch" fits on one line beside the calendar */
@@ -831,6 +832,45 @@
       /* CTA panel: remove left indent so content isn't pushed off-screen */
       .contact-cta {
         padding-left: 0;
+      }
+
+      /* Hide email and desktop CTA button from their original spots on mobile */
+      .contact-default .contact-email { display: none; }
+      .contact-cta-btn-desktop { display: none; }
+
+      /* Mobile action row: full-width, centred below calendar+text row */
+      .contact-mobile-action {
+        display: flex;
+        position: relative;
+        overflow: hidden;
+        justify-content: center;
+        align-items: center;
+        flex-basis: 100%;
+        min-height: 44px;
+      }
+
+      .contact-mobile-email {
+        transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+      }
+
+      .contact-mobile-btn {
+        position: absolute;
+        transform: translateX(-110%);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+      }
+
+      #contact.cta-active .contact-mobile-email {
+        transform: translateX(110%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      #contact.cta-active .contact-mobile-btn {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
       }
 
       /* Calendar stays put on mobile when CTA is active */
@@ -973,7 +1013,7 @@
       top: 50px;
       right: 12px;
       bottom: 50px;
-      width: min(calc(100vw - 72px), 1280px);
+      width: min(calc(100vw - 24px), 1280px);
       transform: translateX(calc(100% + 40px));
       transition: transform 0.55s var(--ease-premium),
                   width 0.45s var(--ease-premium);
@@ -1602,6 +1642,9 @@
       pointer-events: auto;
     }
 
+    /* Mobile action row — hidden on desktop */
+    .contact-mobile-action { display: none; }
+
     .contact-title {
       font-size: clamp(32px, 5vw, 56px);
       font-weight: 700;
@@ -2003,9 +2046,15 @@
         <!-- CTA panel — revealed when calendar is clicked -->
         <div class="contact-cta" id="contactCta">
           <h2 class="footer-cta-title">What should we make today?</h2>
-          <a href="mailto:contact@chinchilla.design" class="footer-cta-btn">Book an Appointment</a>
+          <a href="mailto:contact@chinchilla.design" class="footer-cta-btn contact-cta-btn-desktop">Book an Appointment</a>
         </div>
 
+      </div>
+
+      <!-- Mobile only: email / button centered full-width below the calendar row -->
+      <div class="contact-mobile-action">
+        <a href="mailto:contact@chinchilla.design" class="contact-email contact-mobile-email">contact@chinchilla.design</a>
+        <a href="mailto:contact@chinchilla.design" class="footer-cta-btn contact-mobile-btn">Book an Appointment</a>
       </div>
 
     </div>
@@ -2752,6 +2801,12 @@
 
     teamRevealBtn.addEventListener('click', () => {
       aboutContainer.classList.add('show-team');
+      // On mobile, scroll to top of team section after it reveals
+      if (window.innerWidth < 769) {
+        setTimeout(() => {
+          document.getElementById('teamSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
+      }
     });
 
     teamCloseBtn.addEventListener('click', () => {
@@ -2912,7 +2967,7 @@
       const frameH = modalFrame.offsetHeight;
       if (!frameH) return;
       const infoW = 420;
-      const maxW = window.innerWidth - 24;
+      const maxW = Math.min(window.innerWidth - 24, 1280);
       let ratio;
       if (media.tagName === 'VIDEO') {
         ratio = 16 / 9;
