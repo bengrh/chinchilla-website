@@ -564,7 +564,7 @@
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.6);
+      color: #ffffff;
       transition: opacity 0.2s ease;
       pointer-events: none;
     }
@@ -742,8 +742,8 @@
     @media (max-width: 768px) {
       #ball-pit { min-height: 820px; }
       .bubble-card-desc { display: none; }
-      /* No hover bar expansion on mobile — tap opens modal directly */
-      .projects-bar-wrap { display: none; }
+      /* Pill stays visible on mobile — hover expansion disabled but label always shows */
+      .projects-bar-wrap { padding-bottom: 40px; }
     }
 
     .project-summary {
