@@ -2083,10 +2083,9 @@
         Bodies.rectangle(W/2,       ceilY - T/2,   W*4,    T,          { isStatic:true, restitution:0.4,  friction:0.05 }),
       ]);
 
-      // ── Bodies — start above pit, fall in when section enters view
+      // ── Bodies
       const dropX = [0.15, 0.35, 0.55, 0.75, 0.45];
-      // Staggered above-pit start heights (negative = above pit top)
-      const dropY = [-R*1.5, -R*3.0, -R*1.0, -R*2.5, -R*4.0];
+      const dropY = [R*0.6, R*1.5, R*0.3, R*1.2, R*2.2];
       const bodies = PROJECTS.map((p, i) =>
         Bodies.circle(dropX[i]*W, dropY[i], R, {
           restitution:0.4, friction:0.04, frictionAir:0.022, density:0.003, label:p.key
@@ -2144,8 +2143,6 @@
             <div class="bubble-card-desc">${p.desc}</div>
             <span class="bubble-card-open">View project ↗</span>
           </div>`;
-        el.style.opacity = '0';
-        el.style.transition = 'opacity 0.3s ease';
         PIT.appendChild(el);
         return el;
       });
@@ -2164,18 +2161,7 @@
         });
       });
 
-      // ── Physics runner — started only when pill bar enters the viewport
-      const runner = Runner.create();
-
-      const pillBarEl = document.querySelector('.projects-bar-wrap');
-      const startObserver = new IntersectionObserver((entries) => {
-        if (!entries[0].isIntersecting) return;
-        startObserver.disconnect();
-        // Reveal all bubbles (they fall from their staggered start heights)
-        bubbleEls.forEach(el => { el.style.opacity = '1'; });
-        Runner.run(runner, engine);
-      }, { threshold: 0 });
-      startObserver.observe(pillBarEl || PIT);
+      Runner.run(Runner.create(), engine);
 
       // ── Mouse constraint
       // Mouse.create(PIT) gives coords relative to PIT's top-left.
