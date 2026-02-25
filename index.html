@@ -817,64 +817,67 @@
     @media (max-width: 768px) {
       footer { padding: 60px 24px 40px; }
 
-      /* Contact section: keep calendar left of content on mobile */
+      /* Contact: compact row on mobile */
       .contact-main {
-        gap: 20px;
-        align-items: center;
+        gap: 12px;
+        align-items: flex-start;
         flex-wrap: wrap;
       }
 
-      /* Shrink title so "Get in touch" fits on one line beside the calendar */
       .contact-title {
-        font-size: 22px;
+        font-size: 19px;
+        margin-bottom: 6px;
       }
 
-      /* Both panels flush-left on mobile — no extra indent */
+      .contact-subtitle {
+        font-size: 13px;
+        margin-bottom: 0;
+      }
+
+      /* Both panels flush-left — no extra indent on mobile */
       .contact-default,
       .contact-cta {
         padding-left: 0;
       }
 
-      /* Hide email and desktop CTA button from their original spots on mobile */
+      /* Hide email and desktop CTA button from their original positions */
       .contact-default .contact-email { display: none; }
       .contact-cta-btn-desktop { display: none; }
 
-      /* Mobile action row: full-width, centred below calendar+text row */
+      /* Mobile action row — full-width, centred below the calendar+text row */
       .contact-mobile-action {
         display: flex;
         position: relative;
-        overflow: hidden;
         justify-content: center;
         align-items: center;
         flex-basis: 100%;
-        min-height: 44px;
+        min-height: 40px;
+        padding-top: 4px;
       }
 
+      /* Opacity crossfade — no clipping needed */
       .contact-mobile-email {
-        transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+        font-size: 14px;
+        text-align: center;
+        transition: opacity 0.4s ease;
       }
 
       .contact-mobile-btn {
         position: absolute;
-        transform: translateX(-110%);
         opacity: 0;
         pointer-events: none;
-        transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+        transition: opacity 0.4s ease;
       }
 
       #contact.cta-active .contact-mobile-email {
-        transform: translateX(110%);
         opacity: 0;
         pointer-events: none;
       }
 
       #contact.cta-active .contact-mobile-btn {
-        transform: translateX(0);
         opacity: 1;
         pointer-events: auto;
       }
-
-      /* Calendar stays put on mobile when CTA is active */
 
       .footer-grid {
         grid-template-columns: 1fr;
@@ -1715,7 +1718,7 @@
       }
 
       .contact {
-        padding: 80px 24px;
+        padding: 60px 20px;
       }
 
       footer {
