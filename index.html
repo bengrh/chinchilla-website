@@ -547,7 +547,7 @@
       height: 44px;
       overflow: hidden;
       width: 100%;
-      pointer-events: none; /* decorative only */
+      pointer-events: auto;
       transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -2285,6 +2285,16 @@
         // and correctly suppresses the modal, but subsequent hovers work normally.
         setTimeout(() => { wasDrag = false; }, 0);
       }, true);
+
+      // ── Pill bar tap/click — shove all circles upward
+      pill.addEventListener('click', () => {
+        bodies.forEach(body => {
+          Body.setVelocity(body, {
+            x: body.velocity.x + (Math.random() - 0.5) * 6,
+            y: body.velocity.y - 10
+          });
+        });
+      });
 
       // ── Expand / collapse — scales the physics body so Matter pushes neighbours
       function expandBubble(idx) {
