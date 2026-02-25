@@ -817,11 +817,18 @@
     @media (max-width: 768px) {
       footer { padding: 60px 24px 40px; }
 
-      /* Contact: compact row on mobile */
+      /* Contact: column layout on mobile */
       .contact-main {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      /* Top row: calendar + text side by side */
+      .contact-top-row {
+        display: flex;
         gap: 12px;
         align-items: flex-start;
-        flex-wrap: wrap;
       }
 
       .contact-title {
@@ -844,18 +851,16 @@
       .contact-default .contact-email { display: none; }
       .contact-cta-btn-desktop { display: none; }
 
-      /* Mobile action row — full-width, centred below the calendar+text row */
+      /* Mobile action row — sits naturally below top-row in column */
       .contact-mobile-action {
         display: flex;
         position: relative;
         justify-content: center;
         align-items: center;
-        flex-basis: 100%;
         min-height: 40px;
-        padding-top: 4px;
       }
 
-      /* Opacity crossfade — no clipping needed */
+      /* Opacity crossfade */
       .contact-mobile-email {
         font-size: 14px;
         text-align: center;
@@ -1587,6 +1592,9 @@
       align-items: stretch;
     }
 
+    /* On desktop, contact-top-row is invisible to flex layout — children participate directly */
+    .contact-top-row { display: contents; }
+
     /* Calendar wrapper — stays fixed on desktop, slides on mobile */
     .contact-calendar-wrap {
       flex-shrink: 0;
@@ -2015,7 +2023,6 @@
             </div>
           </div>
           <div class="team-card">
-            <div class="team-image" style="background: linear-gradient(135deg, #d0d0d0 0%, #b0b0b0 100%);"></div>
             <div class="team-info">
               <h3 class="team-name">Jamil Kabani</h3>
               <span class="team-role">Shop Manager</span>
@@ -2031,32 +2038,37 @@
   <section class="contact" id="contact">
     <div class="contact-main">
 
-      <!-- Calendar — clickable, stays fixed on desktop, slides on mobile -->
-      <div class="contact-calendar-wrap" id="contactCalendar" title="Click to get in touch">
-        <div class="cal-grid" id="calGrid">
-          <!-- 35 dots injected by JS -->
+      <!-- Top row: calendar + text side by side (display:contents on desktop, flex row on mobile) -->
+      <div class="contact-top-row">
+
+        <!-- Calendar — clickable, stays fixed on desktop, slides on mobile -->
+        <div class="contact-calendar-wrap" id="contactCalendar" title="Click to get in touch">
+          <div class="cal-grid" id="calGrid">
+            <!-- 35 dots injected by JS -->
+          </div>
         </div>
+
+        <!-- Sliding panels: default content + CTA -->
+        <div class="contact-content-wrap">
+
+          <!-- Default get in touch content -->
+          <div class="contact-default" id="contactDefault">
+            <h2 class="contact-title">Get in touch</h2>
+            <p class="contact-subtitle">Arrange for a call to discuss your next project or to stop in to visit our North Vancouver studio</p>
+            <a href="mailto:contact@chinchilla.design" class="contact-email">contact@chinchilla.design</a>
+          </div>
+
+          <!-- CTA panel — revealed when calendar is clicked -->
+          <div class="contact-cta" id="contactCta">
+            <h2 class="footer-cta-title">What should we make today?</h2>
+            <a href="mailto:contact@chinchilla.design" class="footer-cta-btn contact-cta-btn-desktop">Book an Appointment</a>
+          </div>
+
+        </div>
+
       </div>
 
-      <!-- Sliding panels: default content + CTA -->
-      <div class="contact-content-wrap">
-
-        <!-- Default get in touch content -->
-        <div class="contact-default" id="contactDefault">
-          <h2 class="contact-title">Get in touch</h2>
-          <p class="contact-subtitle">Arrange for a call to discuss your next project or to stop in to visit our North Vancouver studio</p>
-          <a href="mailto:contact@chinchilla.design" class="contact-email">contact@chinchilla.design</a>
-        </div>
-
-        <!-- CTA panel — revealed when calendar is clicked -->
-        <div class="contact-cta" id="contactCta">
-          <h2 class="footer-cta-title">What should we make today?</h2>
-          <a href="mailto:contact@chinchilla.design" class="footer-cta-btn contact-cta-btn-desktop">Book an Appointment</a>
-        </div>
-
-      </div>
-
-      <!-- Mobile only: email / button centered full-width below the calendar row -->
+      <!-- Mobile only: email / button centred full-width below the top row -->
       <div class="contact-mobile-action">
         <a href="mailto:contact@chinchilla.design" class="contact-email contact-mobile-email">contact@chinchilla.design</a>
         <a href="mailto:contact@chinchilla.design" class="footer-cta-btn contact-mobile-btn">Book an Appointment</a>
@@ -2969,6 +2981,7 @@
 
     // ── Auto aspect-ratio gallery sizing ──────────────────────────────────
     function setGalleryAspect(media) {
+      if (window.innerWidth <= 768) return; // mobile uses full-width bottom sheet; no width override needed
       const frameH = modalFrame.offsetHeight;
       if (!frameH) return;
       const infoW = 420;
