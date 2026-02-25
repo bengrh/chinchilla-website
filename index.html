@@ -521,53 +521,65 @@
 
     /* ── Ball-pit Projects ── */
     .projects {
-      padding: 80px 0 0;
+      padding: 260px 0 0;
       position: relative;
       z-index: 2;
       overflow: visible; /* allow balls to fly above the section */
-      /* border-bottom removed — the rule lives inside .projects-label */
     }
 
-    /* Label anchored to the bottom of the section, straddling the border line */
-    .projects-label {
-      position: absolute;
-      bottom: -8px; /* push down so "j" descender hangs visibly below the rule */
-      left: 48px;
-      right: 48px;
+    /* Pill-shaped info bar below ball-pit — expands downward on hover */
+    .projects-bar-wrap {
+      padding: 20px 24px 120px;
+      position: relative;
+      pointer-events: none; /* never block bubble clicks */
+    }
+
+    .projects-bottom {
       display: flex;
-      align-items: flex-end;
-      gap: 16px;
-      overflow: visible;
-      padding: 0;
-      margin-bottom: 0;
-      z-index: 3;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1.5px solid #444;
+      border-radius: 999px;
+      height: 44px;
+      overflow: hidden;
+      width: 100%;
+      pointer-events: none; /* decorative only */
+      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .projects-label-text {
+    .projects.hovered .projects-bottom {
+      border-radius: 20px;
+    }
+
+    /* Content inside the pill — revealed as pill expands */
+    .projects-hover-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 12px 32px 16px;
+      gap: 6px;
+    }
+
+    .projects-hover-title {
       font-family: 'Inter', sans-serif;
-      font-size: clamp(16px, 2vw, 24px);
+      font-size: clamp(16px, 1.8vw, 24px);
       font-weight: 700;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.04em;
       color: #fff;
       line-height: 1;
-      flex-shrink: 0;
-      overflow: visible;
+      display: block;
     }
 
-    .projects-label-rule {
-      flex: 1;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.85);
-      margin-bottom: 4px; /* positions rule at approximately text baseline */
-    }
-
-    .projects-label-count {
+    .projects-hover-desc {
       font-family: monospace;
-      font-size: 14px;
-      letter-spacing: 0.1em;
-      color: var(--gray);
-      flex-shrink: 0;
-      margin-bottom: 4px; /* aligns with the rule */
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.5;
+      margin: 0;
     }
 
     #ball-pit {
@@ -695,39 +707,17 @@
       transform: scale(0.88);
     }
 
+    /* On hover: card stays hidden — title + desc show in the bottom info bar instead */
     .bubble.expanded .bubble-card {
-      opacity: 1;
-      pointer-events: auto;
-      /* Split layout: title in top 50%, description in bottom 50%.
-         Dark translucent bg on lower half; 24% side padding keeps text
-         safely inside the circular clip at all bubble sizes. */
-      justify-content: flex-start;
-      text-align: left;
-      padding: 0;
-      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.38) 50%);
-    }
-
-    .bubble.expanded .bubble-card-title {
-      flex: 0 0 50%;
-      display: flex;
-      align-items: flex-end;
-      padding: 0 24% 10px;
-      margin-bottom: 0;
-    }
-
-    .bubble.expanded .bubble-card-desc {
-      flex: 1;
-      padding: 10px 24% 0;
-      overflow: hidden;
-    }
-
-    .bubble.expanded .bubble-card-open {
-      display: none;
+      opacity: 0;
+      pointer-events: none;
     }
 
     @media (max-width: 768px) {
       #ball-pit { min-height: 820px; }
       .bubble-card-desc { display: none; }
+      /* No hover bar expansion on mobile — tap opens modal directly */
+      .projects-bar-wrap { display: none; }
     }
 
     .project-summary {
@@ -753,54 +743,6 @@
       background: rgba(14, 14, 14, 0.92);
       color: #E8E8E8;
       padding: 80px 48px 40px;
-    }
-
-    /* Outer flex: sliding panels left, calendar right */
-    .footer-main {
-      display: flex;
-      gap: 60px;
-      align-items: flex-start;
-    }
-
-    /* Panels wrap clips the sliding animation */
-    .footer-content-wrap {
-      flex: 1;
-      min-width: 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Default footer content — slides right on CTA activation */
-    .footer-default {
-      transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
-    }
-
-    footer.cta-active .footer-default {
-      transform: translateX(110%);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* CTA panel — slides in from left */
-    .footer-cta {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      transform: translateX(-100%);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
-    }
-
-    footer.cta-active .footer-cta {
-      transform: translateX(0);
-      opacity: 1;
-      pointer-events: auto;
     }
 
     .footer-cta-title {
@@ -841,34 +783,16 @@
     }
 
     @media (max-width: 768px) {
-      /* Tighter side padding on mobile to give content room */
       footer { padding: 60px 24px 40px; }
 
-      /* Mobile footer: flex ROW — small calendar left, content right */
-      .footer-main {
-        flex-direction: row;
-        gap: 20px;
-        align-items: flex-start;
-        /* Clip container for the mobile slide animation */
-        position: relative;
-        overflow: hidden;
+      /* Contact section: stack calendar above content on mobile */
+      .contact-main {
+        flex-direction: column;
+        gap: 24px;
       }
 
-      /* Remove relative from content-wrap on mobile so the CTA
-         positions itself relative to footer-main instead */
-      .footer-content-wrap {
-        position: static;
-        overflow: visible;
-      }
-
-      /* Calendar slides right along with footer-default on mobile */
-      .footer-calendar-wrap {
-        flex-shrink: 0;
-        padding: 6px;
-        transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
-      }
-
-      footer.cta-active .footer-calendar-wrap {
+      /* Calendar slides away on mobile when CTA is active */
+      #contact.cta-active .contact-calendar-wrap {
         transform: translateX(300%);
         opacity: 0;
         pointer-events: none;
@@ -880,7 +804,6 @@
         margin-bottom: 40px;
       }
 
-      /* Brand heading smaller to fit the narrower column */
       .footer-brand h2 {
         font-size: clamp(22px, 6vw, 32px);
       }
@@ -950,19 +873,6 @@
     }
 
     /* Calendar */
-    .footer-calendar-wrap {
-      flex-shrink: 0;
-      cursor: pointer;
-      padding: 10px;
-      border-radius: 14px;
-      transition: opacity 0.3s ease;
-      user-select: none;
-    }
-
-    .footer-calendar-wrap:hover {
-      opacity: 0.75;
-    }
-
     .cal-grid {
       display: grid;
       grid-template-columns: repeat(7, 26px);
@@ -1109,7 +1019,7 @@
       opacity: 1;
     }
 
-    /* Nav: centered between description and details */
+    /* Nav: pinned to bottom of info panel */
     .modal-gallery-nav {
       display: flex;
       gap: 14px;
@@ -1117,8 +1027,6 @@
       justify-content: center;
       padding: 18px 0;
       border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 28px;
     }
 
     .modal-gallery-btn {
@@ -1160,15 +1068,30 @@
       transform: scale(1.3);
     }
 
-    /* Info panel: fixed 420px width, scrollable */
+    /* Info panel: fixed 420px width, flex column — scroll area + sticky footer */
     .modal-info {
       width: 420px;
       flex-shrink: 0;
       height: 100%;
-      padding: 40px;
+      padding: 0;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Scrollable area: all content above the sticky nav */
+    .modal-info-scroll {
+      flex: 1 1 0;
       overflow-y: auto;
+      padding: 40px 40px 32px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.2) transparent;
+    }
+
+    /* Sticky bottom: nav arrows only */
+    .modal-info-footer {
+      flex-shrink: 0;
+      padding: 0 40px 24px;
     }
 
     .modal-category {
@@ -1192,8 +1115,7 @@
       font-size: 15px;
       line-height: 1.7;
       color: var(--gray);
-      margin-bottom: 32px;
-      flex-grow: 1;
+      margin-bottom: 0;
     }
 
     .modal-details {
@@ -1290,7 +1212,14 @@
         width: 100%;
         height: auto;
         flex: 1;
-        padding: 24px;
+        padding: 0;
+        min-height: 0;
+      }
+      .modal-info-scroll {
+        padding: 20px 24px 12px;
+      }
+      .modal-info-footer {
+        padding: 0 24px 24px;
       }
     }
 
@@ -1567,12 +1496,72 @@
     /* Contact Section */
     .contact {
       padding: 120px 48px;
-      text-align: center;
     }
 
-    .contact-content {
-      max-width: 600px;
-      margin: 0 auto;
+    /* Flex row: calendar left, sliding content right */
+    .contact-main {
+      display: flex;
+      gap: 60px;
+      align-items: stretch;
+    }
+
+    /* Calendar wrapper — stays fixed on desktop, slides on mobile */
+    .contact-calendar-wrap {
+      flex-shrink: 0;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 14px;
+      transition: opacity 0.3s ease, transform 0.85s cubic-bezier(0.16,1,0.3,1);
+      user-select: none;
+    }
+
+    .contact-calendar-wrap:hover {
+      opacity: 0.75;
+    }
+
+    /* Clip container for the slide animation */
+    .contact-content-wrap {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Default "Get in touch" content — slides right on CTA activation */
+    .contact-default {
+      transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+    }
+
+    #contact.cta-active .contact-default {
+      transform: translateX(110%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* CTA panel — slides in from left */
+    .contact-cta {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 48px;
+      transform: translateX(-100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+    }
+
+    #contact.cta-active .contact-cta {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .contact-title {
@@ -1644,10 +1633,6 @@
 
       .contact {
         padding: 80px 24px;
-      }
-
-      .contact-content {
-        max-width: 100%;
       }
 
       footer {
@@ -1829,13 +1814,16 @@
 
   <!-- Projects Ball-Pit -->
   <section class="projects" id="projects">
-    <div class="projects-label">
-      <span class="projects-label-text">Projects</span>
-      <div class="projects-label-rule"></div>
-      <span class="projects-label-count">(05)</span>
-    </div>
     <div id="ball-pit">
       <!-- bubbles injected by JS -->
+    </div>
+    <div class="projects-bar-wrap">
+      <div class="projects-bottom">
+        <div class="projects-hover-panel">
+          <span class="projects-hover-title" id="projectsHoverTitle"></span>
+          <p class="projects-hover-desc" id="projectsHoverDesc"></p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1857,38 +1845,43 @@
           </div>
         </div>
         <div class="modal-info">
-          <span class="modal-category" id="modalCategory">Exhibition Design</span>
-          <h2 class="modal-title" id="modalTitle">Project Title</h2>
-          <p class="modal-description" id="modalDescription">Project description goes here.</p>
-          <!-- Navigation: sits between body text and the detail grid -->
-          <div class="modal-gallery-nav" id="galleryNav">
-            <button class="modal-gallery-btn" id="prevBtn" aria-label="Previous image">&larr;</button>
-            <div class="modal-gallery-dots" id="galleryDots">
-              <!-- Dots injected by JS -->
+          <!-- Scrollable area: all content except nav arrows -->
+          <div class="modal-info-scroll">
+            <span class="modal-category" id="modalCategory">Exhibition Design</span>
+            <h2 class="modal-title" id="modalTitle">Project Title</h2>
+            <p class="modal-description" id="modalDescription">Project description goes here.</p>
+            <p class="modal-image-caption" id="modalImageCaption"></p>
+            <div class="modal-details">
+              <div class="modal-detail-item">
+                <h4>Year</h4>
+                <p id="modalYear">2025</p>
+              </div>
+              <div class="modal-detail-item">
+                <h4>Client</h4>
+                <p id="modalClient">Client Name</p>
+              </div>
+              <div class="modal-detail-item">
+                <h4>Services</h4>
+                <p id="modalServices">Design, Development</p>
+              </div>
+              <div class="modal-detail-item">
+                <h4>Status</h4>
+                <p id="modalStatus">Completed</p>
+              </div>
             </div>
-            <button class="modal-gallery-btn" id="nextBtn" aria-label="Next image">&rarr;</button>
-          </div>
-          <p class="modal-image-caption" id="modalImageCaption"></p>
-          <div class="modal-details">
-            <div class="modal-detail-item">
-              <h4>Year</h4>
-              <p id="modalYear">2025</p>
-            </div>
-            <div class="modal-detail-item">
-              <h4>Client</h4>
-              <p id="modalClient">Client Name</p>
-            </div>
-            <div class="modal-detail-item">
-              <h4>Services</h4>
-              <p id="modalServices">Design, Development</p>
-            </div>
-            <div class="modal-detail-item">
-              <h4>Status</h4>
-              <p id="modalStatus">Completed</p>
+            <div class="modal-external-media" id="modalExternalMedia">
+              <!-- External media links injected by JS -->
             </div>
           </div>
-          <div class="modal-external-media" id="modalExternalMedia">
-            <!-- External media links injected by JS -->
+          <!-- Sticky footer: nav arrows only -->
+          <div class="modal-info-footer">
+            <div class="modal-gallery-nav" id="galleryNav">
+              <button class="modal-gallery-btn" id="prevBtn" aria-label="Previous image">&larr;</button>
+              <div class="modal-gallery-dots" id="galleryDots">
+                <!-- Dots injected by JS -->
+              </div>
+              <button class="modal-gallery-btn" id="nextBtn" aria-label="Next image">&rarr;</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1951,74 +1944,72 @@
 
   <!-- Contact Section -->
   <section class="contact" id="contact">
-    <div class="contact-content">
-      <h2 class="contact-title">Get in touch</h2>
-      <p class="contact-subtitle">Arrange for a call to discuss your next project or to stop in to visit our North Vancouver studio</p>
-      <a href="mailto:contact@chinchilla.design" class="contact-email">contact@chinchilla.design</a>
-    </div>
-  </section>
+    <div class="contact-main">
 
-  <!-- Footer -->
-  <footer id="siteFooter">
-    <div class="footer-main">
-
-      <!-- Calendar — stays in place during slide -->
-      <div class="footer-calendar-wrap" id="footerCalendar" title="Click to get in touch">
+      <!-- Calendar — clickable, stays fixed on desktop, slides on mobile -->
+      <div class="contact-calendar-wrap" id="contactCalendar" title="Click to get in touch">
         <div class="cal-grid" id="calGrid">
           <!-- 35 dots injected by JS -->
         </div>
       </div>
 
       <!-- Sliding panels: default content + CTA -->
-      <div class="footer-content-wrap">
+      <div class="contact-content-wrap">
 
-        <!-- Default footer content -->
-        <div class="footer-default" id="footerDefault">
-          <div class="footer-grid">
-            <div class="footer-brand">
-              <h2>Chinchilla<br>Design</h2>
-              <p>A creative studio focused on interior design, digital fabrication, and art direction. Based in Vancouver.</p>
-            </div>
-            <div class="footer-col">
-              <h4>Contact</h4>
-              <ul>
-                <li>
-                  <a href="https://instagram.com/benhaywarddesign" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; font-size: 18px;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                    </svg>
-                    Instagram
-                  </a>
-                </li>
-                <li>
-                  <a href="mailto:contact@chinchilla.design" style="display: inline-flex; align-items: center; gap: 10px; font-size: 18px;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                      <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                    contact@chinchilla.design
-                  </a>
-                </li>
-                <li id="footer-phone"></li>
-              </ul>
-            </div>
-          </div>
-          <div class="footer-bottom">
-            <span>&copy; 2026 Chinchilla Design</span>
-            <span>Vancouver, BC</span>
-          </div>
+        <!-- Default get in touch content -->
+        <div class="contact-default" id="contactDefault">
+          <h2 class="contact-title">Get in touch</h2>
+          <p class="contact-subtitle">Arrange for a call to discuss your next project or to stop in to visit our North Vancouver studio</p>
+          <a href="mailto:contact@chinchilla.design" class="contact-email">contact@chinchilla.design</a>
         </div>
 
         <!-- CTA panel — revealed when calendar is clicked -->
-        <div class="footer-cta" id="footerCta">
+        <div class="contact-cta" id="contactCta">
           <h2 class="footer-cta-title">What should we make today?</h2>
           <a href="mailto:contact@chinchilla.design" class="footer-cta-btn">Book an Appointment</a>
         </div>
 
       </div>
 
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="siteFooter">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h2>Chinchilla<br>Design</h2>
+        <p>A creative studio focused on interior design, digital fabrication, and art direction. Based in Vancouver.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li>
+            <a href="https://instagram.com/benhaywarddesign" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; font-size: 18px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+              Instagram
+            </a>
+          </li>
+          <li>
+            <a href="mailto:contact@chinchilla.design" style="display: inline-flex; align-items: center; gap: 10px; font-size: 18px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              contact@chinchilla.design
+            </a>
+          </li>
+          <li id="footer-phone"></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Chinchilla Design</span>
+      <span>Vancouver, BC</span>
     </div>
   </footer>
 
@@ -2089,6 +2080,31 @@
       // Guards against double-scaling on rapid mouseenter/leave.
       const physicsExpanded = new Array(PROJECTS.length).fill(false);
       const EXPAND_SCALE = ER / R;
+
+      // ── Info bar references & typing helpers
+      const projectsSection = document.getElementById('projects');
+      const hoverTitleEl    = document.getElementById('projectsHoverTitle');
+      const hoverDescEl     = document.getElementById('projectsHoverDesc');
+      const pill            = document.querySelector('.projects-bottom');
+      let   typingTimers    = [];
+
+      function clearTyping() {
+        typingTimers.forEach(t => clearTimeout(t));
+        typingTimers = [];
+        if (hoverTitleEl) hoverTitleEl.textContent = '';
+        if (hoverDescEl)  hoverDescEl.textContent  = '';
+      }
+
+      function typeText(el, text, delayMs) {
+        let i = 0;
+        function tick() {
+          if (i > text.length) return;
+          el.textContent = text.slice(0, i);
+          i++;
+          if (i <= text.length) typingTimers.push(setTimeout(tick, delayMs));
+        }
+        tick();
+      }
 
       // ── DOM bubbles
       const bubbleEls = PROJECTS.map((p, i) => {
@@ -2254,7 +2270,22 @@
       // ── Expand / collapse — scales the physics body so Matter pushes neighbours
       function expandBubble(idx) {
         if (expandedIdx === idx) return;
-        if (expandedIdx !== -1) collapseBubble(expandedIdx);
+
+        // Inline-collapse previous bubble without touching the info bar —
+        // we're about to immediately replace the content, so avoiding the
+        // remove/add flicker on the pill and the hovered class.
+        if (expandedIdx !== -1) {
+          const prev = expandedIdx;
+          expandedIdx = -1;
+          if (physicsExpanded[prev]) {
+            Body.scale(bodies[prev], 1 / EXPAND_SCALE, 1 / EXPAND_SCALE);
+            physicsExpanded[prev] = false;
+          }
+          bubbleEls[prev].classList.remove('expanded');
+          bubbleEls[prev].style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1)';
+          bubbleEls[prev].style.transform  = 'scale(1)';
+        }
+
         expandedIdx = idx;
         // Scale up physics body only once — guard prevents compounding on rapid hover
         if (!physicsExpanded[idx]) {
@@ -2265,12 +2296,37 @@
         el.classList.add('expanded');
         el.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
         el.style.transform  = 'scale(' + EXPAND_SCALE + ')';
+
+        // Measure the pill's natural height for this project's content,
+        // then animate to that height so the full description is always visible.
+        const p = PROJECTS[idx];
+        clearTyping();
+        if (pill) {
+          hoverTitleEl.textContent = p.title;
+          hoverDescEl.textContent  = p.desc;
+          pill.style.transition = 'none';
+          pill.style.height     = 'auto';
+          const naturalH = Math.max(pill.scrollHeight, 44);
+          hoverTitleEl.textContent = '';
+          hoverDescEl.textContent  = '';
+          pill.style.height = '44px';
+          pill.offsetHeight;           // force reflow so transition fires
+          pill.style.transition = '';  // restore CSS transition
+          pill.style.height     = naturalH + 'px';
+        }
+        if (projectsSection) projectsSection.classList.add('hovered');
+        if (hoverTitleEl) typeText(hoverTitleEl, p.title, 8);
+        if (hoverDescEl)  typeText(hoverDescEl,  p.desc,  8);
       }
 
       function collapseBubble(idx) {
         if (idx < 0 || idx >= bubbleEls.length) return;
-        if (expandedIdx === idx) expandedIdx = -1;
-        // Scale physics body back only if it was actually scaled up
+        // Only manage the info bar / pill if this bubble is still the active one.
+        // If expandBubble() already transferred ownership to a new bubble, the
+        // delayed timer should leave the bar alone.
+        const isStillActive = (expandedIdx === idx);
+        if (isStillActive) expandedIdx = -1;
+
         if (physicsExpanded[idx]) {
           Body.scale(bodies[idx], 1 / EXPAND_SCALE, 1 / EXPAND_SCALE);
           physicsExpanded[idx] = false;
@@ -2279,25 +2335,35 @@
         el.classList.remove('expanded');
         el.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1)';
         el.style.transform  = 'scale(1)';
+
+        if (isStillActive) {
+          clearTyping();
+          if (projectsSection) projectsSection.classList.remove('hovered');
+          if (pill) pill.style.height = '44px';
+        }
       }
 
-      // ── Hover expand (desktop only)
+      // ── Hover expand (desktop only — no hover on mobile)
       // collapseTimers: small grace period before collapsing, prevents physics
       // micro-jitter from bouncing enter/leave and causing a glitch loop.
       const collapseTimers = new Array(PROJECTS.length).fill(null);
 
       bubbleEls.forEach((el, idx) => {
-        el.addEventListener('mouseenter', () => {
-          if (collapseTimers[idx]) { clearTimeout(collapseTimers[idx]); collapseTimers[idx] = null; }
-          if (wasDrag || mc.body) return;
-          expandBubble(idx);
-        });
-        el.addEventListener('mouseleave', () => {
-          collapseTimers[idx] = setTimeout(() => {
-            collapseTimers[idx] = null;
-            collapseBubble(idx);
-          }, 80);
-        });
+        if (!isMobile) {
+          el.addEventListener('mouseenter', () => {
+            // Cancel all pending collapse timers — not just this bubble's —
+            // so a delayed collapse from a previous bubble can't interrupt the new expansion.
+            collapseTimers.forEach((t, i) => { if (t) { clearTimeout(t); collapseTimers[i] = null; } });
+            if (wasDrag || mc.body) return;
+            expandBubble(idx);
+          });
+          el.addEventListener('mouseleave', () => {
+            collapseTimers[idx] = setTimeout(() => {
+              collapseTimers[idx] = null;
+              collapseBubble(idx);
+            }, 80);
+          });
+        }
         el.addEventListener('click', () => {
           if (wasDrag) return;
           openModal(el.dataset.project, R);
@@ -2933,8 +2999,8 @@
   <script>
   (function () {
     var grid    = document.getElementById('calGrid');
-    var calWrap = document.getElementById('footerCalendar');
-    var footer  = document.getElementById('siteFooter');
+    var calWrap = document.getElementById('contactCalendar');
+    var section = document.getElementById('contact');
 
     function buildCalendar() {
       var now     = new Date();
@@ -2967,7 +3033,7 @@
 
     // Toggle CTA panel when calendar is clicked
     calWrap.addEventListener('click', function () {
-      footer.classList.toggle('cta-active');
+      section.classList.toggle('cta-active');
     });
   })();
   </script>
