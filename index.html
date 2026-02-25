@@ -551,6 +551,19 @@
       transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
+    @keyframes pill-shove {
+      0%   { transform: translateY(0); }
+      18%  { transform: translateY(-14px); }
+      42%  { transform: translateY(3px); }
+      65%  { transform: translateY(-4px); }
+      82%  { transform: translateY(1px); }
+      100% { transform: translateY(0); }
+    }
+
+    .projects-bottom.shoving {
+      animation: pill-shove 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
     /* "Projects" label shown at rest */
     .projects-bottom::before {
       content: 'Projects';
@@ -2286,8 +2299,14 @@
         setTimeout(() => { wasDrag = false; }, 0);
       }, true);
 
-      // ── Pill bar tap/click — shove all circles upward
+      // ── Pill bar tap/click — shove all circles upward + animate pill
       pill.addEventListener('click', () => {
+        // Restart animation on every click
+        pill.classList.remove('shoving');
+        void pill.offsetWidth; // force reflow so re-adding the class triggers a fresh animation
+        pill.classList.add('shoving');
+        pill.addEventListener('animationend', () => pill.classList.remove('shoving'), { once: true });
+
         bodies.forEach(body => {
           Body.setVelocity(body, {
             x: body.velocity.x + (Math.random() - 0.5) * 6,
