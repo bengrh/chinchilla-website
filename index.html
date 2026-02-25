@@ -2068,7 +2068,7 @@
       const R     = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
       const ER    = Math.round(R * 1.7);    // expanded physics + visual radius
       const D     = R * 2;
-      const PIT_H = R * 2.5;
+      const PIT_H = isMobile ? R * 4.5 : R * 2.5;
       PIT.style.height    = PIT_H + 'px';
       PIT.style.minHeight = '0';
       PIT.style.overflow  = 'visible';
