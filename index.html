@@ -956,7 +956,13 @@
       bottom: 100px;
       width: min(calc(100vw - 72px), 1280px);
       transform: translateX(calc(100% + 40px));
-      transition: transform 0.55s var(--ease-premium);
+      transition: transform 0.55s var(--ease-premium),
+                  width 0.45s var(--ease-premium);
+    }
+
+    /* Landscape: grow leftward so image gains horizontal room */
+    .modal-frame.gallery-landscape-expanded {
+      width: calc(100vw - 24px);
     }
 
     .modal.active .modal-frame {
@@ -1086,6 +1092,35 @@
       transform: scale(1.3);
     }
 
+    /* Expand / collapse toggle — bottom-left of gallery */
+    .modal-gallery-expand {
+      position: absolute;
+      bottom: 18px;
+      left: 18px;
+      z-index: 5;
+      width: 38px;
+      height: 38px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      flex-shrink: 0;
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .modal-gallery-expand:hover {
+      background: rgba(0, 0, 0, 0.75);
+      border-color: rgba(255, 255, 255, 0.85);
+      transform: scale(1.08);
+    }
+
+    .modal-gallery-expand .collapse-icon { display: none; }
+    .modal-gallery-expand.expanded .expand-icon  { display: none; }
+    .modal-gallery-expand.expanded .collapse-icon { display: flex; }
+
     /* Info panel: fixed 420px width, flex column — scroll area + sticky footer */
     .modal-info {
       width: 420px;
@@ -1095,6 +1130,15 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      transition: width 0.45s var(--ease-premium), opacity 0.35s ease;
+    }
+
+    /* Portrait: info panel shrinks away right, gallery fills freed space */
+    .modal-frame.gallery-portrait-expanded .modal-info {
+      width: 0;
+      min-width: 0;
+      flex-shrink: 1;
+      opacity: 0;
     }
 
     /* Scrollable area: all content above the sticky nav */
@@ -1239,6 +1283,7 @@
       .modal-info-footer {
         padding: 0 24px 24px;
       }
+      .modal-gallery-expand { display: none; }
     }
 
     /* About Section */
@@ -1861,6 +1906,20 @@
           <div class="modal-gallery-images" id="modalImages">
             <!-- Images injected by JS -->
           </div>
+          <button class="modal-gallery-expand" id="galleryExpandBtn" aria-label="Expand image">
+            <svg class="expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <polyline points="9 21 3 21 3 15"></polyline>
+              <line x1="21" y1="3" x2="14" y2="10"></line>
+              <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+            <svg class="collapse-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 14 10 14 10 20"></polyline>
+              <polyline points="20 10 14 10 14 4"></polyline>
+              <line x1="10" y1="14" x2="3" y2="21"></line>
+              <line x1="21" y1="3" x2="14" y2="10"></line>
+            </svg>
+          </button>
         </div>
         <div class="modal-info">
           <!-- Scrollable area: all content except nav arrows -->
@@ -2855,6 +2914,7 @@
     const modal = document.getElementById('projectModal');
     const modalBackdrop = modal.querySelector('.modal-backdrop');
     const modalClose = modal.querySelector('.modal-close');
+    const modalFrame = modal.querySelector('.modal-frame');
     const modalImages = document.getElementById('modalImages');
     const galleryDots = document.getElementById('galleryDots');
     const prevBtn = document.getElementById('prevBtn');
@@ -2867,13 +2927,51 @@
     const modalServices = document.getElementById('modalServices');
     const modalStatus = document.getElementById('modalStatus');
     const modalExternalMedia = document.getElementById('modalExternalMedia');
+    const galleryExpandBtn = document.getElementById('galleryExpandBtn');
 
     let currentImageIndex = 0;
     let currentProject = null;
+    let galleryExpanded = false;
+
+    // ── Gallery expand / collapse ──────────────────────────────────────────
+    function applyGalleryExpansion() {
+      const media = modalImages.querySelector('img.active, video.active');
+      modalFrame.classList.remove('gallery-landscape-expanded', 'gallery-portrait-expanded');
+      if (!media) { modalFrame.classList.add('gallery-landscape-expanded'); return; }
+
+      function apply(el) {
+        const isLandscape = el.tagName === 'VIDEO' || el.naturalWidth >= el.naturalHeight;
+        modalFrame.classList.add(isLandscape ? 'gallery-landscape-expanded' : 'gallery-portrait-expanded');
+      }
+
+      if (media.tagName === 'VIDEO' || (media.complete && media.naturalWidth > 0)) {
+        apply(media);
+      } else {
+        media.addEventListener('load', () => apply(media), { once: true });
+      }
+    }
+
+    function resetGalleryExpansion() {
+      galleryExpanded = false;
+      galleryExpandBtn.classList.remove('expanded');
+      modalFrame.classList.remove('gallery-landscape-expanded', 'gallery-portrait-expanded');
+    }
+
+    galleryExpandBtn.addEventListener('click', () => {
+      galleryExpanded = !galleryExpanded;
+      galleryExpandBtn.classList.toggle('expanded', galleryExpanded);
+      if (galleryExpanded) {
+        applyGalleryExpansion();
+      } else {
+        modalFrame.classList.remove('gallery-landscape-expanded', 'gallery-portrait-expanded');
+      }
+    });
+
     // Open Modal
     function openModal(projectKey, bubbleRadius) {
       currentProject = projectsData[projectKey];
       currentImageIndex = 0;
+      resetGalleryExpansion();
 
       // Update content
       modalTitle.textContent = currentProject.title;
@@ -2940,6 +3038,7 @@
     // Close Modal
     function closeModal() {
       modal.classList.remove('active');
+      resetGalleryExpansion();
       document.body.style.overflow = '';
     }
 
@@ -2963,6 +3062,8 @@
       media[currentImageIndex].classList.add('active');
       dots[currentImageIndex].classList.add('active');
 
+      // If expanded, re-evaluate orientation for the new image
+      if (galleryExpanded) applyGalleryExpansion();
     }
 
     function nextImage() {
