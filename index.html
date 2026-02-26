@@ -546,7 +546,8 @@
       border-radius: 999px;
       height: 44px;
       overflow: hidden;
-      width: 100%;
+      width: 75%;
+      margin: 0 auto;
       pointer-events: auto;
     }
 
@@ -597,36 +598,29 @@
       cursor: pointer;
       height: 160px;
       min-width: 0;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: background 0.25s ease, border-color 0.25s ease;
     }
 
-    .project-nav-card-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      filter: brightness(0.5);
-      transition: filter 0.3s ease, transform 0.4s ease;
-    }
-
-    .project-nav-card:hover .project-nav-card-bg {
-      filter: brightness(0.72);
-      transform: scale(1.04);
+    .project-nav-card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.22);
     }
 
     .project-nav-card-body {
-      position: relative;
-      z-index: 1;
-      padding: 14px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
+      box-sizing: border-box;
     }
 
     .project-nav-card-category {
       color: #fff;
       font-family: 'Inter', sans-serif;
-      font-size: 15px;
+      font-size: 18px;
       font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.2;
@@ -635,7 +629,7 @@
     .project-nav-card-links {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
     .project-nav-card-link {
@@ -643,9 +637,9 @@
       border: none;
       padding: 0;
       cursor: pointer;
-      color: rgba(255, 255, 255, 0.75);
+      color: rgba(255, 255, 255, 0.7);
       font-family: 'Inter', sans-serif;
-      font-size: 12px;
+      font-size: 15px;
       font-weight: 500;
       letter-spacing: 0em;
       text-align: left;
@@ -660,8 +654,8 @@
       transform: translateX(3px);
     }
 
-    /* Mobile: horizontal scroll so pill doesn't get too tall */
-    @media (max-width: 768px) {
+    /* Small mobile only: horizontal scroll so pill doesn't get too tall */
+    @media (max-width: 480px) {
       .projects-nav-cards {
         overflow-x: auto;
         overflow-y: hidden;
@@ -673,7 +667,7 @@
       }
       .projects-nav-cards::-webkit-scrollbar { display: none; }
       .project-nav-card {
-        flex: 0 0 68vw;
+        flex: 0 0 62vw;
         scroll-snap-align: start;
         height: 140px;
       }
@@ -2377,7 +2371,6 @@
           `<button class="project-nav-card-link" data-key="${proj.key}">${proj.title} ↗</button>`
         ).join('');
         card.innerHTML = `
-          <div class="project-nav-card-bg" style="background-image:url('${cat.photo}')"></div>
           <div class="project-nav-card-body">
             <span class="project-nav-card-category">${label}</span>
             <div class="project-nav-card-links">${linksHTML}</div>
@@ -2401,7 +2394,7 @@
       const PILL_PAD = 52 + 10; // padding-top + padding-bottom in .projects-nav-cards
 
       function getPillExpandH() {
-        return PILL_PAD + (window.innerWidth <= 768 ? PILL_CARD_H_MOB : PILL_CARD_H_DESK);
+        return PILL_PAD + (window.innerWidth <= 480 ? PILL_CARD_H_MOB : PILL_CARD_H_DESK);
       }
 
       let pillNavOpen = false;
