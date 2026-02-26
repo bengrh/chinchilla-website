@@ -817,72 +817,21 @@
     @media (max-width: 768px) {
       footer { padding: 60px 24px 40px; }
 
-      /* Contact: column layout on mobile */
+      /* Contact: stack vertically on mobile */
       .contact-main {
         flex-direction: column;
-        gap: 12px;
+        gap: 24px;
         align-items: stretch;
       }
 
-      /* Top row: calendar + text side by side */
-      .contact-top-row {
-        display: flex;
-        gap: 12px;
-        align-items: flex-start;
-      }
-
-      .contact-title {
-        font-size: 19px;
-        margin-bottom: 6px;
-      }
-
-      .contact-subtitle {
-        font-size: 13px;
-        margin-bottom: 0;
-      }
-
-      /* Both panels flush-left — no extra indent on mobile */
+      /* Flush-left panels, no extra indent */
       .contact-default,
       .contact-cta {
         padding-left: 0;
       }
 
-      /* Hide email and desktop CTA button from their original positions */
-      .contact-default .contact-email { display: none; }
-      .contact-cta-btn-desktop { display: none; }
-
-      /* Mobile action row — sits naturally below top-row in column */
-      .contact-mobile-action {
-        display: flex;
-        position: relative;
-        justify-content: center;
-        align-items: center;
-        min-height: 40px;
-      }
-
-      /* Opacity crossfade */
-      .contact-mobile-email {
-        font-size: 14px;
-        text-align: center;
-        transition: opacity 0.4s ease;
-      }
-
-      .contact-mobile-btn {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.4s ease;
-      }
-
-      #contact.cta-active .contact-mobile-email {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      #contact.cta-active .contact-mobile-btn {
-        opacity: 1;
-        pointer-events: auto;
-      }
+      .contact-title { font-size: 28px; margin-bottom: 10px; }
+      .contact-subtitle { font-size: 15px; margin-bottom: 20px; }
 
       .footer-grid {
         grid-template-columns: 1fr;
@@ -1592,10 +1541,7 @@
       align-items: stretch;
     }
 
-    /* On desktop, contact-top-row is invisible to flex layout — children participate directly */
-    .contact-top-row { display: contents; }
-
-    /* Calendar wrapper — stays fixed on desktop, slides on mobile */
+    /* Calendar wrapper */
     .contact-calendar-wrap {
       flex-shrink: 0;
       cursor: pointer;
@@ -1654,9 +1600,6 @@
       opacity: 1;
       pointer-events: auto;
     }
-
-    /* Mobile action row — hidden on desktop */
-    .contact-mobile-action { display: none; }
 
     .contact-title {
       font-size: clamp(32px, 5vw, 56px);
@@ -2038,40 +1981,29 @@
   <section class="contact" id="contact">
     <div class="contact-main">
 
-      <!-- Top row: calendar + text side by side (display:contents on desktop, flex row on mobile) -->
-      <div class="contact-top-row">
-
-        <!-- Calendar — clickable, stays fixed on desktop, slides on mobile -->
-        <div class="contact-calendar-wrap" id="contactCalendar" title="Click to get in touch">
-          <div class="cal-grid" id="calGrid">
-            <!-- 35 dots injected by JS -->
-          </div>
+      <!-- Calendar — clickable -->
+      <div class="contact-calendar-wrap" id="contactCalendar" title="Click to get in touch">
+        <div class="cal-grid" id="calGrid">
+          <!-- 35 dots injected by JS -->
         </div>
-
-        <!-- Sliding panels: default content + CTA -->
-        <div class="contact-content-wrap">
-
-          <!-- Default get in touch content -->
-          <div class="contact-default" id="contactDefault">
-            <h2 class="contact-title">Get in touch</h2>
-            <p class="contact-subtitle">Arrange for a call to discuss your next project or to stop in to visit our North Vancouver studio</p>
-            <a href="mailto:contact@chinchilla.design" class="contact-email">contact@chinchilla.design</a>
-          </div>
-
-          <!-- CTA panel — revealed when calendar is clicked -->
-          <div class="contact-cta" id="contactCta">
-            <h2 class="footer-cta-title">What should we make today?</h2>
-            <a href="mailto:contact@chinchilla.design" class="footer-cta-btn contact-cta-btn-desktop">Book an Appointment</a>
-          </div>
-
-        </div>
-
       </div>
 
-      <!-- Mobile only: email / button centred full-width below the top row -->
-      <div class="contact-mobile-action">
-        <a href="mailto:contact@chinchilla.design" class="contact-email contact-mobile-email">contact@chinchilla.design</a>
-        <a href="mailto:contact@chinchilla.design" class="footer-cta-btn contact-mobile-btn">Book an Appointment</a>
+      <!-- Sliding panels: default content + CTA -->
+      <div class="contact-content-wrap">
+
+        <!-- Default: Get in touch -->
+        <div class="contact-default" id="contactDefault">
+          <h2 class="contact-title">Get in touch</h2>
+          <p class="contact-subtitle">Arrange for a call to discuss your next project or to stop in to visit our North Vancouver studio</p>
+          <a href="mailto:contact@chinchilla.design" class="contact-email">contact@chinchilla.design</a>
+        </div>
+
+        <!-- CTA panel — revealed when calendar is clicked -->
+        <div class="contact-cta" id="contactCta">
+          <h2 class="footer-cta-title">What should we make today?</h2>
+          <a href="mailto:contact@chinchilla.design" class="footer-cta-btn">Book an Appointment</a>
+        </div>
+
       </div>
 
     </div>
