@@ -932,15 +932,10 @@
     /* Days outside current month */
     .cal-dot.cal-outside { background: #2d2d2d; }
 
-    /* Mobile: smaller calendar dots — must come after base definitions to win */
+    /* Mobile: calendar same dot size as desktop, centred in its column */
     @media (max-width: 768px) {
-      .cal-grid {
-        grid-template-columns: repeat(7, 10px);
-        gap: 4px;
-      }
-      .cal-dot {
-        width: 10px;
-        height: 10px;
+      .contact-calendar-wrap {
+        align-self: center;
       }
     }
 
@@ -1669,7 +1664,7 @@
       }
 
       .contact {
-        padding: 60px 20px;
+        padding: 60px 24px;
       }
 
       footer {
@@ -2750,11 +2745,12 @@
 
     teamRevealBtn.addEventListener('click', () => {
       aboutContainer.classList.add('show-team');
-      // On mobile, scroll to top of team section after it reveals
+      // On mobile, scroll to about section after animation completes (900ms > 0.8s transition)
+      // Scroll to #about (not #teamSection) to avoid the browser trying to chase a transformed element
       if (window.innerWidth < 769) {
         setTimeout(() => {
-          document.getElementById('teamSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 80);
+          document.querySelector('#about').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 900);
       }
     });
 
