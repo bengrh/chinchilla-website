@@ -616,30 +616,48 @@
     .project-nav-card-body {
       position: relative;
       z-index: 1;
-      padding: 12px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       height: 100%;
     }
 
-    .project-nav-card-title {
-      margin-top: auto;
+    .project-nav-card-category {
       color: #fff;
       font-family: 'Inter', sans-serif;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 700;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       line-height: 1.2;
     }
 
-    .project-nav-card-cta {
-      margin-top: 4px;
-      color: rgba(255, 255, 255, 0.6);
+    .project-nav-card-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .project-nav-card-link {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.75);
       font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0em;
+      text-align: left;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .project-nav-card-link:hover {
+      color: #fff;
+      transform: translateX(3px);
     }
 
     /* Mobile: horizontal scroll so pill doesn't get too tall */
@@ -655,7 +673,7 @@
       }
       .projects-nav-cards::-webkit-scrollbar { display: none; }
       .project-nav-card {
-        flex: 0 0 52vw;
+        flex: 0 0 68vw;
         scroll-snap-align: start;
         height: 140px;
       }
@@ -2096,11 +2114,11 @@
       if (!PIT || typeof Matter === 'undefined') return;
 
       const PROJECTS = [
-        { key: 'ids-pavilion', title: 'IDS Pavilion',   photo: 'images/ids-pavilion/IDS%20Pavilion.jpg', desc: 'A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.' },
-        { key: 'tiny-house',   title: 'Tiny House',      photo: 'images/tiny-house/exterior.jpg',         desc: 'Every surface CNC-milled from sustainable plywood — a fully functional tiny house as seen on HGTV.' },
-        { key: 'wall-art',     title: 'Wall Art',        photo: 'images/wall-art/front.jpg',              desc: 'Sculptural cedar wall piece with burl inlays, shaped parametrically and finished by hand.' },
-        { key: 'chair',        title: 'Chair',           photo: 'images/chair/installed.jpg',             desc: 'Solid white oak dining chair with a hand-shaped wraparound back and cognac leather seat.' },
-        { key: 'sage-hayward', title: 'Winery Branding', photo: 'images/sage-hayward/sign.jpg',           desc: 'Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.' }
+        { key: 'ids-pavilion', title: 'IDS Pavilion',   category: 'Design/Build',   photo: 'images/ids-pavilion/IDS%20Pavilion.jpg', desc: 'A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.' },
+        { key: 'tiny-house',   title: 'Tiny House',     category: 'Design/Build',   photo: 'images/tiny-house/exterior.jpg',         desc: 'Every surface CNC-milled from sustainable plywood — a fully functional tiny house as seen on HGTV.' },
+        { key: 'wall-art',     title: 'Wall Art',       category: 'Product Design', photo: 'images/wall-art/front.jpg',              desc: 'Sculptural cedar wall piece with burl inlays, shaped parametrically and finished by hand.' },
+        { key: 'chair',        title: 'Chair',          category: 'Product Design', photo: 'images/chair/installed.jpg',             desc: 'Solid white oak dining chair with a hand-shaped wraparound back and cognac leather seat.' },
+        { key: 'sage-hayward', title: 'Winery Branding',category: 'Brand Identity', photo: 'images/sage-hayward/sign.jpg',           desc: 'Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.' }
       ];
 
       const { Engine, Runner, Bodies, Body, Events, World, Mouse, MouseConstraint } = Matter;
@@ -2344,20 +2362,32 @@
       // ── Pill nav: click to expand / collapse project cards ────────────────
       const navCardsContainer = document.getElementById('projectsNavCards');
 
-      // Build one card per project
+      // Group projects by category, preserving insertion order
+      const catMap = {};
       PROJECTS.forEach(proj => {
+        if (!catMap[proj.category]) catMap[proj.category] = { photo: proj.photo, projects: [] };
+        catMap[proj.category].projects.push(proj);
+      });
+
+      // Build one card per category
+      Object.entries(catMap).forEach(([label, cat]) => {
         const card = document.createElement('div');
         card.className = 'project-nav-card';
+        const linksHTML = cat.projects.map(proj =>
+          `<button class="project-nav-card-link" data-key="${proj.key}">${proj.title} ↗</button>`
+        ).join('');
         card.innerHTML = `
-          <div class="project-nav-card-bg" style="background-image:url('${proj.photo}')"></div>
+          <div class="project-nav-card-bg" style="background-image:url('${cat.photo}')"></div>
           <div class="project-nav-card-body">
-            <span class="project-nav-card-title">${proj.title}</span>
-            <span class="project-nav-card-cta">View ↗</span>
+            <span class="project-nav-card-category">${label}</span>
+            <div class="project-nav-card-links">${linksHTML}</div>
           </div>`;
-        card.addEventListener('click', e => {
-          e.stopPropagation();
-          closePillNav();
-          openModal(proj.key, null);
+        card.querySelectorAll('.project-nav-card-link').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.stopPropagation();
+            closePillNav();
+            openModal(btn.dataset.key, null);
+          });
         });
         navCardsContainer.appendChild(card);
       });
