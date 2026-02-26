@@ -534,34 +534,23 @@
       pointer-events: none; /* never block bubble clicks */
     }
 
+    /* Pill bar — dark glass, GSAP handles height + border-radius */
     .projects-bottom {
       position: relative;
       display: flex;
       flex-direction: column;
-      background: #F97316;
-      border: none;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1.5px solid #444;
       border-radius: 999px;
       height: 44px;
       overflow: hidden;
       width: 100%;
       pointer-events: auto;
-      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    @keyframes pill-shove {
-      0%   { transform: translateY(0); }
-      18%  { transform: translateY(-14px); }
-      42%  { transform: translateY(3px); }
-      65%  { transform: translateY(-4px); }
-      82%  { transform: translateY(1px); }
-      100% { transform: translateY(0); }
-    }
-
-    .projects-bottom.shoving {
-      animation: pill-shove 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    /* "Projects" label shown at rest */
+    /* "Projects" label — always visible as pill header */
     .projects-bottom::before {
       content: 'Projects';
       position: absolute;
@@ -577,47 +566,99 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: #ffffff;
-      transition: opacity 0.2s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Label change when nav is open */
+    .projects-bottom[data-open]::before {
+      content: 'Close ✕';
+      letter-spacing: 0.04em;
+    }
+
+    /* Project nav cards — rows of clickable project thumbnails */
+    .projects-nav-cards {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      padding: 52px 10px 10px;
       pointer-events: none;
     }
 
-    /* Fade label out when a bubble is hovered */
-    .projects.hovered .projects-bottom::before {
-      opacity: 0;
+    .projects-bottom.nav-open .projects-nav-cards {
+      pointer-events: auto;
     }
 
-    /* Content inside the pill — revealed as pill expands */
-    .projects-hover-panel {
+    .project-nav-card {
+      flex: 1;
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      height: 160px;
+      min-width: 0;
+    }
+
+    .project-nav-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.5);
+      transition: filter 0.3s ease, transform 0.4s ease;
+    }
+
+    .project-nav-card:hover .project-nav-card-bg {
+      filter: brightness(0.72);
+      transform: scale(1.04);
+    }
+
+    .project-nav-card-body {
+      position: relative;
+      z-index: 1;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 12px 32px 16px;
-      gap: 6px;
-      opacity: 0;
-      transition: opacity 0.2s ease 0.15s;
+      height: 100%;
     }
 
-    .projects.hovered .projects-hover-panel {
-      opacity: 1;
-    }
-
-    .projects-hover-title {
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(16px, 1.8vw, 24px);
-      font-weight: 700;
-      letter-spacing: -0.04em;
+    .project-nav-card-title {
+      margin-top: auto;
       color: #fff;
-      line-height: 1;
-      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
     }
 
-    .projects-hover-desc {
-      font-family: monospace;
-      font-size: 11px;
-      letter-spacing: 0.05em;
-      color: rgba(255, 255, 255, 0.65);
-      line-height: 1.5;
-      margin: 0;
+    .project-nav-card-cta {
+      margin-top: 4px;
+      color: rgba(255, 255, 255, 0.6);
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* Mobile: horizontal scroll so pill doesn't get too tall */
+    @media (max-width: 768px) {
+      .projects-nav-cards {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        scroll-snap-type: x mandatory;
+        flex-wrap: nowrap;
+        padding: 52px 10px 10px;
+      }
+      .projects-nav-cards::-webkit-scrollbar { display: none; }
+      .project-nav-card {
+        flex: 0 0 52vw;
+        scroll-snap-align: start;
+        height: 140px;
+      }
     }
 
     #ball-pit {
@@ -1856,11 +1897,8 @@
       <!-- bubbles injected by JS -->
     </div>
     <div class="projects-bar-wrap">
-      <div class="projects-bottom">
-        <div class="projects-hover-panel">
-          <span class="projects-hover-title" id="projectsHoverTitle"></span>
-          <p class="projects-hover-desc" id="projectsHoverDesc"></p>
-        </div>
+      <div class="projects-bottom" id="projectsPill">
+        <div class="projects-nav-cards" id="projectsNavCards"></div>
       </div>
     </div>
   </section>
@@ -2303,20 +2341,68 @@
         setTimeout(() => { wasDrag = false; }, 0);
       }, true);
 
-      // ── Pill bar tap/click — shove all circles upward + animate pill
-      pill.addEventListener('click', () => {
-        // Restart animation on every click
-        pill.classList.remove('shoving');
-        void pill.offsetWidth; // force reflow so re-adding the class triggers a fresh animation
-        pill.classList.add('shoving');
-        pill.addEventListener('animationend', () => pill.classList.remove('shoving'), { once: true });
+      // ── Pill nav: click to expand / collapse project cards ────────────────
+      const navCardsContainer = document.getElementById('projectsNavCards');
 
-        bodies.forEach(body => {
-          Body.setVelocity(body, {
-            x: body.velocity.x + (Math.random() - 0.5) * 6,
-            y: body.velocity.y - 10
-          });
+      // Build one card per project
+      PROJECTS.forEach(proj => {
+        const card = document.createElement('div');
+        card.className = 'project-nav-card';
+        card.innerHTML = `
+          <div class="project-nav-card-bg" style="background-image:url('${proj.photo}')"></div>
+          <div class="project-nav-card-body">
+            <span class="project-nav-card-title">${proj.title}</span>
+            <span class="project-nav-card-cta">View ↗</span>
+          </div>`;
+        card.addEventListener('click', e => {
+          e.stopPropagation();
+          closePillNav();
+          openModal(proj.key, null);
         });
+        navCardsContainer.appendChild(card);
+      });
+
+      const navCardEls = Array.from(navCardsContainer.querySelectorAll('.project-nav-card'));
+      gsap.set(navCardEls, { y: 20, opacity: 0 });
+
+      const PILL_CLOSED_H = 44;
+      const PILL_CARD_H_DESK = 160;
+      const PILL_CARD_H_MOB  = 140;
+      const PILL_PAD = 52 + 10; // padding-top + padding-bottom in .projects-nav-cards
+
+      function getPillExpandH() {
+        return PILL_PAD + (window.innerWidth <= 768 ? PILL_CARD_H_MOB : PILL_CARD_H_DESK);
+      }
+
+      let pillNavOpen = false;
+
+      function openPillNav() {
+        pillNavOpen = true;
+        pill.setAttribute('data-open', '');
+        pill.classList.add('nav-open');
+        gsap.timeline()
+          .to(pill, { height: getPillExpandH(), borderRadius: '20px', duration: 0.45, ease: 'power3.out' })
+          .to(navCardEls, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out', stagger: 0.06 }, '-=0.2');
+        // Give the balls a shove as the pill opens
+        bodies.forEach(body => Body.setVelocity(body, {
+          x: body.velocity.x + (Math.random() - 0.5) * 6,
+          y: body.velocity.y - 10
+        }));
+      }
+
+      function closePillNav() {
+        if (!pillNavOpen) return;
+        pillNavOpen = false;
+        pill.removeAttribute('data-open');
+        pill.classList.remove('nav-open');
+        gsap.timeline()
+          .to(navCardEls, { y: 20, opacity: 0, duration: 0.2, ease: 'power2.in', stagger: { each: 0.03, from: 'end' } })
+          .to(pill, { height: PILL_CLOSED_H, borderRadius: '999px', duration: 0.35, ease: 'power3.inOut' }, '-=0.1');
+      }
+
+      pill.addEventListener('click', () => {
+        if (pillNavOpen) closePillNav();
+        else openPillNav();
       });
 
       // ── Expand / collapse — scales the physics body so Matter pushes neighbours
@@ -2349,26 +2435,7 @@
         el.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
         el.style.transform  = 'scale(' + EXPAND_SCALE + ')';
 
-        // Measure the pill's natural height for this project's content,
-        // then animate to that height so the full description is always visible.
-        const p = PROJECTS[idx];
-        clearTyping();
-        if (pill) {
-          hoverTitleEl.textContent = p.title;
-          hoverDescEl.textContent  = p.desc;
-          pill.style.transition = 'none';
-          pill.style.height     = 'auto';
-          const naturalH = Math.max(pill.scrollHeight, 44);
-          hoverTitleEl.textContent = '';
-          hoverDescEl.textContent  = '';
-          pill.style.height = '44px';
-          pill.offsetHeight;           // force reflow so transition fires
-          pill.style.transition = '';  // restore CSS transition
-          pill.style.height     = naturalH + 'px';
-        }
-        if (projectsSection) projectsSection.classList.add('hovered');
-        if (hoverTitleEl) typeText(hoverTitleEl, p.title, 8);
-        if (hoverDescEl)  typeText(hoverDescEl,  p.desc,  8);
+        // Bubble expansion only scales the circle; pill nav is click-driven separately.
       }
 
       function collapseBubble(idx) {
@@ -2389,9 +2456,7 @@
         el.style.transform  = 'scale(1)';
 
         if (isStillActive) {
-          clearTyping();
           if (projectsSection) projectsSection.classList.remove('hovered');
-          if (pill) pill.style.height = '44px';
         }
       }
 
