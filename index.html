@@ -529,7 +529,7 @@
 
     /* Pill-shaped info bar below ball-pit — expands downward on hover */
     .projects-bar-wrap {
-      padding: 20px 24px 60px;
+      padding: 56px 24px 60px;
       position: relative;
       pointer-events: none; /* never block bubble clicks */
     }
@@ -654,10 +654,10 @@
       transform: translateX(3px);
     }
 
-    /* Small mobile: 90% wide pill, cards stacked vertically */
+    /* Small mobile: 96% wide pill, cards stacked vertically */
     @media (max-width: 480px) {
       .projects-bottom {
-        width: 90%;
+        width: 96%;
       }
       .projects-nav-cards {
         flex-direction: column;
@@ -806,7 +806,7 @@
       #ball-pit { min-height: 820px; }
       .bubble-card-desc { display: none; }
       /* Pill stays visible on mobile — hover expansion disabled but label always shows */
-      .projects-bar-wrap { padding-bottom: 40px; }
+      .projects-bar-wrap { padding-top: 20px; padding-bottom: 40px; }
     }
 
     .project-summary {
