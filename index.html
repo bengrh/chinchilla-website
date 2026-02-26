@@ -120,23 +120,22 @@
       align-items: center;
       gap: 12px;
       padding: 12px 20px;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1.5px solid #444;
+      background: #F97316;
+      border: none;
       border-radius: 999px;
-      color: var(--black);
+      color: #fff;
       font-family: 'Inter', sans-serif;
       font-weight: 600;
       font-size: 14px;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       z-index: 201;
-      transition: background 0.3s ease;
+      transition: background 0.3s ease, transform 0.3s ease;
     }
 
     .staggered-toggle:hover {
-      background: rgba(0, 0, 0, 0.75);
+      background: #ea6c0a;
+      transform: scale(1.03);
     }
 
     .staggered-toggle-label {
@@ -539,10 +538,8 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1.5px solid #444;
+      background: #F97316;
+      border: none;
       border-radius: 999px;
       height: 44px;
       overflow: hidden;
@@ -884,6 +881,11 @@
 
     .footer-col a:hover {
       opacity: 0.6;
+    }
+
+    .footer-col a svg {
+      color: #F97316;
+      flex-shrink: 0;
     }
 
     .footer-bottom {
