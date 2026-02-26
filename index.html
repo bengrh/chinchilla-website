@@ -612,7 +612,8 @@
       padding: 18px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start;
+      gap: 10px;
       height: 100%;
       box-sizing: border-box;
     }
@@ -650,26 +651,24 @@
     }
 
     .project-nav-card-link:hover {
-      color: #fff;
+      color: #F97316;
       transform: translateX(3px);
     }
 
-    /* Small mobile only: horizontal scroll so pill doesn't get too tall */
+    /* Small mobile: 90% wide pill, cards stacked vertically */
     @media (max-width: 480px) {
+      .projects-bottom {
+        width: 90%;
+      }
       .projects-nav-cards {
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        scroll-snap-type: x mandatory;
-        flex-wrap: nowrap;
+        flex-direction: column;
+        gap: 8px;
         padding: 52px 10px 10px;
       }
-      .projects-nav-cards::-webkit-scrollbar { display: none; }
       .project-nav-card {
-        flex: 0 0 62vw;
-        scroll-snap-align: start;
-        height: 140px;
+        flex: none;
+        width: 100%;
+        height: 120px;
       }
     }
 
@@ -2390,7 +2389,7 @@
 
       const PILL_CLOSED_H = 44;
       const PILL_CARD_H_DESK = 160;
-      const PILL_CARD_H_MOB  = 140;
+      const PILL_CARD_H_MOB  = 3 * 120 + 2 * 8; // 3 stacked cards × 120px + 2 gaps × 8px = 376
       const PILL_PAD = 52 + 10; // padding-top + padding-bottom in .projects-nav-cards
 
       function getPillExpandH() {
