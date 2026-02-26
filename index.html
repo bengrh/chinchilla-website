@@ -824,12 +824,6 @@
         align-items: stretch;
       }
 
-      /* Flush-left panels, no extra indent */
-      .contact-default,
-      .contact-cta {
-        padding-left: 0;
-      }
-
       .contact-title { font-size: 28px; margin-bottom: 10px; }
       .contact-subtitle { font-size: 15px; margin-bottom: 20px; }
 
@@ -1665,6 +1659,12 @@
 
       .contact {
         padding: 60px 24px;
+      }
+
+      /* Must come after the desktop padding-left: 48px rules to win the cascade */
+      .contact-default,
+      .contact-cta {
+        padding-left: 0;
       }
 
       footer {
