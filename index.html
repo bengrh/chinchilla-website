@@ -120,8 +120,8 @@
       align-items: center;
       gap: 12px;
       padding: 12px 20px;
-      background: #F97316;
-      border: none;
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid rgba(255,255,255,0.2);
       border-radius: 999px;
       color: #fff;
       font-family: 'Inter', sans-serif;
@@ -134,7 +134,7 @@
     }
 
     .staggered-toggle:hover {
-      background: #ea6c0a;
+      background: rgba(255,255,255,0.18);
       transform: scale(1.03);
     }
 
@@ -336,7 +336,7 @@
     }
 
     .staggered-social-link:hover {
-      color: #F97316;
+      color: var(--black);
     }
 
     @media (min-width: 769px) {
@@ -650,7 +650,7 @@
     }
 
     .project-nav-card-link:hover {
-      color: #F97316;
+      color: #fff;
       transform: translateX(3px);
     }
 
@@ -839,8 +839,8 @@
       align-items: center;
       justify-content: center;
       padding: 16px 36px;
-      background: #F97316;
-      color: #fff;
+      background: #ffffff;
+      color: #0a0a0a;
       border-radius: 100px;
       font-size: 17px;
       font-weight: 600;
@@ -851,7 +851,7 @@
     }
 
     .footer-cta-btn:hover {
-      background: #ea6c0a;
+      background: rgba(255,255,255,0.85);
       transform: scale(1.03);
     }
 
@@ -864,13 +864,6 @@
 
     @media (max-width: 768px) {
       footer { padding: 60px 24px 40px; }
-
-      /* Contact: stack vertically on mobile */
-      .contact-main {
-        flex-direction: column;
-        gap: 24px;
-        align-items: stretch;
-      }
 
       .contact-title { font-size: 28px; margin-bottom: 10px; }
       .contact-subtitle { font-size: 15px; margin-bottom: 20px; }
@@ -927,15 +920,14 @@
       font-size: 16px;
       font-weight: 400;
       letter-spacing: -0.02em;
-      transition: color 0.3s ease;
+      transition: opacity 0.3s ease;
     }
 
     .footer-col a:hover {
-      color: #F97316;
+      opacity: 0.6;
     }
 
     .footer-col a svg {
-      color: #F97316;
       flex-shrink: 0;
     }
 
@@ -952,38 +944,6 @@
     .footer-bottom span {
       font-size: 14px;
       color: #A0A0A0;
-    }
-
-    /* Calendar */
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 26px);
-      gap: 7px;
-    }
-
-    .cal-dot {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      transition: transform 0.2s ease;
-    }
-
-    .cal-dot:hover { transform: scale(1.35); }
-
-    /* Past days in month */
-    .cal-dot.cal-past   { background: #ffffff; }
-    /* Today */
-    .cal-dot.cal-today  { background: #F97316; }
-    /* Future days in month */
-    .cal-dot.cal-future { background: rgba(255, 255, 255, 0.25); }
-    /* Days outside current month */
-    .cal-dot.cal-outside { background: #2d2d2d; }
-
-    /* Mobile: calendar same dot size as desktop, centred in its column */
-    @media (max-width: 768px) {
-      .contact-calendar-wrap {
-        align-self: center;
-      }
     }
 
     /* Project Modal */
@@ -1576,71 +1536,11 @@
       padding: 120px 24px;
     }
 
-    /* Flex row: calendar left, sliding content right */
-    .contact-main {
-      display: flex;
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    /* Calendar wrapper */
-    .contact-calendar-wrap {
-      flex-shrink: 0;
-      cursor: pointer;
-      padding: 10px;
-      border-radius: 14px;
-      transition: opacity 0.3s ease, transform 0.85s cubic-bezier(0.16,1,0.3,1);
-      user-select: none;
-    }
-
-    .contact-calendar-wrap:hover {
-      opacity: 0.75;
-    }
-
-    /* Clip container for the slide animation */
-    .contact-content-wrap {
-      flex: 1;
-      min-width: 0;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    /* Default "Get in touch" content — slides right on CTA activation */
-    .contact-default {
-      padding-left: 48px;
-      transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
-    }
-
-    #contact.cta-active .contact-default {
-      transform: translateX(110%);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* CTA panel — slides in from left */
+    /* Contact content — single column layout */
     .contact-cta {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding-left: 48px;
-      transform: translateX(-100%);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
-    }
-
-    #contact.cta-active .contact-cta {
-      transform: translateX(0);
-      opacity: 1;
-      pointer-events: auto;
+      margin-top: 40px;
     }
 
     .contact-title {
@@ -1670,8 +1570,8 @@
     }
 
     .contact-email:hover {
-      color: #F97316;
-      border-color: #F97316;
+      color: var(--black);
+      border-color: var(--black);
     }
 
     /* Mobile adjustments */
@@ -1715,14 +1615,8 @@
         padding: 60px 24px;
       }
 
-      /* Must come after the desktop padding-left: 48px rules to win the cascade */
-      .contact-default,
-      .contact-cta {
-        padding-left: 0;
-      }
-
-      /* Centre all text and buttons in the contact section */
-      .contact-content-wrap { text-align: center; }
+      /* Centre all text and buttons in the contact section on mobile */
+      .contact { text-align: center; }
       .contact-cta { align-items: center; }
 
       footer {
@@ -2029,34 +1923,20 @@
 
   <!-- Contact Section -->
   <section class="contact" id="contact">
-    <div class="contact-main">
 
-      <!-- Calendar — clickable -->
-      <div class="contact-calendar-wrap" id="contactCalendar" title="Click to get in touch">
-        <div class="cal-grid" id="calGrid">
-          <!-- 35 dots injected by JS -->
-        </div>
-      </div>
-
-      <!-- Sliding panels: default content + CTA -->
-      <div class="contact-content-wrap">
-
-        <!-- Default: Get in touch -->
-        <div class="contact-default" id="contactDefault">
-          <h2 class="contact-title">Get in touch</h2>
-          <p class="contact-subtitle">Arrange for a call to discuss your next project or to stop in to visit our North Vancouver studio</p>
-          <a href="mailto:contact@chinchilla.design" class="contact-email">contact@chinchilla.design</a>
-        </div>
-
-        <!-- CTA panel — revealed when calendar is clicked -->
-        <div class="contact-cta" id="contactCta">
-          <h2 class="footer-cta-title">What should we make today?</h2>
-          <a href="mailto:contact@chinchilla.design" class="footer-cta-btn">Book an Appointment</a>
-        </div>
-
-      </div>
-
+    <!-- Get in touch -->
+    <div class="contact-default">
+      <h2 class="contact-title">Get in touch</h2>
+      <p class="contact-subtitle">Arrange for a call to discuss your next project or to stop in to visit our North Vancouver studio</p>
+      <a href="mailto:contact@chinchilla.design" class="contact-email">contact@chinchilla.design</a>
     </div>
+
+    <!-- CTA -->
+    <div class="contact-cta">
+      <h2 class="footer-cta-title">What should we make today?</h2>
+      <a href="mailto:contact@chinchilla.design" class="footer-cta-btn">Book an Appointment</a>
+    </div>
+
   </section>
 
   <!-- Footer -->
@@ -3177,47 +3057,6 @@
 
   </script>
 
-  <!-- Footer Calendar -->
-  <script>
-  (function () {
-    var grid    = document.getElementById('calGrid');
-    var calWrap = document.getElementById('contactCalendar');
-    var section = document.getElementById('contact');
 
-    function buildCalendar() {
-      var now     = new Date();
-      var todayMs = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-      var first   = new Date(now.getFullYear(), now.getMonth(), 1);
-      // Week starts Sunday
-      var startOffset = first.getDay(); // 0 = Sun
-      var start = new Date(first);
-      start.setDate(start.getDate() - startOffset);
-
-      grid.innerHTML = '';
-      for (var i = 0; i < 35; i++) {
-        var d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
-        var dot = document.createElement('div');
-        dot.className = 'cal-dot';
-
-        if (d.getMonth() !== now.getMonth()) {
-          dot.classList.add('cal-outside');
-        } else {
-          var dMs = d.getTime();
-          if (dMs === todayMs)      dot.classList.add('cal-today');
-          else if (dMs < todayMs)   dot.classList.add('cal-past');
-          else                      dot.classList.add('cal-future');
-        }
-        grid.appendChild(dot);
-      }
-    }
-
-    buildCalendar();
-
-    // Toggle CTA panel when calendar is clicked
-    calWrap.addEventListener('click', function () {
-      section.classList.toggle('cta-active');
-    });
-  })();
-  </script>
 </body>
 </html>
