@@ -689,10 +689,13 @@
       overflow: hidden;
       /* physics drives left/top; CSS transitions drive width/height on hover */
       will-change: left, top, width, height;
+      /* subtle orange tint on the circle itself */
       box-shadow:
-        0 0 0 6px rgba(249, 115, 22, 0.12),   /* translucent orange gap */
-        0 0 0 8px #F97316,                      /* solid orange border */
-        0 8px 40px rgba(0,0,0,0.5);             /* drop shadow */
+        inset 0 0 0 2000px rgba(249, 115, 22, 0.07),
+        0 12px 40px rgba(0, 0, 0, 0.5);
+      /* 5px gap then 2px orange border — matches button lineweight */
+      outline: 2px solid #F97316;
+      outline-offset: 5px;
       user-select: none;
       -webkit-user-select: none;
     }
@@ -1998,8 +2001,11 @@
       const isMobile = window.innerWidth < 768;
       const W     = PIT.offsetWidth;
       const R     = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
-      const ER    = Math.round(R * 1.7);    // expanded physics + visual radius
+      const ER    = Math.round(R * 1.7);    // expanded visual radius
       const D     = R * 2;
+      // Ring = outline-offset (5px) + outline-width (2px) — physics bodies use R+RING
+      // so collisions happen at the outer edge of the visible orange border
+      const RING  = 7;
       const PIT_H = isMobile ? R * 4.5 : R * 2.5;
       PIT.style.height    = PIT_H + 'px';
       PIT.style.minHeight = '0';
@@ -2032,7 +2038,7 @@
       const dropX = [0.15, 0.35, 0.55, 0.75, 0.45];
       const dropY = [R*0.6, R*1.5, R*0.3, R*1.2, R*2.2];
       const bodies = PROJECTS.map((p, i) =>
-        Bodies.circle(dropX[i]*W, dropY[i], R, {
+        Bodies.circle(dropX[i]*W, dropY[i], R + RING, {
           restitution:0.4, friction:0.04, frictionAir:0.022, density:0.003, label:p.key
         })
       );
@@ -2043,7 +2049,10 @@
       // physicsExpanded[i] = true when body[i] has been scaled up in Matter.
       // Guards against double-scaling on rapid mouseenter/leave.
       const physicsExpanded = new Array(PROJECTS.length).fill(false);
-      const EXPAND_SCALE = ER / R;
+      // Visual scale: how much the DOM element grows on hover
+      const EXPAND_SCALE_VIS  = ER / R;
+      // Physics scale: applied to the Matter body (which starts at R+RING)
+      const EXPAND_SCALE_PHYS = (ER + RING) / (R + RING);
 
       // ── Info bar references & typing helpers
       const projectsSection = document.getElementById('projects');
@@ -2310,7 +2319,7 @@
           const prev = expandedIdx;
           expandedIdx = -1;
           if (physicsExpanded[prev]) {
-            Body.scale(bodies[prev], 1 / EXPAND_SCALE, 1 / EXPAND_SCALE);
+            Body.scale(bodies[prev], 1 / EXPAND_SCALE_PHYS, 1 / EXPAND_SCALE_PHYS);
             physicsExpanded[prev] = false;
           }
           bubbleEls[prev].classList.remove('expanded');
@@ -2321,13 +2330,13 @@
         expandedIdx = idx;
         // Scale up physics body only once — guard prevents compounding on rapid hover
         if (!physicsExpanded[idx]) {
-          Body.scale(bodies[idx], EXPAND_SCALE, EXPAND_SCALE);
+          Body.scale(bodies[idx], EXPAND_SCALE_PHYS, EXPAND_SCALE_PHYS);
           physicsExpanded[idx] = true;
         }
         const el = bubbleEls[idx];
         el.classList.add('expanded');
         el.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
-        el.style.transform  = 'scale(' + EXPAND_SCALE + ')';
+        el.style.transform  = 'scale(' + EXPAND_SCALE_VIS + ')';
 
         // Bubble expansion only scales the circle; pill nav is click-driven separately.
       }
@@ -2341,7 +2350,7 @@
         if (isStillActive) expandedIdx = -1;
 
         if (physicsExpanded[idx]) {
-          Body.scale(bodies[idx], 1 / EXPAND_SCALE, 1 / EXPAND_SCALE);
+          Body.scale(bodies[idx], 1 / EXPAND_SCALE_PHYS, 1 / EXPAND_SCALE_PHYS);
           physicsExpanded[idx] = false;
         }
         const el = bubbleEls[idx];
