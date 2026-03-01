@@ -120,8 +120,8 @@
       align-items: center;
       gap: 12px;
       padding: 12px 20px;
-      background: #F97316;
-      border: none;
+      background: rgba(249, 115, 22, 0.1);
+      border: 2px solid #F97316;
       border-radius: 999px;
       color: #fff;
       font-family: 'Inter', sans-serif;
@@ -130,11 +130,12 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
       z-index: 201;
-      transition: background 0.3s ease, transform 0.3s ease;
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
     }
 
     .staggered-toggle:hover {
-      background: #ea6c0a;
+      background: rgba(234, 108, 10, 0.2);
+      border-color: #ea6c0a;
       transform: scale(1.03);
     }
 
@@ -513,7 +514,10 @@
     }
 
     .intro-text .highlight {
-      color: #F97316;
+      background: linear-gradient(to bottom, #F97316 0%, #0A0A0A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     /* ── Ball-pit Projects ── */
@@ -1531,7 +1535,7 @@
 
     /* Contact Section */
     .contact {
-      padding: 120px 24px;
+      padding: 120px 48px;
     }
 
     /* Contact content — single column layout */
