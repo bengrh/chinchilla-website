@@ -540,10 +540,10 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(249, 115, 22, 0.1);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1.5px solid #444;
+      border: 2px solid #F97316;
       border-radius: 999px;
       height: 44px;
       overflow: hidden;
@@ -689,7 +689,10 @@
       overflow: hidden;
       /* physics drives left/top; CSS transitions drive width/height on hover */
       will-change: left, top, width, height;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      box-shadow:
+        0 0 0 6px rgba(249, 115, 22, 0.12),   /* translucent orange gap */
+        0 0 0 8px #F97316,                      /* solid orange border */
+        0 8px 40px rgba(0,0,0,0.5);             /* drop shadow */
       user-select: none;
       -webkit-user-select: none;
     }
