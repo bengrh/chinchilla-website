@@ -1160,6 +1160,14 @@
       margin-bottom: 0;
     }
 
+    .modal-description p {
+      margin: 0 0 1em;
+    }
+
+    .modal-description p:last-child {
+      margin-bottom: 0;
+    }
+
     .modal-details {
       border-top: 1px solid var(--border);
       padding-top: 24px;
@@ -1834,7 +1842,7 @@
           <div class="modal-info-scroll">
             <span class="modal-category" id="modalCategory">Exhibition Design</span>
             <h2 class="modal-title" id="modalTitle">Project Title</h2>
-            <p class="modal-description" id="modalDescription">Project description goes here.</p>
+            <div class="modal-description" id="modalDescription"><p>Project description goes here.</p></div>
             <div class="modal-details">
               <div class="modal-detail-item">
                 <h4>Year</h4>
@@ -2741,7 +2749,7 @@
         client: 'Interior Design Show',
         services: 'Spatial Design, Fabrication',
         status: 'Completed',
-        description: 'A pavilion for IDS 2025 exploring the meeting point of traditional weaving and digital fabrication — CNC-milled panels arranged to create two distinct surface textures beneath a dramatic canopy structure.',
+        description: 'When observing how visitors walk through our pavilion, nearly every person had the automatic reaction to run their hands over the sweeping curves of the maple countertop. This was one of the goals of the spatial and tactile experience that we curated for our 2025 installation at Vancouver\'s Interior Design Show (IDS). We dedicated three months out of our company\'s schedule to focus efforts on a project that would serve us both as an opportunity to explore the power of our newly acquired digital fabrication assets, but also to launch our business in front of Vancouver\'s design community.\n\nEarlier in the year we had taken delivery of a 5\' x 10\' three axis CNC, a precision piece of automated woodworking technology that we are leveraging in order to allow us to design in ways that would be nearly impossible to execute in any other way. This aesthetic of digital craftsmanship was woven throughout our design for the IDS Pavilion; every aspect of this design demonstrates what can emerge when you push the limits of contemporary design software in concert with digital fabrication tools.\n\nTo keep the project realistic to self finance, we leveraged an opportunity to build the pavilion out of predominantly reclaimed materials. UBC\'s Timber Engineering department regularly stress tests large structural wooden beams and then struggles to find a second life for this material. They welcomed us taking the wood off their hands, that was otherwise destined for a landfill. We cut away the fragmented and fractured material created by the violence of UBC\'s hydraulic press and were left with an inventory of material which was catalogued and fed into our design software. This array of various volumes of wood informed the design of the pavilion to best make use of our material onhand.\n\nWe made this pavilion to show, rather than tell people what we are capable of producing. It served us in allowing us to connect with prospective clients and design collaborators who are looking for a company that specializes in delivering highly complex and detail oriented custom wood installations. It is currently serving as a showcase of our work at our facility in North Vancouver but we would welcome it going to a new home where it can take on a new life.',
         images: [
           'images/ids-pavilion/IDS%20Pavilion.jpg',
           'images/ids-pavilion/IDS%20Canopy.jpg',
@@ -2907,7 +2915,10 @@
       // Update content
       modalTitle.textContent = currentProject.title;
       modalCategory.textContent = currentProject.category;
-      modalDescription.textContent = currentProject.description;
+      modalDescription.innerHTML = currentProject.description
+        .split('\n\n')
+        .map(p => `<p>${p}</p>`)
+        .join('');
       modalYear.textContent = currentProject.year;
       modalClient.textContent = currentProject.client;
       modalServices.textContent = currentProject.services;
