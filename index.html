@@ -547,6 +547,34 @@
       margin: 0;
     }
 
+    /* Back to categories button */
+    .pit-back-btn {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 0 24px;
+      padding: 8px 18px;
+      width: fit-content;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      color: rgba(255, 255, 255, 0.65);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease, color 0.2s ease;
+    }
+    .pit-back-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
     /* Category bubble label overlay */
     .cat-bubble {
       cursor: pointer !important;
@@ -1682,6 +1710,7 @@
   <!-- Projects Ball-Pit -->
   <section class="projects" id="projects">
     <p class="section-eyebrow">Selected Work</p>
+    <div id="pit-back-btn" class="pit-back-btn">← Categories</div>
     <div id="ball-pit">
       <!-- bubbles injected by JS -->
     </div>
@@ -1891,8 +1920,10 @@
         Bodies.rectangle(W/2,       ceilY - T/2,   W*4,    T,          { isStatic:true, restitution:0.4,  friction:0.05 }),
       ]);
 
-      // ── Category explosion state (each category independently explodable)
-      const catExploded = new Array(CATEGORIES.length).fill(false);
+      // ── Mode state
+      let pitMode = 'categories'; // 'categories' | 'projects' | 'transitioning'
+      let activeCategoryKey = null;
+      const backBtn = document.getElementById('pit-back-btn');
 
       // ── Project bodies — created but NOT added to world initially
       const bodies = PROJECTS.map(p =>
@@ -2029,8 +2060,8 @@
         touchStartPos = { x: t.clientX, y: t.clientY };
         touchMoved = false;
 
-        // Hit-test against active project bodies (cat bodies are static — not draggable)
-        touchGrabbed = bodies.some((b, i) => {
+        // Hit-test: project bodies when in projects mode, nothing draggable in categories mode
+        touchGrabbed = pitMode === 'projects' && bodies.some((b, i) => {
           if (bubbleEls[i].classList.contains('pit-hidden')) return false;
           const cr = physicsExpanded[i] ? ER : R;
           return Math.hypot(b.position.x - p.x, b.position.y - p.y) < cr + 12;
@@ -2067,11 +2098,11 @@
 
           // Tap (no significant movement) → explode category or open project modal
           if (!touchMoved) {
-            const catHitIdx = catBodies.reduce((acc, b, i) =>
-              acc !== -1 ? acc : (Math.hypot(b.position.x - p.x, b.position.y - p.y) < RC + 12 ? i : -1), -1);
-            if (catHitIdx !== -1) {
-              setTimeout(() => explodeCategory(CATEGORIES[catHitIdx].key), 10);
-            } else {
+            if (pitMode === 'categories') {
+              const catHitIdx = catBodies.reduce((acc, b, i) =>
+                acc !== -1 ? acc : (Math.hypot(b.position.x - p.x, b.position.y - p.y) < RC + 12 ? i : -1), -1);
+              if (catHitIdx !== -1) setTimeout(() => explodeCategory(CATEGORIES[catHitIdx].key), 10);
+            } else if (pitMode === 'projects') {
               const key = bodies.reduce((hit, b, i) => {
                 if (hit || bubbleEls[i].classList.contains('pit-hidden')) return hit;
                 const cr = physicsExpanded[i] ? ER : R;
@@ -2101,75 +2132,109 @@
         setTimeout(() => { wasDrag = false; }, 0);
       }, true);
 
-      // ── Explode a category: burst it and spawn project circles outward from its center.
-      //    Clicking an already-exploded category collapses it.
+      // ── Back button wire-up
+      backBtn.addEventListener('click', () => backToCategories());
+
+      // ── Explode: clicked category bursts and disappears, others fade, project circles burst out
       function explodeCategory(catKey) {
-        const catIdx = CATEGORIES.findIndex(c => c.key === catKey);
-        if (catIdx === -1) return;
+        if (pitMode !== 'categories') return;
+        pitMode = 'transitioning';
+        activeCategoryKey = catKey;
 
-        if (catExploded[catIdx]) {
-          collapseCategory(catIdx);
-          return;
-        }
+        const clickedIdx = CATEGORIES.findIndex(c => c.key === catKey);
+        const catX  = catBodies[clickedIdx].position.x;
+        const catCY = catBodies[clickedIdx].position.y;
 
-        catExploded[catIdx] = true;
-        const catEl = categoryEls[catIdx];
-        const catX  = catBodies[catIdx].position.x;
-        const catCY = catBodies[catIdx].position.y;
+        // Burst + disappear the clicked bubble
+        const clickedEl = categoryEls[clickedIdx];
+        clickedEl.style.transition = 'transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease';
+        clickedEl.style.transform  = 'scale(1.4)';
+        clickedEl.style.opacity    = '0';
+        clickedEl.style.pointerEvents = 'none';
 
-        // Burst visual: quick scale-up then return
-        catEl.style.transition = 'transform 0.25s cubic-bezier(0.16,1,0.3,1)';
-        catEl.style.transform  = 'scale(1.22)';
-        setTimeout(() => {
-          catEl.style.transition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1)';
-          catEl.style.transform  = 'scale(1)';
-        }, 250);
-        catEl.classList.add('cat-exploded');
-
-        // Spawn project circles at cat center with outward burst velocities
-        const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === catKey);
-        const spread = Math.PI * 0.65;
-        active.forEach(({ p, i }, slot) => {
-          const angle = active.length === 1
-            ? Math.PI / 2 + (Math.random() - 0.5) * 0.3
-            : Math.PI / 2 + (slot / (active.length - 1) - 0.5) * spread;
-          const speed = 13 + Math.random() * 5;
-          Body.setPosition(bodies[i], { x: catX, y: catCY });
-          Body.setVelocity(bodies[i], { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed });
-          Body.setAngle(bodies[i], 0);
-          bubbleEls[i].classList.remove('pit-hidden');
-          bubbleEls[i].style.opacity = '0';
-          bubbleEls[i].style.transition = 'opacity 0.2s ease';
-          bubbleEls[i].style.pointerEvents = '';
-          World.add(world, bodies[i]);
-          requestAnimationFrame(() => { bubbleEls[i].style.opacity = '1'; });
+        // Fade out the other categories
+        CATEGORIES.forEach((c, i) => {
+          if (i === clickedIdx) return;
+          categoryEls[i].style.transition = 'opacity 0.25s ease 0.05s';
+          categoryEls[i].style.opacity    = '0';
+          categoryEls[i].style.pointerEvents = 'none';
         });
+
+        setTimeout(() => {
+          categoryEls.forEach(el => el.classList.add('pit-hidden'));
+
+          // Show back button
+          backBtn.style.display = 'flex';
+          requestAnimationFrame(() => {
+            backBtn.style.opacity = '1';
+            backBtn.style.transform = 'translateY(0)';
+          });
+
+          // Spawn project circles at the clicked category's center, burst outward
+          const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === catKey);
+          const spread = Math.PI * 0.65;
+          active.forEach(({ p, i }, slot) => {
+            const angle = active.length === 1
+              ? Math.PI / 2 + (Math.random() - 0.5) * 0.3
+              : Math.PI / 2 + (slot / (active.length - 1) - 0.5) * spread;
+            const speed = 13 + Math.random() * 5;
+            Body.setPosition(bodies[i], { x: catX, y: catCY });
+            Body.setVelocity(bodies[i], { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed });
+            Body.setAngle(bodies[i], 0);
+            bubbleEls[i].classList.remove('pit-hidden');
+            bubbleEls[i].style.opacity = '0';
+            bubbleEls[i].style.transition = 'opacity 0.2s ease';
+            bubbleEls[i].style.pointerEvents = '';
+            World.add(world, bodies[i]);
+            requestAnimationFrame(() => { bubbleEls[i].style.opacity = '1'; });
+          });
+
+          pitMode = 'projects';
+        }, 330);
       }
 
-      // ── Collapse a category: fade out and remove its project circles
-      function collapseCategory(catIdx) {
-        const catKey = CATEGORIES[catIdx].key;
-        catExploded[catIdx] = false;
-        categoryEls[catIdx].classList.remove('cat-exploded');
+      // ── Back to categories: fade out project circles, restore category circles
+      function backToCategories() {
+        if (pitMode !== 'projects') return;
+        pitMode = 'transitioning';
 
-        // Collapse any hovered project bubble from this category
-        if (expandedIdx !== -1 && PROJECTS[expandedIdx].category === catKey) {
-          collapseBubble(expandedIdx);
-        }
+        backBtn.style.opacity = '0';
+        backBtn.style.transform = 'translateY(-8px)';
+        setTimeout(() => { backBtn.style.display = 'none'; }, 300);
 
-        const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === catKey);
+        if (expandedIdx !== -1) collapseBubble(expandedIdx);
+
+        const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === activeCategoryKey);
         active.forEach(({ i }) => {
           bubbleEls[i].style.transition = 'opacity 0.25s ease';
           bubbleEls[i].style.opacity = '0';
           bubbleEls[i].style.pointerEvents = 'none';
         });
+
         setTimeout(() => {
           active.forEach(({ i }) => {
             World.remove(world, bodies[i]);
             bubbleEls[i].classList.add('pit-hidden');
             Body.setPosition(bodies[i], { x: -9999, y: -9999 });
           });
-        }, 280);
+          activeCategoryKey = null;
+
+          // Restore category circles — static bodies never moved, just show the DOM
+          categoryEls.forEach(el => {
+            el.classList.remove('pit-hidden');
+            el.style.transform = 'scale(1)';
+            el.style.pointerEvents = '';
+            el.style.opacity = '0';
+          });
+          requestAnimationFrame(() => {
+            categoryEls.forEach(el => {
+              el.style.transition = 'opacity 0.35s ease';
+              el.style.opacity = '1';
+            });
+          });
+
+          pitMode = 'categories';
+        }, 300);
       }
 
       // ── Expand / collapse — scales the physics body so Matter pushes neighbours
@@ -2256,7 +2321,7 @@
 
       // Collapse on drag start
       Events.on(mc, 'startdrag', () => {
-        if (expandedIdx !== -1) collapseBubble(expandedIdx);
+        if (pitMode === 'projects' && expandedIdx !== -1) collapseBubble(expandedIdx);
       });
 
       // ── Category hover + click handlers
@@ -2273,7 +2338,7 @@
           });
         }
         el.addEventListener('click', () => {
-          if (wasDrag) return;
+          if (wasDrag || pitMode !== 'categories') return;
           explodeCategory(el.dataset.category);
         });
       });
