@@ -547,36 +547,11 @@
       margin: 0;
     }
 
-    /* Back to categories button */
-    .pit-back-btn {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      margin: 12px 0 0 24px;
-      padding: 8px 18px;
-      width: fit-content;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 999px;
-      color: rgba(255, 255, 255, 0.65);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      user-select: none;
-      opacity: 0;
-      transform: translateY(-8px);
-      transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease, color 0.2s ease;
-    }
-
-    .pit-back-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.35);
-    }
-
     /* Category bubble label overlay */
+    .cat-bubble {
+      cursor: pointer !important;
+    }
+
     .cat-bubble-label {
       position: absolute;
       inset: 0;
@@ -590,7 +565,7 @@
       transition: background 0.4s ease;
     }
 
-    .cat-bubble.expanded .cat-bubble-label {
+    .cat-bubble.cat-exploded .cat-bubble-label {
       background: rgba(0, 0, 0, 0.18);
     }
 
@@ -611,7 +586,7 @@
       transition: filter 0.5s ease;
     }
 
-    .cat-bubble.expanded .cat-bubble-photo {
+    .cat-bubble.cat-exploded .cat-bubble-photo {
       filter: grayscale(20%) brightness(0.9);
     }
 
@@ -720,7 +695,7 @@
 
     @media (max-width: 768px) {
       .bubble-card-desc { display: none; }
-      .pit-back-btn { margin-left: 16px; font-size: 12px; }
+
     }
 
     .project-summary {
@@ -1707,7 +1682,6 @@
   <!-- Projects Ball-Pit -->
   <section class="projects" id="projects">
     <p class="section-eyebrow">Selected Work</p>
-    <div id="pit-back-btn" class="pit-back-btn">← Categories</div>
     <div id="ball-pit">
       <!-- bubbles injected by JS -->
     </div>
@@ -1889,7 +1863,7 @@
       // so collisions happen at the outer edge of the visible orange border
       const RING  = 7;
       const RC    = Math.round(R * 1.4);            // category bubble radius
-      const PIT_H = isMobile ? R * 8 : R * 5;      // tall pit so balls settle naturally
+      const PIT_H = isMobile ? R * 10 : R * 7;     // tall pit — cats at top, projects settle below
       PIT.style.height    = PIT_H + 'px';
       PIT.style.minHeight = '0';
       PIT.style.overflow  = 'visible';
@@ -1917,10 +1891,8 @@
         Bodies.rectangle(W/2,       ceilY - T/2,   W*4,    T,          { isStatic:true, restitution:0.4,  friction:0.05 }),
       ]);
 
-      // ── Mode state
-      let pitMode = 'categories';  // 'categories' | 'projects' | 'transitioning'
-      let activeCategoryKey = null;
-      const backBtn = document.getElementById('pit-back-btn');
+      // ── Category explosion state (each category independently explodable)
+      const catExploded = new Array(CATEGORIES.length).fill(false);
 
       // ── Project bodies — created but NOT added to world initially
       const bodies = PROJECTS.map(p =>
@@ -1956,22 +1928,16 @@
         return el;
       });
 
-      // ── Category bodies — created and added to world immediately
+      // ── Category bodies — static, suspended at fixed positions in upper portion
       const catDropX = [0.22, 0.5, 0.78];
       const RC2 = RC * 2;
+      const catFixedY = PIT_H * 0.22;
       const catBodies = CATEGORIES.map((c, i) =>
-        Bodies.circle(catDropX[i] * W, -RC * (1 + i * 0.4), RC + RING, {
-          restitution: 0.38, friction: 0.03, frictionAir: 0.018, density: 0.003, label: 'cat:' + c.key
+        Bodies.circle(catDropX[i] * W, catFixedY, RC + RING, {
+          isStatic: true, label: 'cat:' + c.key
         })
       );
       World.add(world, catBodies);
-
-      // Category hover/expand tracking
-      const catPhysicsExpanded = new Array(CATEGORIES.length).fill(false);
-      let catExpandedIdx = -1;
-      const CAT_EXPAND_SCALE_VIS  = 1.12;
-      const CAT_EXPAND_SCALE_PHYS = ((RC * CAT_EXPAND_SCALE_VIS) + RING) / (RC + RING);
-      const catCollapseTimers = new Array(CATEGORIES.length).fill(null);
 
       // ── Category DOM elements
       const categoryEls = CATEGORIES.map((c, i) => {
@@ -1980,8 +1946,8 @@
         el.dataset.category = c.key;
         el.style.width  = RC2 + 'px';
         el.style.height = RC2 + 'px';
-        el.style.left   = (catDropX[i] * W - RC) + 'px';
-        el.style.top    = (-RC) + 'px';
+        el.style.left   = (catBodies[i].position.x - RC) + 'px';
+        el.style.top    = (catBodies[i].position.y - RC) + 'px';
         el.innerHTML = `
           <img class="bubble-photo cat-bubble-photo" src="${c.photo}" alt="${c.label}" draggable="false">
           <div class="cat-bubble-label">
@@ -1995,28 +1961,14 @@
       const MAX_SPEED = 28;
 
       Events.on(engine, 'afterUpdate', () => {
-        // Sync category bubbles
-        catBodies.forEach((b, i) => {
+        // Sync active project bubbles only (cat bodies are static — positions never change)
+        bodies.forEach((b, i) => {
+          if (bubbleEls[i].classList.contains('pit-hidden')) return;
           const spd = Math.hypot(b.velocity.x, b.velocity.y);
           if (spd > MAX_SPEED) Body.setVelocity(b, { x: b.velocity.x * MAX_SPEED / spd, y: b.velocity.y * MAX_SPEED / spd });
-          if (!categoryEls[i].classList.contains('pit-hidden')) {
-            categoryEls[i].style.left = (b.position.x - RC) + 'px';
-            categoryEls[i].style.top  = (b.position.y - RC) + 'px';
-          }
+          bubbleEls[i].style.left = (b.position.x - R) + 'px';
+          bubbleEls[i].style.top  = (b.position.y - R) + 'px';
         });
-        // Sync active project bubbles
-        if (activeCategoryKey) {
-          PROJECTS.forEach((p, i) => {
-            if (p.category !== activeCategoryKey) return;
-            const b = bodies[i];
-            const spd = Math.hypot(b.velocity.x, b.velocity.y);
-            if (spd > MAX_SPEED) Body.setVelocity(b, { x: b.velocity.x * MAX_SPEED / spd, y: b.velocity.y * MAX_SPEED / spd });
-            if (!bubbleEls[i].classList.contains('pit-hidden')) {
-              bubbleEls[i].style.left = (b.position.x - R) + 'px';
-              bubbleEls[i].style.top  = (b.position.y - R) + 'px';
-            }
-          });
-        }
       });
 
       Runner.run(Runner.create(), engine);
@@ -2077,16 +2029,12 @@
         touchStartPos = { x: t.clientX, y: t.clientY };
         touchMoved = false;
 
-        // Hit-test against whichever set of bodies is currently active
-        if (pitMode === 'categories') {
-          touchGrabbed = catBodies.some(b => Math.hypot(b.position.x - p.x, b.position.y - p.y) < RC + 12);
-        } else {
-          touchGrabbed = bodies.some((b, i) => {
-            if (!activeCategoryKey || PROJECTS[i].category !== activeCategoryKey) return false;
-            const cr = physicsExpanded[i] ? ER : R;
-            return Math.hypot(b.position.x - p.x, b.position.y - p.y) < cr + 12;
-          });
-        }
+        // Hit-test against active project bodies (cat bodies are static — not draggable)
+        touchGrabbed = bodies.some((b, i) => {
+          if (bubbleEls[i].classList.contains('pit-hidden')) return false;
+          const cr = physicsExpanded[i] ? ER : R;
+          return Math.hypot(b.position.x - p.x, b.position.y - p.y) < cr + 12;
+        });
 
         if (touchGrabbed) {
           mouse.position.x = p.x; mouse.position.y = p.y;
@@ -2117,15 +2065,15 @@
           mouse.button = -1;
           Events.trigger(mc, 'mouseup', { mouse });
 
-          // Tap (no significant movement) → explode category or open modal
+          // Tap (no significant movement) → explode category or open project modal
           if (!touchMoved) {
-            if (pitMode === 'categories') {
-              const hit = catBodies.reduce((acc, b, i) =>
-                acc || (Math.hypot(b.position.x - p.x, b.position.y - p.y) < RC + 12 ? CATEGORIES[i].key : null), null);
-              if (hit) setTimeout(() => explodeCategory(hit), 10);
-            } else if (pitMode === 'projects') {
+            const catHitIdx = catBodies.reduce((acc, b, i) =>
+              acc !== -1 ? acc : (Math.hypot(b.position.x - p.x, b.position.y - p.y) < RC + 12 ? i : -1), -1);
+            if (catHitIdx !== -1) {
+              setTimeout(() => explodeCategory(CATEGORIES[catHitIdx].key), 10);
+            } else {
               const key = bodies.reduce((hit, b, i) => {
-                if (hit || !activeCategoryKey || PROJECTS[i].category !== activeCategoryKey) return hit;
+                if (hit || bubbleEls[i].classList.contains('pit-hidden')) return hit;
                 const cr = physicsExpanded[i] ? ER : R;
                 return Math.hypot(b.position.x - p.x, b.position.y - p.y) < cr + 12 ? PROJECTS[i].key : null;
               }, null);
@@ -2153,117 +2101,75 @@
         setTimeout(() => { wasDrag = false; }, 0);
       }, true);
 
-      // ── Back button wire-up
-      backBtn.addEventListener('click', () => backToCategories());
-
-      // ── Explode a category: burst the clicked bubble, kick others off, drop project bubbles
+      // ── Explode a category: burst it and spawn project circles outward from its center.
+      //    Clicking an already-exploded category collapses it.
       function explodeCategory(catKey) {
-        if (pitMode !== 'categories') return;
-        pitMode = 'transitioning';
-        activeCategoryKey = catKey;
+        const catIdx = CATEGORIES.findIndex(c => c.key === catKey);
+        if (catIdx === -1) return;
 
-        const clickedIdx = CATEGORIES.findIndex(c => c.key === catKey);
-
-        // Collapse any hovered category bubble
-        if (catExpandedIdx !== -1) {
-          const prev = catExpandedIdx; catExpandedIdx = -1;
-          if (catPhysicsExpanded[prev]) { Body.scale(catBodies[prev], 1 / CAT_EXPAND_SCALE_PHYS, 1 / CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[prev] = false; }
-          categoryEls[prev].classList.remove('expanded'); categoryEls[prev].style.transform = 'scale(1)';
+        if (catExploded[catIdx]) {
+          collapseCategory(catIdx);
+          return;
         }
 
-        // Burst the clicked bubble — scale up and fade out
-        const clickedEl = categoryEls[clickedIdx];
-        clickedEl.style.transition = 'transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease';
-        clickedEl.style.transform  = 'scale(1.35)';
-        clickedEl.style.opacity    = '0';
-        clickedEl.style.pointerEvents = 'none';
+        catExploded[catIdx] = true;
+        const catEl = categoryEls[catIdx];
+        const catX  = catBodies[catIdx].position.x;
+        const catCY = catBodies[catIdx].position.y;
 
-        // Kick and fade the other category bubbles off screen
-        CATEGORIES.forEach((c, i) => {
-          if (i === clickedIdx) return;
-          Body.setVelocity(catBodies[i], {
-            x: catBodies[i].velocity.x + (Math.random() - 0.5) * 8,
-            y: catBodies[i].velocity.y + 18
-          });
-          categoryEls[i].style.transition = 'opacity 0.25s ease 0.1s';
-          categoryEls[i].style.opacity    = '0';
-          categoryEls[i].style.pointerEvents = 'none';
-        });
-
+        // Burst visual: quick scale-up then return
+        catEl.style.transition = 'transform 0.25s cubic-bezier(0.16,1,0.3,1)';
+        catEl.style.transform  = 'scale(1.22)';
         setTimeout(() => {
-          // Remove category bodies from world and hide DOM
-          catBodies.forEach(b => World.remove(world, b));
-          categoryEls.forEach(el => el.classList.add('pit-hidden'));
+          catEl.style.transition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1)';
+          catEl.style.transform  = 'scale(1)';
+        }, 250);
+        catEl.classList.add('cat-exploded');
 
-          // Show back button
-          backBtn.style.display = 'flex';
-          requestAnimationFrame(() => {
-            backBtn.style.opacity = '1';
-            backBtn.style.transform = 'translateY(0)';
-          });
-
-          // Drop project bubbles for this category from above
-          const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === catKey);
-          active.forEach(({ p, i }, slot) => {
-            const xFrac = active.length === 1 ? 0.5 : 0.2 + (slot / (active.length - 1)) * 0.6;
-            Body.setPosition(bodies[i], { x: xFrac * W, y: -R * 2 - slot * R * 0.5 });
-            Body.setVelocity(bodies[i], { x: (Math.random() - 0.5) * 3, y: 2 });
-            Body.setAngle(bodies[i], 0);
-            bubbleEls[i].classList.remove('pit-hidden');
-            bubbleEls[i].style.opacity = '1';
-            bubbleEls[i].style.pointerEvents = '';
-            World.add(world, bodies[i]);
-          });
-
-          pitMode = 'projects';
-        }, 360);
+        // Spawn project circles at cat center with outward burst velocities
+        const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === catKey);
+        const spread = Math.PI * 0.65;
+        active.forEach(({ p, i }, slot) => {
+          const angle = active.length === 1
+            ? Math.PI / 2 + (Math.random() - 0.5) * 0.3
+            : Math.PI / 2 + (slot / (active.length - 1) - 0.5) * spread;
+          const speed = 13 + Math.random() * 5;
+          Body.setPosition(bodies[i], { x: catX, y: catCY });
+          Body.setVelocity(bodies[i], { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed });
+          Body.setAngle(bodies[i], 0);
+          bubbleEls[i].classList.remove('pit-hidden');
+          bubbleEls[i].style.opacity = '0';
+          bubbleEls[i].style.transition = 'opacity 0.2s ease';
+          bubbleEls[i].style.pointerEvents = '';
+          World.add(world, bodies[i]);
+          requestAnimationFrame(() => { bubbleEls[i].style.opacity = '1'; });
+        });
       }
 
-      // ── Back to categories: kick project bubbles off, drop categories back in
-      function backToCategories() {
-        if (pitMode !== 'projects') return;
-        pitMode = 'transitioning';
+      // ── Collapse a category: fade out and remove its project circles
+      function collapseCategory(catIdx) {
+        const catKey = CATEGORIES[catIdx].key;
+        catExploded[catIdx] = false;
+        categoryEls[catIdx].classList.remove('cat-exploded');
 
-        backBtn.style.opacity = '0';
-        backBtn.style.transform = 'translateY(-8px)';
-        setTimeout(() => { backBtn.style.display = 'none'; }, 300);
+        // Collapse any hovered project bubble from this category
+        if (expandedIdx !== -1 && PROJECTS[expandedIdx].category === catKey) {
+          collapseBubble(expandedIdx);
+        }
 
-        if (expandedIdx !== -1) collapseBubble(expandedIdx);
-
-        const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === activeCategoryKey);
+        const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === catKey);
         active.forEach(({ i }) => {
-          Body.setVelocity(bodies[i], { x: (Math.random() - 0.5) * 6, y: bodies[i].velocity.y + 16 });
           bubbleEls[i].style.transition = 'opacity 0.25s ease';
           bubbleEls[i].style.opacity = '0';
           bubbleEls[i].style.pointerEvents = 'none';
         });
-
         setTimeout(() => {
           active.forEach(({ i }) => {
             World.remove(world, bodies[i]);
             bubbleEls[i].classList.add('pit-hidden');
             Body.setPosition(bodies[i], { x: -9999, y: -9999 });
           });
-          activeCategoryKey = null;
-
-          // Reset and re-drop category bubbles
-          CATEGORIES.forEach((c, i) => {
-            Body.setPosition(catBodies[i], { x: catDropX[i] * W, y: -RC * 2 - i * RC * 0.4 });
-            Body.setVelocity(catBodies[i], { x: (Math.random() - 0.5) * 3, y: 2 });
-            Body.setAngle(catBodies[i], 0);
-            categoryEls[i].classList.remove('pit-hidden');
-            categoryEls[i].style.transform = 'scale(1)';
-            categoryEls[i].style.pointerEvents = '';
-            categoryEls[i].style.opacity = '0';
-            World.add(world, catBodies[i]);
-            requestAnimationFrame(() => {
-              categoryEls[i].style.transition = 'opacity 0.35s ease';
-              categoryEls[i].style.opacity = '1';
-            });
-          });
-
-          pitMode = 'categories';
-        }, 330);
+        }, 280);
       }
 
       // ── Expand / collapse — scales the physics body so Matter pushes neighbours
@@ -2350,45 +2256,24 @@
 
       // Collapse on drag start
       Events.on(mc, 'startdrag', () => {
-        if (pitMode === 'projects' && expandedIdx !== -1) collapseBubble(expandedIdx);
-        if (pitMode === 'categories' && catExpandedIdx !== -1) {
-          const prev = catExpandedIdx; catExpandedIdx = -1;
-          if (catPhysicsExpanded[prev]) { Body.scale(catBodies[prev], 1 / CAT_EXPAND_SCALE_PHYS, 1 / CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[prev] = false; }
-          categoryEls[prev].classList.remove('expanded'); categoryEls[prev].style.transform = 'scale(1)';
-        }
+        if (expandedIdx !== -1) collapseBubble(expandedIdx);
       });
 
       // ── Category hover + click handlers
       categoryEls.forEach((el, idx) => {
         if (!isMobile) {
           el.addEventListener('mouseenter', () => {
-            catCollapseTimers.forEach((t, i) => { if (t) { clearTimeout(t); catCollapseTimers[i] = null; } });
-            if (wasDrag || mc.body || pitMode !== 'categories') return;
-            if (catExpandedIdx !== -1 && catExpandedIdx !== idx) {
-              const prev = catExpandedIdx; catExpandedIdx = -1;
-              if (catPhysicsExpanded[prev]) { Body.scale(catBodies[prev], 1 / CAT_EXPAND_SCALE_PHYS, 1 / CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[prev] = false; }
-              categoryEls[prev].classList.remove('expanded'); categoryEls[prev].style.transform = 'scale(1)';
-            }
-            catExpandedIdx = idx;
-            if (!catPhysicsExpanded[idx]) { Body.scale(catBodies[idx], CAT_EXPAND_SCALE_PHYS, CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[idx] = true; }
-            el.classList.add('expanded');
-            el.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
-            el.style.transform  = 'scale(' + CAT_EXPAND_SCALE_VIS + ')';
+            if (wasDrag) return;
+            el.style.transition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1)';
+            el.style.transform = 'scale(1.07)';
           });
           el.addEventListener('mouseleave', () => {
-            catCollapseTimers[idx] = setTimeout(() => {
-              catCollapseTimers[idx] = null;
-              if (catExpandedIdx !== idx) return;
-              catExpandedIdx = -1;
-              if (catPhysicsExpanded[idx]) { Body.scale(catBodies[idx], 1 / CAT_EXPAND_SCALE_PHYS, 1 / CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[idx] = false; }
-              el.classList.remove('expanded');
-              el.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1)';
-              el.style.transform  = 'scale(1)';
-            }, 80);
+            el.style.transition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1)';
+            el.style.transform = 'scale(1)';
           });
         }
         el.addEventListener('click', () => {
-          if (wasDrag || pitMode !== 'categories') return;
+          if (wasDrag) return;
           explodeCategory(el.dataset.category);
         });
       });
