@@ -547,156 +547,81 @@
       margin: 0;
     }
 
-    /* Pill-shaped info bar below ball-pit — expands downward on hover */
-    .projects-bar-wrap {
-      padding: 56px 24px 60px;
-      position: relative;
-      pointer-events: none; /* never block bubble clicks */
-    }
-
-    /* Pill bar — dark glass, GSAP handles height + border-radius */
-    .projects-bottom {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
+    /* Back to categories button */
+    .pit-back-btn {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 0 24px;
+      padding: 8px 18px;
+      width: fit-content;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 999px;
-      height: 44px;
-      overflow: hidden;
-      width: 75%;
-      margin: 0 auto;
-      pointer-events: auto;
+      color: rgba(255, 255, 255, 0.65);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease, color 0.2s ease;
     }
 
-    /* "Projects" label — always visible as pill header */
-    .projects-bottom::before {
-      content: 'Projects';
+    .pit-back-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* Category bubble label overlay */
+    .cat-bubble-label {
       position: absolute;
-      inset: 0 0 auto 0;
-      height: 44px;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 32px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #ffffff;
+      z-index: 4;
+      background: rgba(0, 0, 0, 0.38);
+      border-radius: 50%;
       pointer-events: none;
-      z-index: 2;
+      transition: background 0.4s ease;
     }
 
-    /* Label change when nav is open */
-    .projects-bottom[data-open]::before {
-      content: 'Close ✕';
-      letter-spacing: 0.04em;
+    .cat-bubble.expanded .cat-bubble-label {
+      background: rgba(0, 0, 0, 0.18);
     }
 
-    /* Project nav cards — rows of clickable project thumbnails */
-    .projects-nav-cards {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      padding: 52px 10px 10px;
-      pointer-events: none;
-    }
-
-    .projects-bottom.nav-open .projects-nav-cards {
-      pointer-events: auto;
-    }
-
-    .project-nav-card {
-      flex: 1;
-      position: relative;
-      border-radius: 14px;
-      overflow: hidden;
-      cursor: pointer;
-      height: auto;
-      min-width: 0;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      transition: background 0.25s ease, border-color 0.25s ease;
-    }
-
-    .project-nav-card:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.22);
-    }
-
-    .project-nav-card-body {
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      gap: 10px;
-      box-sizing: border-box;
-    }
-
-    .project-nav-card-category {
+    .cat-bubble-label-text {
       color: #fff;
       font-family: 'Inter', sans-serif;
-      font-size: 18px;
+      font-size: clamp(13px, 1.6vw, 20px);
       font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.2;
+      letter-spacing: -0.02em;
+      text-align: center;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+      padding: 0 14px;
+      line-height: 1.25;
     }
 
-    .project-nav-card-links {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .cat-bubble-photo {
+      filter: grayscale(60%) brightness(0.75);
+      transition: filter 0.5s ease;
     }
 
-    .project-nav-card-link {
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      color: rgba(255, 255, 255, 0.7);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      letter-spacing: 0em;
-      text-align: left;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      transition: color 0.2s ease, transform 0.2s ease;
+    .cat-bubble.expanded .cat-bubble-photo {
+      filter: grayscale(20%) brightness(0.9);
     }
 
-    .project-nav-card-link:hover {
-      color: #F97316;
-      transform: translateX(3px);
-    }
-
-    /* Small mobile: 96% wide pill, cards stacked vertically */
-    @media (max-width: 480px) {
-      .projects-bottom {
-        width: 96%;
-      }
-      .projects-nav-cards {
-        flex-direction: column;
-        gap: 8px;
-        padding: 52px 10px 10px;
-      }
-      .project-nav-card {
-        flex: none;
-        width: 100%;
-        height: auto;
-      }
-    }
+    /* Utility — hides element from physics loop sync */
+    .pit-hidden { display: none !important; }
 
     #ball-pit {
       position: relative;
       width: 100%;
-      /* no overflow:hidden here — balls start above and fall in */
       cursor: grab;
-      min-height: 560px;
     }
 
     #ball-pit:active { cursor: grabbing; }
@@ -794,10 +719,8 @@
     }
 
     @media (max-width: 768px) {
-      #ball-pit { min-height: 820px; }
       .bubble-card-desc { display: none; }
-      /* Pill stays visible on mobile — hover expansion disabled but label always shows */
-      .projects-bar-wrap { padding-top: 40px; padding-bottom: 40px; }
+      .pit-back-btn { margin-left: 16px; font-size: 12px; }
     }
 
     .project-summary {
@@ -1784,13 +1707,9 @@
   <!-- Projects Ball-Pit -->
   <section class="projects" id="projects">
     <p class="section-eyebrow">Selected Work</p>
+    <div id="pit-back-btn" class="pit-back-btn">← Categories</div>
     <div id="ball-pit">
       <!-- bubbles injected by JS -->
-    </div>
-    <div class="projects-bar-wrap">
-      <div class="projects-bottom" id="projectsPill">
-        <div class="projects-nav-cards" id="projectsNavCards"></div>
-      </div>
     </div>
   </section>
 
@@ -1953,6 +1872,12 @@
         { key: 'sage-hayward', title: 'Winery Branding',category: 'Brand Identity', photo: 'images/sage-hayward/sign.jpg',           desc: 'Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.' }
       ];
 
+      const CATEGORIES = [
+        { key: 'Design/Build',   label: 'Design / Build',  photo: 'images/ids-pavilion/IDS%20Pavilion.jpg' },
+        { key: 'Product Design', label: 'Product Design',  photo: 'images/wall-art/front.jpg' },
+        { key: 'Brand Identity', label: 'Brand Identity',  photo: 'images/sage-hayward/sign.jpg' }
+      ];
+
       const { Engine, Runner, Bodies, Body, Events, World, Mouse, MouseConstraint } = Matter;
 
       const isMobile = window.innerWidth < 768;
@@ -1963,7 +1888,8 @@
       // Ring = outline-offset (5px) + outline-width (2px) — physics bodies use R+RING
       // so collisions happen at the outer edge of the visible orange border
       const RING  = 7;
-      const PIT_H = isMobile ? R * 4.5 : R * 2.5;
+      const RC    = Math.round(R * 1.4);            // category bubble radius
+      const PIT_H = isMobile ? R * 8 : R * 5;      // tall pit so balls settle naturally
       PIT.style.height    = PIT_H + 'px';
       PIT.style.minHeight = '0';
       PIT.style.overflow  = 'visible';
@@ -1991,66 +1917,75 @@
         Bodies.rectangle(W/2,       ceilY - T/2,   W*4,    T,          { isStatic:true, restitution:0.4,  friction:0.05 }),
       ]);
 
-      // ── Bodies
-      const dropX = [0.15, 0.35, 0.55, 0.75, 0.45];
-      const dropY = [R*0.6, R*1.5, R*0.3, R*1.2, R*2.2];
-      const bodies = PROJECTS.map((p, i) =>
-        Bodies.circle(dropX[i]*W, dropY[i], R + RING, {
-          restitution:0.4, friction:0.04, frictionAir:0.022, density:0.003, label:p.key
+      // ── Mode state
+      let pitMode = 'categories';  // 'categories' | 'projects' | 'transitioning'
+      let activeCategoryKey = null;
+      const backBtn = document.getElementById('pit-back-btn');
+
+      // ── Project bodies — created but NOT added to world initially
+      const bodies = PROJECTS.map(p =>
+        Bodies.circle(-9999, -9999, R + RING, {
+          restitution: 0.4, friction: 0.04, frictionAir: 0.022, density: 0.003, label: p.key
         })
       );
-      World.add(world, bodies);
 
       // Track which body is currently scaled up for hover
       let expandedIdx = -1;
-      // physicsExpanded[i] = true when body[i] has been scaled up in Matter.
-      // Guards against double-scaling on rapid mouseenter/leave.
       const physicsExpanded = new Array(PROJECTS.length).fill(false);
-      // Visual scale: how much the DOM element grows on hover
       const EXPAND_SCALE_VIS  = ER / R;
-      // Physics scale: applied to the Matter body (which starts at R+RING)
       const EXPAND_SCALE_PHYS = (ER + RING) / (R + RING);
 
-      // ── Info bar references & typing helpers
-      const projectsSection = document.getElementById('projects');
-      const hoverTitleEl    = document.getElementById('projectsHoverTitle');
-      const hoverDescEl     = document.getElementById('projectsHoverDesc');
-      const pill            = document.querySelector('.projects-bottom');
-      let   typingTimers    = [];
-
-      function clearTyping() {
-        typingTimers.forEach(t => clearTimeout(t));
-        typingTimers = [];
-        if (hoverTitleEl) hoverTitleEl.textContent = '';
-        if (hoverDescEl)  hoverDescEl.textContent  = '';
-      }
-
-      function typeText(el, text, delayMs) {
-        let i = 0;
-        function tick() {
-          if (i > text.length) return;
-          el.textContent = text.slice(0, i);
-          i++;
-          if (i <= text.length) typingTimers.push(setTimeout(tick, delayMs));
-        }
-        tick();
-      }
-
-      // ── DOM bubbles
-      const bubbleEls = PROJECTS.map((p, i) => {
+      // ── Project DOM bubbles — hidden initially
+      const bubbleEls = PROJECTS.map((p) => {
         const el = document.createElement('div');
         el.className = 'bubble';
         el.dataset.project = p.key;
         el.style.width  = D + 'px';
         el.style.height = D + 'px';
-        el.style.left   = (dropX[i]*W - R) + 'px';
-        el.style.top    = (dropY[i] - R) + 'px';
+        el.style.left   = '-9999px';
+        el.style.top    = '-9999px';
         el.innerHTML = `
           <img class="bubble-photo" src="${p.photo}" alt="${p.title}" draggable="false">
           <div class="bubble-card">
             <div class="bubble-card-title">${p.title}</div>
             <div class="bubble-card-desc">${p.desc}</div>
             <span class="bubble-card-open">View project ↗</span>
+          </div>`;
+        el.classList.add('pit-hidden');
+        PIT.appendChild(el);
+        return el;
+      });
+
+      // ── Category bodies — created and added to world immediately
+      const catDropX = [0.22, 0.5, 0.78];
+      const RC2 = RC * 2;
+      const catBodies = CATEGORIES.map((c, i) =>
+        Bodies.circle(catDropX[i] * W, -RC * (1 + i * 0.4), RC + RING, {
+          restitution: 0.38, friction: 0.03, frictionAir: 0.018, density: 0.003, label: 'cat:' + c.key
+        })
+      );
+      World.add(world, catBodies);
+
+      // Category hover/expand tracking
+      const catPhysicsExpanded = new Array(CATEGORIES.length).fill(false);
+      let catExpandedIdx = -1;
+      const CAT_EXPAND_SCALE_VIS  = 1.12;
+      const CAT_EXPAND_SCALE_PHYS = ((RC * CAT_EXPAND_SCALE_VIS) + RING) / (RC + RING);
+      const catCollapseTimers = new Array(CATEGORIES.length).fill(null);
+
+      // ── Category DOM elements
+      const categoryEls = CATEGORIES.map((c, i) => {
+        const el = document.createElement('div');
+        el.className = 'bubble cat-bubble';
+        el.dataset.category = c.key;
+        el.style.width  = RC2 + 'px';
+        el.style.height = RC2 + 'px';
+        el.style.left   = (catDropX[i] * W - RC) + 'px';
+        el.style.top    = (-RC) + 'px';
+        el.innerHTML = `
+          <img class="bubble-photo cat-bubble-photo" src="${c.photo}" alt="${c.label}" draggable="false">
+          <div class="cat-bubble-label">
+            <span class="cat-bubble-label-text">${c.label}</span>
           </div>`;
         PIT.appendChild(el);
         return el;
@@ -2060,14 +1995,28 @@
       const MAX_SPEED = 28;
 
       Events.on(engine, 'afterUpdate', () => {
-        bodies.forEach((b, i) => {
-          // Cap velocity
-          const spd = Math.sqrt(b.velocity.x*b.velocity.x + b.velocity.y*b.velocity.y);
-          if (spd > MAX_SPEED) Body.setVelocity(b, { x: b.velocity.x*MAX_SPEED/spd, y: b.velocity.y*MAX_SPEED/spd });
-          // Anchor is always R — visual expansion uses CSS transform, not left/top shift
-          bubbleEls[i].style.left = (b.position.x - R) + 'px';
-          bubbleEls[i].style.top  = (b.position.y - R) + 'px';
+        // Sync category bubbles
+        catBodies.forEach((b, i) => {
+          const spd = Math.hypot(b.velocity.x, b.velocity.y);
+          if (spd > MAX_SPEED) Body.setVelocity(b, { x: b.velocity.x * MAX_SPEED / spd, y: b.velocity.y * MAX_SPEED / spd });
+          if (!categoryEls[i].classList.contains('pit-hidden')) {
+            categoryEls[i].style.left = (b.position.x - RC) + 'px';
+            categoryEls[i].style.top  = (b.position.y - RC) + 'px';
+          }
         });
+        // Sync active project bubbles
+        if (activeCategoryKey) {
+          PROJECTS.forEach((p, i) => {
+            if (p.category !== activeCategoryKey) return;
+            const b = bodies[i];
+            const spd = Math.hypot(b.velocity.x, b.velocity.y);
+            if (spd > MAX_SPEED) Body.setVelocity(b, { x: b.velocity.x * MAX_SPEED / spd, y: b.velocity.y * MAX_SPEED / spd });
+            if (!bubbleEls[i].classList.contains('pit-hidden')) {
+              bubbleEls[i].style.left = (b.position.x - R) + 'px';
+              bubbleEls[i].style.top  = (b.position.y - R) + 'px';
+            }
+          });
+        }
       });
 
       Runner.run(Runner.create(), engine);
@@ -2128,12 +2077,16 @@
         touchStartPos = { x: t.clientX, y: t.clientY };
         touchMoved = false;
 
-        // Hit-test against physics bodies (use actual current radius)
-        touchGrabbed = bodies.some((b, i) => {
-          const dx = b.position.x - p.x, dy = b.position.y - p.y;
-          const cr = physicsExpanded[i] ? ER : R;
-          return Math.sqrt(dx*dx + dy*dy) < cr + 12;
-        });
+        // Hit-test against whichever set of bodies is currently active
+        if (pitMode === 'categories') {
+          touchGrabbed = catBodies.some(b => Math.hypot(b.position.x - p.x, b.position.y - p.y) < RC + 12);
+        } else {
+          touchGrabbed = bodies.some((b, i) => {
+            if (!activeCategoryKey || PROJECTS[i].category !== activeCategoryKey) return false;
+            const cr = physicsExpanded[i] ? ER : R;
+            return Math.hypot(b.position.x - p.x, b.position.y - p.y) < cr + 12;
+          });
+        }
 
         if (touchGrabbed) {
           mouse.position.x = p.x; mouse.position.y = p.y;
@@ -2164,15 +2117,20 @@
           mouse.button = -1;
           Events.trigger(mc, 'mouseup', { mouse });
 
-          // Tap (no significant movement) → open modal
+          // Tap (no significant movement) → explode category or open modal
           if (!touchMoved) {
-            const key = bodies.reduce((hit, b, i) => {
-              if (hit) return hit;
-              const dx = b.position.x - p.x, dy = b.position.y - p.y;
-              const cr = physicsExpanded[i] ? ER : R;
-              return Math.sqrt(dx*dx + dy*dy) < cr + 12 ? PROJECTS[i].key : null;
-            }, null);
-            if (key) setTimeout(() => openModal(key, R), 10);
+            if (pitMode === 'categories') {
+              const hit = catBodies.reduce((acc, b, i) =>
+                acc || (Math.hypot(b.position.x - p.x, b.position.y - p.y) < RC + 12 ? CATEGORIES[i].key : null), null);
+              if (hit) setTimeout(() => explodeCategory(hit), 10);
+            } else if (pitMode === 'projects') {
+              const key = bodies.reduce((hit, b, i) => {
+                if (hit || !activeCategoryKey || PROJECTS[i].category !== activeCategoryKey) return hit;
+                const cr = physicsExpanded[i] ? ER : R;
+                return Math.hypot(b.position.x - p.x, b.position.y - p.y) < cr + 12 ? PROJECTS[i].key : null;
+              }, null);
+              if (key) setTimeout(() => openModal(key, R), 10);
+            }
           }
         }
         touchGrabbed = false;
@@ -2195,73 +2153,118 @@
         setTimeout(() => { wasDrag = false; }, 0);
       }, true);
 
-      // ── Pill nav: click to expand / collapse project cards ────────────────
-      const navCardsContainer = document.getElementById('projectsNavCards');
+      // ── Back button wire-up
+      backBtn.addEventListener('click', () => backToCategories());
 
-      // Group projects by category, preserving insertion order
-      const catMap = {};
-      PROJECTS.forEach(proj => {
-        if (!catMap[proj.category]) catMap[proj.category] = { photo: proj.photo, projects: [] };
-        catMap[proj.category].projects.push(proj);
-      });
+      // ── Explode a category: burst the clicked bubble, kick others off, drop project bubbles
+      function explodeCategory(catKey) {
+        if (pitMode !== 'categories') return;
+        pitMode = 'transitioning';
+        activeCategoryKey = catKey;
 
-      // Build one card per category
-      Object.entries(catMap).forEach(([label, cat]) => {
-        const card = document.createElement('div');
-        card.className = 'project-nav-card';
-        const linksHTML = cat.projects.map(proj =>
-          `<button class="project-nav-card-link" data-key="${proj.key}">${proj.title}</button>`
-        ).join('');
-        card.innerHTML = `
-          <div class="project-nav-card-body">
-            <span class="project-nav-card-category">${label}</span>
-            <div class="project-nav-card-links">${linksHTML}</div>
-          </div>`;
-        card.querySelectorAll('.project-nav-card-link').forEach(btn => {
-          btn.addEventListener('click', e => {
-            e.stopPropagation();
-            closePillNav();
-            openModal(btn.dataset.key, null);
+        const clickedIdx = CATEGORIES.findIndex(c => c.key === catKey);
+
+        // Collapse any hovered category bubble
+        if (catExpandedIdx !== -1) {
+          const prev = catExpandedIdx; catExpandedIdx = -1;
+          if (catPhysicsExpanded[prev]) { Body.scale(catBodies[prev], 1 / CAT_EXPAND_SCALE_PHYS, 1 / CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[prev] = false; }
+          categoryEls[prev].classList.remove('expanded'); categoryEls[prev].style.transform = 'scale(1)';
+        }
+
+        // Burst the clicked bubble — scale up and fade out
+        const clickedEl = categoryEls[clickedIdx];
+        clickedEl.style.transition = 'transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease';
+        clickedEl.style.transform  = 'scale(1.35)';
+        clickedEl.style.opacity    = '0';
+        clickedEl.style.pointerEvents = 'none';
+
+        // Kick and fade the other category bubbles off screen
+        CATEGORIES.forEach((c, i) => {
+          if (i === clickedIdx) return;
+          Body.setVelocity(catBodies[i], {
+            x: catBodies[i].velocity.x + (Math.random() - 0.5) * 8,
+            y: catBodies[i].velocity.y + 18
           });
+          categoryEls[i].style.transition = 'opacity 0.25s ease 0.1s';
+          categoryEls[i].style.opacity    = '0';
+          categoryEls[i].style.pointerEvents = 'none';
         });
-        navCardsContainer.appendChild(card);
-      });
 
-      const navCardEls = Array.from(navCardsContainer.querySelectorAll('.project-nav-card'));
-      gsap.set(navCardEls, { y: 20, opacity: 0 });
+        setTimeout(() => {
+          // Remove category bodies from world and hide DOM
+          catBodies.forEach(b => World.remove(world, b));
+          categoryEls.forEach(el => el.classList.add('pit-hidden'));
 
-      const PILL_CLOSED_H = 44;
+          // Show back button
+          backBtn.style.display = 'flex';
+          requestAnimationFrame(() => {
+            backBtn.style.opacity = '1';
+            backBtn.style.transform = 'translateY(0)';
+          });
 
-      let pillNavOpen = false;
+          // Drop project bubbles for this category from above
+          const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === catKey);
+          active.forEach(({ p, i }, slot) => {
+            const xFrac = active.length === 1 ? 0.5 : 0.2 + (slot / (active.length - 1)) * 0.6;
+            Body.setPosition(bodies[i], { x: xFrac * W, y: -R * 2 - slot * R * 0.5 });
+            Body.setVelocity(bodies[i], { x: (Math.random() - 0.5) * 3, y: 2 });
+            Body.setAngle(bodies[i], 0);
+            bubbleEls[i].classList.remove('pit-hidden');
+            bubbleEls[i].style.opacity = '1';
+            bubbleEls[i].style.pointerEvents = '';
+            World.add(world, bodies[i]);
+          });
 
-      function openPillNav() {
-        pillNavOpen = true;
-        pill.setAttribute('data-open', '');
-        pill.classList.add('nav-open');
-        gsap.timeline()
-          .to(pill, { height: 'auto', borderRadius: '20px', duration: 0.45, ease: 'power3.out' })
-          .to(navCardEls, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out', stagger: 0.06 }, '-=0.2');
-        // Give the balls a shove as the pill opens
-        bodies.forEach(body => Body.setVelocity(body, {
-          x: body.velocity.x + (Math.random() - 0.5) * 6,
-          y: body.velocity.y - 10
-        }));
+          pitMode = 'projects';
+        }, 360);
       }
 
-      function closePillNav() {
-        if (!pillNavOpen) return;
-        pillNavOpen = false;
-        pill.removeAttribute('data-open');
-        pill.classList.remove('nav-open');
-        gsap.timeline()
-          .to(navCardEls, { y: 20, opacity: 0, duration: 0.2, ease: 'power2.in', stagger: { each: 0.03, from: 'end' } })
-          .to(pill, { height: PILL_CLOSED_H, borderRadius: '999px', duration: 0.35, ease: 'power3.inOut' }, '-=0.1');
-      }
+      // ── Back to categories: kick project bubbles off, drop categories back in
+      function backToCategories() {
+        if (pitMode !== 'projects') return;
+        pitMode = 'transitioning';
 
-      pill.addEventListener('click', () => {
-        if (pillNavOpen) closePillNav();
-        else openPillNav();
-      });
+        backBtn.style.opacity = '0';
+        backBtn.style.transform = 'translateY(-8px)';
+        setTimeout(() => { backBtn.style.display = 'none'; }, 300);
+
+        if (expandedIdx !== -1) collapseBubble(expandedIdx);
+
+        const active = PROJECTS.map((p, i) => ({ p, i })).filter(({ p }) => p.category === activeCategoryKey);
+        active.forEach(({ i }) => {
+          Body.setVelocity(bodies[i], { x: (Math.random() - 0.5) * 6, y: bodies[i].velocity.y + 16 });
+          bubbleEls[i].style.transition = 'opacity 0.25s ease';
+          bubbleEls[i].style.opacity = '0';
+          bubbleEls[i].style.pointerEvents = 'none';
+        });
+
+        setTimeout(() => {
+          active.forEach(({ i }) => {
+            World.remove(world, bodies[i]);
+            bubbleEls[i].classList.add('pit-hidden');
+            Body.setPosition(bodies[i], { x: -9999, y: -9999 });
+          });
+          activeCategoryKey = null;
+
+          // Reset and re-drop category bubbles
+          CATEGORIES.forEach((c, i) => {
+            Body.setPosition(catBodies[i], { x: catDropX[i] * W, y: -RC * 2 - i * RC * 0.4 });
+            Body.setVelocity(catBodies[i], { x: (Math.random() - 0.5) * 3, y: 2 });
+            Body.setAngle(catBodies[i], 0);
+            categoryEls[i].classList.remove('pit-hidden');
+            categoryEls[i].style.transform = 'scale(1)';
+            categoryEls[i].style.pointerEvents = '';
+            categoryEls[i].style.opacity = '0';
+            World.add(world, catBodies[i]);
+            requestAnimationFrame(() => {
+              categoryEls[i].style.transition = 'opacity 0.35s ease';
+              categoryEls[i].style.opacity = '1';
+            });
+          });
+
+          pitMode = 'categories';
+        }, 330);
+      }
 
       // ── Expand / collapse — scales the physics body so Matter pushes neighbours
       function expandBubble(idx) {
@@ -2345,8 +2348,50 @@
         });
       });
 
-      // Collapse if user starts dragging
-      Events.on(mc, 'startdrag', () => { if (expandedIdx !== -1) collapseBubble(expandedIdx); });
+      // Collapse on drag start
+      Events.on(mc, 'startdrag', () => {
+        if (pitMode === 'projects' && expandedIdx !== -1) collapseBubble(expandedIdx);
+        if (pitMode === 'categories' && catExpandedIdx !== -1) {
+          const prev = catExpandedIdx; catExpandedIdx = -1;
+          if (catPhysicsExpanded[prev]) { Body.scale(catBodies[prev], 1 / CAT_EXPAND_SCALE_PHYS, 1 / CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[prev] = false; }
+          categoryEls[prev].classList.remove('expanded'); categoryEls[prev].style.transform = 'scale(1)';
+        }
+      });
+
+      // ── Category hover + click handlers
+      categoryEls.forEach((el, idx) => {
+        if (!isMobile) {
+          el.addEventListener('mouseenter', () => {
+            catCollapseTimers.forEach((t, i) => { if (t) { clearTimeout(t); catCollapseTimers[i] = null; } });
+            if (wasDrag || mc.body || pitMode !== 'categories') return;
+            if (catExpandedIdx !== -1 && catExpandedIdx !== idx) {
+              const prev = catExpandedIdx; catExpandedIdx = -1;
+              if (catPhysicsExpanded[prev]) { Body.scale(catBodies[prev], 1 / CAT_EXPAND_SCALE_PHYS, 1 / CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[prev] = false; }
+              categoryEls[prev].classList.remove('expanded'); categoryEls[prev].style.transform = 'scale(1)';
+            }
+            catExpandedIdx = idx;
+            if (!catPhysicsExpanded[idx]) { Body.scale(catBodies[idx], CAT_EXPAND_SCALE_PHYS, CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[idx] = true; }
+            el.classList.add('expanded');
+            el.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
+            el.style.transform  = 'scale(' + CAT_EXPAND_SCALE_VIS + ')';
+          });
+          el.addEventListener('mouseleave', () => {
+            catCollapseTimers[idx] = setTimeout(() => {
+              catCollapseTimers[idx] = null;
+              if (catExpandedIdx !== idx) return;
+              catExpandedIdx = -1;
+              if (catPhysicsExpanded[idx]) { Body.scale(catBodies[idx], 1 / CAT_EXPAND_SCALE_PHYS, 1 / CAT_EXPAND_SCALE_PHYS); catPhysicsExpanded[idx] = false; }
+              el.classList.remove('expanded');
+              el.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1)';
+              el.style.transform  = 'scale(1)';
+            }, 80);
+          });
+        }
+        el.addEventListener('click', () => {
+          if (wasDrag || pitMode !== 'categories') return;
+          explodeCategory(el.dataset.category);
+        });
+      });
 
       document.addEventListener('ballpit:open', e => openModal(e.detail));
     });
