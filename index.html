@@ -1974,7 +1974,7 @@
     // ── Ball-pit Projects ──────────────────────────────────────────────
     window.addEventListener('load', function () {
       const PIT = document.getElementById('ball-pit');
-      if (!PIT || typeof Matter === 'undefined') return;
+      if (!PIT || typeof Matter === 'undefined' || PIT.offsetWidth === 0) return;
 
       const PROJECTS = [
         { key: 'ids-pavilion', title: 'IDS Pavilion',   category: 'Design/Build',   photo: 'images/ids-pavilion/IDS%20Pavilion.jpg', desc: 'A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.' },
