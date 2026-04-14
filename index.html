@@ -1017,45 +1017,6 @@
       height: 26px;
     }
 
-    /* 3D viewer toggle button */
-    .modal-3d-toggle {
-      position: absolute;
-      bottom: 16px;
-      right: 16px;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 8px 14px 8px 11px;
-      background: rgba(10,10,10,0.75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 999px;
-      color: #fff;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      transition: background 0.2s, border-color 0.2s;
-    }
-    .modal-3d-toggle:hover {
-      background: rgba(40,40,40,0.9);
-      border-color: rgba(255,255,255,0.35);
-    }
-
-    /* 3D model-viewer panel */
-    .modal-3d-viewer {
-      position: absolute;
-      inset: 0;
-      background: #0d0d0d;
-    }
-    .modal-3d-viewer model-viewer {
-      width: 100%;
-      height: 100%;
-      --poster-color: transparent;
-    }
 
     /* Gallery: fills remaining width, full height, images crop to fill */
     .modal-gallery {
@@ -2233,14 +2194,6 @@
           <div class="modal-gallery-images" id="modalImages">
             <!-- Images injected by JS -->
           </div>
-          <div class="modal-3d-viewer" id="modal3dViewer" style="display:none">
-            <!-- model-viewer injected by JS -->
-          </div>
-          <button class="modal-3d-toggle" id="modal3dToggle" style="display:none" aria-label="Toggle 3D view">
-            <svg id="modal3dIconModel" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            <svg id="modal3dIconPhoto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span id="modal3dToggleLabel">View in 3D</span>
-          </button>
         </div>
         <div class="modal-info">
           <!-- Scrollable area: all content except nav arrows -->
@@ -3210,7 +3163,6 @@
           'Tunnel end — looking inside the arched opening at the foot of the bench',
           'Surface macro — shadow lines between the laths at finishing stage'
         ],
-        model3d: 'images/lath-bench/model.glb',
         externalMedia: []
       },
       'wall-art': {
@@ -3287,59 +3239,7 @@
     const modalClose = modal.querySelector('.modal-close');
     const modalFrame = modal.querySelector('.modal-frame');
     const modalImages = document.getElementById('modalImages');
-    const modal3dViewer = document.getElementById('modal3dViewer');
-    const modal3dToggle = document.getElementById('modal3dToggle');
-    const modal3dToggleLabel = document.getElementById('modal3dToggleLabel');
-    const modal3dIconModel = document.getElementById('modal3dIconModel');
-    const modal3dIconPhoto = document.getElementById('modal3dIconPhoto');
     const galleryDots = document.getElementById('galleryDots');
-    let modal3dActive = false;
-
-    function loadModelViewerScript() {
-      if (document.querySelector('script[src*="model-viewer"]')) return;
-      const s = document.createElement('script');
-      s.type = 'module';
-      s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
-      document.head.appendChild(s);
-    }
-
-    function show3dViewer(glbSrc) {
-      loadModelViewerScript();
-      modal3dViewer.innerHTML = `<model-viewer
-        src="${glbSrc}"
-        alt="3D model"
-        auto-rotate
-        camera-controls
-        shadow-intensity="1.2"
-        environment-image="neutral"
-        exposure="0.9"
-        style="width:100%;height:100%;background:#0d0d0d">
-      </model-viewer>`;
-      modal3dViewer.style.display = 'block';
-      modalImages.style.display = 'none';
-      modal3dIconModel.style.display = 'none';
-      modal3dIconPhoto.style.display = '';
-      modal3dToggleLabel.textContent = 'View Photos';
-      modal3dActive = true;
-    }
-
-    function hide3dViewer() {
-      modal3dViewer.style.display = 'none';
-      modal3dViewer.innerHTML = '';
-      modalImages.style.display = '';
-      modal3dIconModel.style.display = '';
-      modal3dIconPhoto.style.display = 'none';
-      modal3dToggleLabel.textContent = 'View in 3D';
-      modal3dActive = false;
-    }
-
-    modal3dToggle.addEventListener('click', () => {
-      if (modal3dActive) {
-        hide3dViewer();
-      } else {
-        show3dViewer(currentProject.model3d);
-      }
-    });
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const modalTitle = document.getElementById('modalTitle');
@@ -3453,13 +3353,6 @@
         }
       }
 
-      // Show/hide 3D toggle
-      if (currentProject.model3d) {
-        modal3dToggle.style.display = 'flex';
-      } else {
-        modal3dToggle.style.display = 'none';
-      }
-
       // Show modal
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -3470,7 +3363,6 @@
       modal.classList.remove('active');
       modalFrame.style.width = '';
       document.body.style.overflow = '';
-      hide3dViewer();
     }
 
     // Navigate Gallery
