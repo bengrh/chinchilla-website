@@ -2870,8 +2870,8 @@
     }
 
     function animateCursor() {
-      cursorX = lerp(cursorX, mouseX, 0.15);
-      cursorY = lerp(cursorY, mouseY, 0.15);
+      cursorX = lerp(cursorX, mouseX, 0.35);
+      cursorY = lerp(cursorY, mouseY, 0.35);
       cursor.style.left = cursorX + 'px';
       cursor.style.top = cursorY + 'px';
       requestAnimationFrame(animateCursor);
