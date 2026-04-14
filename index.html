@@ -96,7 +96,8 @@
 
     /* Ensure all content sits above the dot grid */
     .hero, .marquee-section, .intro,
-    .projects, .modal, .about, .contact, footer {
+    .projects, .modal, .about, .contact, footer,
+    #what-we-do {
       position: relative;
       z-index: 1;
     }
@@ -1016,6 +1017,46 @@
       height: 26px;
     }
 
+    /* 3D viewer toggle button */
+    .modal-3d-toggle {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px 8px 11px;
+      background: rgba(10,10,10,0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .modal-3d-toggle:hover {
+      background: rgba(40,40,40,0.9);
+      border-color: rgba(255,255,255,0.35);
+    }
+
+    /* 3D model-viewer panel */
+    .modal-3d-viewer {
+      position: absolute;
+      inset: 0;
+      background: #0d0d0d;
+    }
+    .modal-3d-viewer model-viewer {
+      width: 100%;
+      height: 100%;
+      --poster-color: transparent;
+    }
+
     /* Gallery: fills remaining width, full height, images crop to fill */
     .modal-gallery {
       position: relative;
@@ -1617,6 +1658,224 @@
         cursor: auto;
       }
     }
+    /* ── Services & What We Do Table ── */
+    .svc-table-section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .svc-table-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 48px 120px;
+    }
+
+    /* Column header row */
+    .svc-table-head {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0 56px;
+      padding-bottom: 32px;
+      margin-bottom: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .svc-col-label {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* "Process" / "Scope" — the prominent labels */
+    .svc-col-label .section-eyebrow {
+      font-size: clamp(30px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      text-transform: none;
+      color: var(--black);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    /* "How We Work" / "What We Do" — secondary subtitle */
+    .svc-col-title {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--gray);
+    }
+
+    /* Vertical divider */
+    .svc-col-divider {
+      width: 1px;
+      background: var(--border);
+      align-self: stretch;
+    }
+
+    /* Table body — two independent flex columns side by side */
+    .svc-table-body {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0 56px;
+      align-items: start;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Each column is a flex stack so hover only shifts its own side */
+    .svc-cells-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Individual cell */
+    .svc-cell {
+      display: grid;
+      grid-template-columns: 44px 1fr 28px;
+      align-items: start;
+      cursor: default;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .svc-cell:last-child {
+      border-bottom: none;
+    }
+
+    .svc-num {
+      font-family: monospace;
+      font-size: 10px;
+      color: #3a3a3a;
+      letter-spacing: 0.05em;
+      padding: 26px 0;
+      transition: color 0.25s;
+    }
+
+    .svc-cell-body {
+      padding: 24px 0 0;
+    }
+
+    .svc-title {
+      display: block;
+      font-size: clamp(14px, 1.5vw, 19px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      padding-bottom: 24px;
+      transition: color 0.25s ease;
+      line-height: 1.2;
+    }
+
+    .svc-desc {
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.42);
+      line-height: 1.65;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      padding-bottom: 0;
+      transition:
+        max-height 0.38s cubic-bezier(0.16,1,0.3,1),
+        opacity 0.28s ease,
+        padding-bottom 0.28s ease;
+    }
+
+    .svc-indicator {
+      font-size: 15px;
+      color: #2d2d2d;
+      padding: 27px 0 0;
+      transition: color 0.25s, transform 0.25s;
+      text-align: right;
+      line-height: 1;
+    }
+
+    /* Hover state */
+    .svc-cell:hover .svc-desc {
+      max-height: 100px;
+      opacity: 1;
+      padding-bottom: 28px;
+    }
+
+    .svc-cell:hover .svc-title {
+      color: rgba(255,255,255,0.45);
+    }
+
+    .svc-cell:hover .svc-num {
+      color: #555;
+    }
+
+    .svc-right.svc-cell:hover .svc-indicator {
+      color: rgba(255,255,255,0.35);
+      transform: translate(2px, -2px);
+    }
+
+    .svc-left.svc-cell:hover .svc-indicator {
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* Mobile: stack columns */
+    @media (max-width: 767px) {
+      .svc-table-wrap {
+        padding: 72px 24px 80px;
+      }
+
+      .svc-table-head {
+        grid-template-columns: 1fr;
+        gap: 40px 0;
+        border-bottom: none;
+      }
+
+      .svc-table-head .svc-col-divider {
+        display: none;
+      }
+
+      .svc-col-label:first-child {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 32px;
+      }
+
+      .svc-table-body {
+        grid-template-columns: 1fr;
+      }
+
+      .svc-table-body .svc-col-divider {
+        display: none;
+      }
+
+      .svc-cells-col + .svc-cells-col {
+        border-top: 1px solid var(--border);
+      }
+
+      .svc-title {
+        font-size: 16px;
+      }
+    }
+
+    /* Press badge */
+    .press-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      width: fit-content;
+    }
+
+    .press-badge-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .press-badge-show {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--black);
+      letter-spacing: 0.01em;
+    }
+
   </style>
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -1685,8 +1944,12 @@
           <a href="#brand-identity" class="staggered-sub-link" data-nav>Brand Identity</a>
         </div>
       </div>
-      <div class="staggered-item staggered-item--has-sub" id="studioItem">
+      <a class="staggered-item" href="#services" onclick="toggleMenu()">
         <span class="staggered-item-number">02</span>
+        <span class="staggered-item-label">Services</span>
+      </a>
+      <div class="staggered-item staggered-item--has-sub" id="studioItem">
+        <span class="staggered-item-number">03</span>
         <span class="staggered-item-label">Studio</span>
         <div class="staggered-sub">
           <a href="#about" class="staggered-sub-link" data-nav>About</a>
@@ -1694,7 +1957,7 @@
         </div>
       </div>
       <a href="#contact" class="staggered-item" data-nav>
-        <span class="staggered-item-number">03</span>
+        <span class="staggered-item-number">04</span>
         <span class="staggered-item-label">Connect</span>
       </a>
     </nav>
@@ -1797,8 +2060,168 @@
   <!-- Interstitial Statement -->
   <section class="intro">
     <p class="intro-text">
-      We welcome the opportunity to get involved <span class="highlight">early as possible</span> in your design process to help <span class="highlight">efficiently evolve</span> your design for manufacturing, while preserving its <span class="highlight">intent and vision</span>.
+      We welcome the opportunity to get involved as early as possible in your design process to help efficiently evolve your design for manufacturing, while preserving its <span class="highlight">intent</span> and <span class="highlight">vision</span>.
     </p>
+  </section>
+
+  <!-- Services & What We Do -->
+  <section class="svc-table-section" id="services">
+    <div class="svc-table-wrap">
+
+      <!-- Column headers -->
+      <div class="svc-table-head">
+        <div class="svc-col-label">
+          <p class="section-eyebrow">Process</p>
+          <h2 class="svc-col-title">How We Work</h2>
+        </div>
+        <div class="svc-col-divider"></div>
+        <div class="svc-col-label">
+          <p class="section-eyebrow">Scope</p>
+          <h2 class="svc-col-title">What We Do</h2>
+        </div>
+      </div>
+
+      <!-- Two independent columns — hover expands only within its column -->
+      <div class="svc-table-body">
+
+        <div class="svc-cells-col svc-cells-left">
+          <div class="svc-cell">
+            <span class="svc-num">01</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Feasibility &amp; Quoting</span>
+              <p class="svc-desc">Honest scope, materials and budget before you're committed. We give you real numbers early so nothing surprises you later.</p>
+            </div>
+            <span class="svc-indicator">+</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">02</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Design Assist</span>
+              <p class="svc-desc">Embedded in your design process to refine details, resolve fabrication problems and select materials before they become costly surprises.</p>
+            </div>
+            <span class="svc-indicator">+</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">03</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Technical Drawing</span>
+              <p class="svc-desc">Fabrication-ready shop drawings produced directly from your design intent, precise, dimensioned and ready for the floor.</p>
+            </div>
+            <span class="svc-indicator">+</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">04</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Prototyping</span>
+              <p class="svc-desc">Physical tests of form, joinery, texture and finish before full production. Reduce risk and refine the outcome before committing to material.</p>
+            </div>
+            <span class="svc-indicator">+</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">05</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">CNC Fabrication</span>
+              <p class="svc-desc">Precision 3-axis routing, cutting and forming in wood and sheet materials. Complex geometry executed with repeatability and care.</p>
+            </div>
+            <span class="svc-indicator">+</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">06</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Woodwork &amp; Joinery</span>
+              <p class="svc-desc">Complex traditional and contemporary wood construction from intricate cabinetry to architectural-scale installations.</p>
+            </div>
+            <span class="svc-indicator">+</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">07</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Finishing</span>
+              <p class="svc-desc">Surface preparation, staining, lacquering, texture and hardware. Finish is where craft becomes visible.</p>
+            </div>
+            <span class="svc-indicator">+</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">08</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Installation</span>
+              <p class="svc-desc">On-site delivery, assembly and final placement. We see every project through to the last fastener.</p>
+            </div>
+            <span class="svc-indicator">+</span>
+          </div>
+        </div>
+
+        <div class="svc-col-divider"></div>
+
+        <div class="svc-cells-col svc-cells-right">
+          <div class="svc-cell">
+            <span class="svc-num">01</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Hospitality</span>
+              <p class="svc-desc">Bars, restaurants, hotels and spas. Custom millwork, feature walls and bespoke furniture that defines a guest's first impression.</p>
+            </div>
+            <span class="svc-indicator">↗</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">02</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Custom Residential Interiors</span>
+              <p class="svc-desc">Kitchens, living spaces and private commissions designed and built to a level of craft that production furniture cannot reach.</p>
+            </div>
+            <span class="svc-indicator">↗</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">03</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Commercial Interiors</span>
+              <p class="svc-desc">Offices, retail and branded environments where material quality and spatial detail communicate directly with the people in them.</p>
+            </div>
+            <span class="svc-indicator">↗</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">04</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Architectural Features</span>
+              <p class="svc-desc">Staircases, ceilings, cladding and structural elements that are both load-bearing and sculptural, fabricated to tolerance.</p>
+            </div>
+            <span class="svc-indicator">↗</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">05</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Art Installations</span>
+              <p class="svc-desc">Gallery and public work at the intersection of parametric design and hand craft. Objects that hold up under close inspection.</p>
+            </div>
+            <span class="svc-indicator">↗</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">06</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Custom Furnishings</span>
+              <p class="svc-desc">Tables, seating, shelving and storage designed for a specific room, a specific client and a specific life. Available for commission.</p>
+            </div>
+            <span class="svc-indicator">↗</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">07</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Built-in Lighting</span>
+              <p class="svc-desc">Integrated lighting designed as part of the millwork, not added after. Coves, reveals and diffused surfaces that feel inevitable.</p>
+            </div>
+            <span class="svc-indicator">↗</span>
+          </div>
+          <div class="svc-cell">
+            <span class="svc-num">08</span>
+            <div class="svc-cell-body">
+              <span class="svc-title">Trade Show &amp; Exhibition</span>
+              <p class="svc-desc">Pavilions, booths and event installations built to perform under scrutiny and ship reliably. From the IDS to international venues.</p>
+            </div>
+            <span class="svc-indicator">↗</span>
+          </div>
+        </div>
+
+      </div><!-- /.svc-table-body -->
+    </div><!-- /.svc-table-wrap -->
   </section>
 
   <!-- Project Modal -->
@@ -1810,6 +2233,14 @@
           <div class="modal-gallery-images" id="modalImages">
             <!-- Images injected by JS -->
           </div>
+          <div class="modal-3d-viewer" id="modal3dViewer" style="display:none">
+            <!-- model-viewer injected by JS -->
+          </div>
+          <button class="modal-3d-toggle" id="modal3dToggle" style="display:none" aria-label="Toggle 3D view">
+            <svg id="modal3dIconModel" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            <svg id="modal3dIconPhoto" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span id="modal3dToggleLabel">View in 3D</span>
+          </button>
         </div>
         <div class="modal-info">
           <!-- Scrollable area: all content except nav arrows -->
@@ -1867,6 +2298,7 @@
             <p>Our role is often that of a bridge. We help connect design intent and physical execution, digital models and real materials, and creative ambition and manufacturing reality. We specialize in projects where standard fabrication methods fall short.</p>
             <p>We frequently work in a design-assist capacity, advising on material strategy, fabrication logic, and production methods early in the design process to ensure efficiency, feasibility, and design integrity.</p>
             <p>Based in Vancouver and working internationally, we partner with designers and clients who are pursuing technically ambitious, materially expressive, and carefully executed projects.</p>
+            <p>As for the name: chinchillas bathe in dust. They roll in fine volcanic powder to keep their coats clean, a grooming ritual that looks, from the outside, like deliberate immersion in the stuff most animals try to avoid. Anyone who has spent a full day in a woodworking shop will understand the reference immediately. The dust gets in your hair, your clothes, your coffee. By the end of the day you have been thoroughly coated in it. It started as an inside joke and just stuck.</p>
           </div>
         </div>
         <button class="team-reveal-btn" id="teamRevealBtn">
@@ -1948,6 +2380,7 @@
       const PROJECTS = [
         { key: 'ids-pavilion', title: 'IDS Pavilion',   category: 'Design/Build',   photo: 'images/ids-pavilion/IDS%20Pavilion.jpg', desc: 'A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.' },
         { key: 'tiny-house',   title: 'Tiny House',     category: 'Design/Build',   photo: 'images/tiny-house/exterior.jpg',         desc: 'Every surface CNC-milled from sustainable plywood — a fully functional tiny house as seen on HGTV.' },
+        { key: 'lath-bench',   title: 'Lath Bench',     category: 'Product Design', photo: 'images/lath-bench/gallery.jpg',          desc: 'Parametric lath construction over CNC-cut ribs — a sculptural bench in collaboration with Brent Comber Originals.' },
         { key: 'wall-art',     title: 'Wall Art',       category: 'Product Design', photo: 'images/wall-art/front.jpg',              desc: 'Sculptural cedar wall piece with burl inlays, shaped parametrically and finished by hand.' },
         { key: 'chair',        title: 'Chair',          category: 'Product Design', photo: 'images/chair/installed.jpg',             desc: 'Solid white oak dining chair with a hand-shaped wraparound back and cognac leather seat.' },
         { key: 'sage-hayward', title: 'Winery Branding',category: 'Brand Identity', photo: 'images/sage-hayward/sign.jpg',           desc: 'Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.' }
@@ -1963,7 +2396,7 @@
       // Ring = outline-offset (5px) + outline-width (2px) — physics bodies use R+RING
       // so collisions happen at the outer edge of the visible orange border
       const RING  = 7;
-      const PIT_H = isMobile ? R * 4.5 : R * 2.5;
+      const PIT_H = isMobile ? R * 4.5 : R * 4;
       PIT.style.height    = PIT_H + 'px';
       PIT.style.minHeight = '0';
       PIT.style.overflow  = 'visible';
@@ -1992,8 +2425,8 @@
       ]);
 
       // ── Bodies
-      const dropX = [0.15, 0.35, 0.55, 0.75, 0.45];
-      const dropY = [R*0.6, R*1.5, R*0.3, R*1.2, R*2.2];
+      const dropX = [0.15, 0.35, 0.55, 0.75, 0.45, 0.65];
+      const dropY = [R*0.6, R*1.5, R*0.3, R*1.2, R*2.2, R*0.9];
       const bodies = PROJECTS.map((p, i) =>
         Bodies.circle(dropX[i]*W, dropY[i], R + RING, {
           restitution:0.4, friction:0.04, frictionAir:0.022, density:0.003, label:p.key
@@ -2747,6 +3180,39 @@
           { title: 'CSALT Architecture: Prefabrication Projects', url: 'https://www.csaltarchitecture.com/prefabrication-projects/tiny-house' }
         ]
       },
+      'lath-bench': {
+        title: 'Lath Bench',
+        category: 'Product Design',
+        year: '2025',
+        client: 'Brent Comber Originals',
+        services: 'Parametric Design, CNC Fabrication, Woodworking',
+        status: 'Available to Order',
+        description: 'The Lath Bench is a sculptural seating piece developed in collaboration with artist Brent Comber. The form was modelled parametrically — each rib profile generated from a single ruled surface that shifts continuously along the length of the piece, producing a smooth organic undulation from end to end.\n\nConstruction uses over two hundred individually CNC-milled laths, each cut to its precise curved profile, bent and fixed over a structural skeleton of CNC-cut ribs. Small hardwood dowels peg the laths at consistent intervals, creating both the structural connection and the shadow rhythm visible across the surface.\n\nThe interior is intentionally legible — a cross-section of the build logic visible through the gaps in the surface laths. Looking inside reveals the full arc of the rib system: ship-hull construction in miniature, every frame a different curve.\n\nThe bench is a collaboration with <a href="https://www.brentcomber.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Brent Comber Originals</a> and is available for commission through his studio.',
+        images: [
+          'images/lath-bench/gallery.jpg',
+          'images/lath-bench/top-detail.jpg',
+          'images/lath-bench/curve-profile.jpg',
+          'images/lath-bench/end-detail.jpg',
+          'images/lath-bench/shop-clamp.jpg',
+          'images/lath-bench/interior-ribs.jpg',
+          'images/lath-bench/lath-overhead.jpg',
+          'images/lath-bench/tunnel-interior.jpg',
+          'images/lath-bench/surface-macro.jpg'
+        ],
+        imageCaptions: [
+          'Installed in gallery — full bench showing the biomorphic form',
+          'Top surface — laths radiating across the curved crown of the bench',
+          'Exterior profile — the continuous sweep of laths along the full length',
+          'End detail — lath spacing, dowel connections, and rib edges',
+          'In production — ribs being clamped during glue-up',
+          'Interior structural view — CNC-cut rib frames visible through the surface',
+          'Overhead — the lath rhythm from above, each strip a unique curved cut',
+          'Tunnel end — looking inside the arched opening at the foot of the bench',
+          'Surface macro — shadow lines between the laths at finishing stage'
+        ],
+        model3d: 'images/lath-bench/model.glb',
+        externalMedia: []
+      },
       'wall-art': {
         title: 'Wall Art',
         category: 'Product Design',
@@ -2821,7 +3287,59 @@
     const modalClose = modal.querySelector('.modal-close');
     const modalFrame = modal.querySelector('.modal-frame');
     const modalImages = document.getElementById('modalImages');
+    const modal3dViewer = document.getElementById('modal3dViewer');
+    const modal3dToggle = document.getElementById('modal3dToggle');
+    const modal3dToggleLabel = document.getElementById('modal3dToggleLabel');
+    const modal3dIconModel = document.getElementById('modal3dIconModel');
+    const modal3dIconPhoto = document.getElementById('modal3dIconPhoto');
     const galleryDots = document.getElementById('galleryDots');
+    let modal3dActive = false;
+
+    function loadModelViewerScript() {
+      if (document.querySelector('script[src*="model-viewer"]')) return;
+      const s = document.createElement('script');
+      s.type = 'module';
+      s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
+      document.head.appendChild(s);
+    }
+
+    function show3dViewer(glbSrc) {
+      loadModelViewerScript();
+      modal3dViewer.innerHTML = `<model-viewer
+        src="${glbSrc}"
+        alt="3D model"
+        auto-rotate
+        camera-controls
+        shadow-intensity="1.2"
+        environment-image="neutral"
+        exposure="0.9"
+        style="width:100%;height:100%;background:#0d0d0d">
+      </model-viewer>`;
+      modal3dViewer.style.display = 'block';
+      modalImages.style.display = 'none';
+      modal3dIconModel.style.display = 'none';
+      modal3dIconPhoto.style.display = '';
+      modal3dToggleLabel.textContent = 'View Photos';
+      modal3dActive = true;
+    }
+
+    function hide3dViewer() {
+      modal3dViewer.style.display = 'none';
+      modal3dViewer.innerHTML = '';
+      modalImages.style.display = '';
+      modal3dIconModel.style.display = '';
+      modal3dIconPhoto.style.display = 'none';
+      modal3dToggleLabel.textContent = 'View in 3D';
+      modal3dActive = false;
+    }
+
+    modal3dToggle.addEventListener('click', () => {
+      if (modal3dActive) {
+        hide3dViewer();
+      } else {
+        show3dViewer(currentProject.model3d);
+      }
+    });
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const modalTitle = document.getElementById('modalTitle');
@@ -2935,6 +3453,13 @@
         }
       }
 
+      // Show/hide 3D toggle
+      if (currentProject.model3d) {
+        modal3dToggle.style.display = 'flex';
+      } else {
+        modal3dToggle.style.display = 'none';
+      }
+
       // Show modal
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -2945,6 +3470,7 @@
       modal.classList.remove('active');
       modalFrame.style.width = '';
       document.body.style.overflow = '';
+      hide3dViewer();
     }
 
     // Navigate Gallery
