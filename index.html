@@ -1660,12 +1660,18 @@
     .svc-table-section {
       position: relative;
       z-index: 1;
+      padding: 80px 48px;
     }
 
     .svc-table-wrap {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 100px 48px 120px;
+      padding: 72px 56px 80px;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1.5px solid rgba(255, 255, 255, 0.14);
+      border-radius: 40px;
     }
 
     /* Column header row */
@@ -1811,8 +1817,13 @@
 
     /* Mobile: stack columns */
     @media (max-width: 767px) {
+      .svc-table-section {
+        padding: 40px 16px;
+      }
+
       .svc-table-wrap {
-        padding: 72px 24px 80px;
+        padding: 48px 24px 56px;
+        border-radius: 28px;
       }
 
       .svc-table-head {
