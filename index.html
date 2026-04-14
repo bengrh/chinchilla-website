@@ -1667,10 +1667,10 @@
       max-width: 1100px;
       margin: 0 auto;
       padding: 72px 56px 80px;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1.5px solid rgba(255, 255, 255, 0.14);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
       border-radius: 40px;
     }
 
@@ -1734,7 +1734,7 @@
     /* Individual cell */
     .svc-cell {
       display: grid;
-      grid-template-columns: 44px 1fr 28px;
+      grid-template-columns: 44px 1fr;
       align-items: start;
       cursor: default;
       overflow: hidden;
@@ -1782,15 +1782,6 @@
         padding-bottom 0.28s ease;
     }
 
-    .svc-indicator {
-      font-size: 15px;
-      color: #2d2d2d;
-      padding: 27px 0 0;
-      transition: color 0.25s, transform 0.25s;
-      text-align: right;
-      line-height: 1;
-    }
-
     /* Hover state */
     .svc-cell:hover .svc-desc {
       max-height: 100px;
@@ -1804,15 +1795,6 @@
 
     .svc-cell:hover .svc-num {
       color: #555;
-    }
-
-    .svc-right.svc-cell:hover .svc-indicator {
-      color: rgba(255,255,255,0.35);
-      transform: translate(2px, -2px);
-    }
-
-    .svc-left.svc-cell:hover .svc-indicator {
-      color: rgba(255,255,255,0.35);
     }
 
     /* Mobile: stack columns */
@@ -2100,7 +2082,6 @@
               <span class="svc-title">Feasibility &amp; Quoting</span>
               <p class="svc-desc">Honest scope, materials and budget before you're committed. We give you real numbers early so nothing surprises you later.</p>
             </div>
-            <span class="svc-indicator">+</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">02</span>
@@ -2108,7 +2089,6 @@
               <span class="svc-title">Design Assist</span>
               <p class="svc-desc">Embedded in your design process to refine details, resolve fabrication problems and select materials before they become costly surprises.</p>
             </div>
-            <span class="svc-indicator">+</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">03</span>
@@ -2116,7 +2096,6 @@
               <span class="svc-title">Technical Drawing</span>
               <p class="svc-desc">Fabrication-ready shop drawings produced directly from your design intent, precise, dimensioned and ready for the floor.</p>
             </div>
-            <span class="svc-indicator">+</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">04</span>
@@ -2124,7 +2103,6 @@
               <span class="svc-title">Prototyping</span>
               <p class="svc-desc">Physical tests of form, joinery, texture and finish before full production. Reduce risk and refine the outcome before committing to material.</p>
             </div>
-            <span class="svc-indicator">+</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">05</span>
@@ -2132,7 +2110,6 @@
               <span class="svc-title">CNC Fabrication</span>
               <p class="svc-desc">Precision 3-axis routing, cutting and forming in wood and sheet materials. Complex geometry executed with repeatability and care.</p>
             </div>
-            <span class="svc-indicator">+</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">06</span>
@@ -2140,7 +2117,6 @@
               <span class="svc-title">Woodwork &amp; Joinery</span>
               <p class="svc-desc">Complex traditional and contemporary wood construction from intricate cabinetry to architectural-scale installations.</p>
             </div>
-            <span class="svc-indicator">+</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">07</span>
@@ -2148,7 +2124,6 @@
               <span class="svc-title">Finishing</span>
               <p class="svc-desc">Surface preparation, staining, lacquering, texture and hardware. Finish is where craft becomes visible.</p>
             </div>
-            <span class="svc-indicator">+</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">08</span>
@@ -2156,7 +2131,6 @@
               <span class="svc-title">Installation</span>
               <p class="svc-desc">On-site delivery, assembly and final placement. We see every project through to the last fastener.</p>
             </div>
-            <span class="svc-indicator">+</span>
           </div>
         </div>
 
@@ -2169,7 +2143,6 @@
               <span class="svc-title">Hospitality</span>
               <p class="svc-desc">Bars, restaurants, hotels and spas. Custom millwork, feature walls and bespoke furniture that defines a guest's first impression.</p>
             </div>
-            <span class="svc-indicator">↗</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">02</span>
@@ -2177,7 +2150,6 @@
               <span class="svc-title">Custom Residential Interiors</span>
               <p class="svc-desc">Kitchens, living spaces and private commissions designed and built to a level of craft that production furniture cannot reach.</p>
             </div>
-            <span class="svc-indicator">↗</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">03</span>
@@ -2185,7 +2157,6 @@
               <span class="svc-title">Commercial Interiors</span>
               <p class="svc-desc">Offices, retail and branded environments where material quality and spatial detail communicate directly with the people in them.</p>
             </div>
-            <span class="svc-indicator">↗</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">04</span>
@@ -2193,7 +2164,6 @@
               <span class="svc-title">Architectural Features</span>
               <p class="svc-desc">Staircases, ceilings, cladding and structural elements that are both load-bearing and sculptural, fabricated to tolerance.</p>
             </div>
-            <span class="svc-indicator">↗</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">05</span>
@@ -2201,7 +2171,6 @@
               <span class="svc-title">Art Installations</span>
               <p class="svc-desc">Gallery and public work at the intersection of parametric design and hand craft. Objects that hold up under close inspection.</p>
             </div>
-            <span class="svc-indicator">↗</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">06</span>
@@ -2209,7 +2178,6 @@
               <span class="svc-title">Custom Furnishings</span>
               <p class="svc-desc">Tables, seating, shelving and storage designed for a specific room, a specific client and a specific life. Available for commission.</p>
             </div>
-            <span class="svc-indicator">↗</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">07</span>
@@ -2217,7 +2185,6 @@
               <span class="svc-title">Built-in Lighting</span>
               <p class="svc-desc">Integrated lighting designed as part of the millwork, not added after. Coves, reveals and diffused surfaces that feel inevitable.</p>
             </div>
-            <span class="svc-indicator">↗</span>
           </div>
           <div class="svc-cell">
             <span class="svc-num">08</span>
@@ -2225,7 +2192,6 @@
               <span class="svc-title">Trade Show &amp; Exhibition</span>
               <p class="svc-desc">Pavilions, booths and event installations built to perform under scrutiny and ship reliably. From the IDS to international venues.</p>
             </div>
-            <span class="svc-indicator">↗</span>
           </div>
         </div>
 
