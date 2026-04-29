@@ -852,7 +852,49 @@
         border-top: 1px solid rgba(255,255,255,0.07);
       }
       .proj-filters { padding: 0 24px 32px; }
-      .proj-strip { padding: 0 24px 36px; }
+      .proj-strip { padding: 0 24px 40px; }
+
+      /* Mobile: native touch swipe strip */
+      .proj-strip-outer {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .proj-strip-outer::-webkit-scrollbar { display: none; }
+
+      /* Cards: 75vw so next card peeks in */
+      .proj-card {
+        width: 75vw;
+        overflow: hidden; /* restore clipping — image doesn't hang on mobile */
+      }
+
+      /* Image stays fixed — no slide animation on touch */
+      .proj-card img {
+        height: 100%;
+        transform: none !important;
+        transition: none;
+        border-radius: 0;
+      }
+
+      /* Text: bottom gradient overlay, always visible */
+      .proj-card-top {
+        top: auto;
+        bottom: 0;
+        height: auto;
+        padding: 52px 16px 18px;
+        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .proj-card-cat,
+      .proj-card-title {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
     }
 
 
