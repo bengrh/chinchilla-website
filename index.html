@@ -578,7 +578,8 @@
 
     /* Scroll strip */
     .proj-strip-outer {
-      overflow: hidden;
+      overflow-x: clip; /* clip horizontal only — lets image hang below card */
+      overflow-y: visible;
     }
 
     .proj-strip {
@@ -595,27 +596,28 @@
       height: 62vh;
       min-height: 380px;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
       border-radius: 14px;
       cursor: pointer;
     }
 
     .proj-card.filtered-out { display: none; }
 
-    /* Image wipes DOWN on hover to reveal text panel above */
+    /* Image slides DOWN on hover — full image stays visible below card */
     .proj-card img {
       position: absolute;
       top: 0; left: 0; right: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 14px;
       z-index: 3;
       transform: translateY(0);
       transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       pointer-events: none;
     }
 
-    .proj-card:hover img { transform: translateY(100%); }
+    .proj-card:hover img { transform: translateY(160px); }
 
     /* Text panel revealed above image */
     .proj-card-top {
