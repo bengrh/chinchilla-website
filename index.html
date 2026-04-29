@@ -617,58 +617,53 @@
       pointer-events: none;
     }
 
-    .proj-card:hover img { transform: translateY(160px); }
+    .proj-card:hover img { transform: translateY(50px); }
 
     /* Text panel revealed above image */
     .proj-card-top {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 160px;
-      padding: 24px 24px 20px;
+      height: 50px;
+      padding: 0 16px;
       background: #0d0d0d;
       z-index: 2;
       display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      gap: 5px;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
     }
 
     .proj-card-cat {
       display: block;
-      font-size: 10px;
+      font-size: 9px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.45);
+      white-space: nowrap;
+      flex-shrink: 0;
       opacity: 0;
-      transform: translateY(6px);
+      transform: translateY(4px);
       transition: opacity 0.4s 0.05s ease, transform 0.4s 0.05s ease;
     }
 
     .proj-card-title {
       display: block;
-      font-size: clamp(16px, 1.5vw, 22px);
+      font-size: 14px;
       font-weight: 600;
       color: #fff;
       letter-spacing: -0.02em;
-      line-height: 1.2;
+      line-height: 1;
       margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.4s 0.1s ease, transform 0.4s 0.1s ease;
+      transform: translateY(4px);
+      transition: opacity 0.4s 0.08s ease, transform 0.4s 0.08s ease;
     }
 
     .proj-card-brief {
-      font-size: 13px;
-      color: rgba(255,255,255,0.6);
-      line-height: 1.4;
-      margin: 0;
-      opacity: 0;
-      transform: translateY(4px);
-      transition: opacity 0.4s 0.15s ease, transform 0.4s 0.15s ease;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      display: none;
     }
 
     .proj-card:hover .proj-card-cat,
