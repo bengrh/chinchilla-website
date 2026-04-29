@@ -530,12 +530,11 @@
       background-clip: text;
     }
 
-    /* ── Ball-pit Projects ── */
+    /* ── Projects Strip ── */
     .projects {
-      padding: 60px 0 0;
+      padding: 80px 0 60px;
       position: relative;
       z-index: 2;
-      overflow: visible; /* allow balls to fly above the section */
     }
 
     .section-eyebrow {
@@ -543,270 +542,306 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: rgba(255, 255, 255, 0.35);
-      text-align: center;
-      padding-top: 60px;
       margin: 0;
     }
 
-    /* Pill-shaped info bar below ball-pit — expands downward on hover */
-    .projects-bar-wrap {
-      padding: 56px 24px 60px;
-      position: relative;
-      pointer-events: none; /* never block bubble clicks */
+    /* Filter pills */
+    .proj-filters {
+      display: flex;
+      gap: 10px;
+      padding: 0 48px 40px;
+      flex-wrap: wrap;
     }
 
-    /* Pill bar — dark glass, GSAP handles height + border-radius */
-    .projects-bottom {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
+    .proj-filter {
+      padding: 8px 22px;
+      border: 1.5px solid rgba(255,255,255,0.18);
       border-radius: 999px;
-      height: 44px;
-      overflow: hidden;
-      width: 75%;
-      margin: 0 auto;
-      pointer-events: auto;
-    }
-
-    /* "Projects" label — always visible as pill header */
-    .projects-bottom::before {
-      content: 'Projects';
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 32px;
+      background: none;
+      color: rgba(255,255,255,0.45);
       font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #ffffff;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    /* Label change when nav is open */
-    .projects-bottom[data-open]::before {
-      content: 'Close ✕';
-      letter-spacing: 0.04em;
-    }
-
-    /* Project nav cards — rows of clickable project thumbnails */
-    .projects-nav-cards {
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      padding: 52px 10px 10px;
-      pointer-events: none;
-    }
-
-    .projects-bottom.nav-open .projects-nav-cards {
-      pointer-events: auto;
-    }
-
-    .project-nav-card {
-      flex: 1;
-      position: relative;
-      border-radius: 14px;
-      overflow: hidden;
       cursor: pointer;
-      height: auto;
-      min-width: 0;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      transition: background 0.25s ease, border-color 0.25s ease;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
     }
 
-    .project-nav-card:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.22);
-    }
-
-    .project-nav-card-body {
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      gap: 10px;
-      box-sizing: border-box;
-    }
-
-    .project-nav-card-category {
+    .proj-filter.active,
+    .proj-filter:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.45);
       color: #fff;
-      font-family: 'Inter', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
+    }
+
+    /* Scroll strip */
+    .proj-strip-outer {
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+    }
+    .proj-strip-outer:active { cursor: grabbing; }
+
+    .proj-strip {
+      display: flex;
+      gap: 14px;
+      padding: 0 48px 48px;
+      overflow-x: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .proj-strip::-webkit-scrollbar { display: none; }
+
+    /* Project card */
+    .proj-card {
+      flex-shrink: 0;
+      width: clamp(260px, 28vw, 400px);
+      height: 62vh;
+      min-height: 380px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    .proj-card.filtered-out { display: none; }
+
+    .proj-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+      pointer-events: none;
+    }
+
+    .proj-card:hover img { transform: scale(1.05); }
+
+    .proj-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0) 55%);
+      opacity: 0;
+      transition: opacity 0.32s ease;
+    }
+
+    .proj-card:hover .proj-card-overlay { opacity: 1; }
+
+    .proj-card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 22px 24px;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform 0.32s ease, opacity 0.32s ease;
+    }
+
+    .proj-card:hover .proj-card-info {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .proj-card-cat {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 5px;
+    }
+
+    .proj-card-title {
+      display: block;
+      font-size: clamp(17px, 1.8vw, 24px);
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.02em;
       line-height: 1.2;
     }
 
-    .project-nav-card-links {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    /* ── Expanded project view ── */
+    .proj-open {
+      display: none;
+      position: fixed;
+      inset: 0;
+      grid-template-columns: 60fr 40fr;
+      background: rgba(8,8,8,0.98);
+      z-index: 200;
+      animation: projOpenFade 0.3s ease forwards;
     }
 
-    .project-nav-card-link {
-      background: none;
-      border: none;
-      padding: 0;
+    @keyframes projOpenFade {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .proj-open.active { display: grid; }
+
+    .proj-open-close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.28);
+      background: rgba(0,0,0,0.5);
+      color: #fff;
       cursor: pointer;
-      color: rgba(255, 255, 255, 0.7);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      letter-spacing: 0em;
-      text-align: left;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 3px;
-      transition: color 0.2s ease, transform 0.2s ease;
+      justify-content: center;
+      z-index: 20;
+      transition: background 0.2s, border-color 0.2s;
     }
 
-    .project-nav-card-link:hover {
-      color: #F97316;
-      transform: translateX(3px);
+    .proj-open-close:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.6);
     }
 
-    /* Small mobile: 96% wide pill, cards stacked vertically */
-    @media (max-width: 480px) {
-      .projects-bottom {
-        width: 96%;
-      }
-      .projects-nav-cards {
-        flex-direction: column;
-        gap: 8px;
-        padding: 52px 10px 10px;
-      }
-      .project-nav-card {
-        flex: none;
-        width: 100%;
-        height: auto;
-      }
+    .proj-open-gallery {
+      position: relative;
+      overflow: hidden;
+      background: #000;
     }
 
-    #ball-pit {
+    .proj-open-imgs {
       position: relative;
       width: 100%;
-      /* no overflow:hidden here — balls start above and fall in */
-      cursor: grab;
-      min-height: 560px;
+      height: 100%;
     }
 
-    #ball-pit:active { cursor: grabbing; }
-
-    .bubble {
-      position: absolute;
-      border-radius: 50%;
-      cursor: grab;
-      overflow: hidden;
-      /* physics drives left/top; CSS transitions drive width/height on hover */
-      will-change: left, top, width, height;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    .bubble-photo {
+    .proj-open-imgs img {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: grayscale(80%);
-      transition: filter 0.6s ease;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .bubble-card {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 26px;
-      z-index: 4;
       opacity: 0;
       transition: opacity 0.4s ease;
       pointer-events: none;
-      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.0) 55%);
     }
 
-    .bubble-card-title {
-      font-size: clamp(16px, 2vw, 24px);
-      font-weight: 700;
-      letter-spacing: -0.03em;
+    .proj-open-imgs img.active { opacity: 1; }
+
+    .proj-open-nav {
+      position: absolute;
+      bottom: 24px;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      z-index: 5;
+    }
+
+    .proj-open-arrow {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(0,0,0,0.45);
       color: #fff;
-      margin-bottom: 6px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
     }
 
-    .bubble-card-desc {
+    .proj-open-arrow:hover { background: rgba(255,255,255,0.15); }
+
+    .proj-open-dots { display: flex; gap: 7px; align-items: center; }
+
+    .proj-open-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.28);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .proj-open-dot.active { background: #fff; transform: scale(1.3); }
+
+    .proj-open-info {
+      padding: 72px 52px 72px 48px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .proj-open-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin: 0 0 14px;
+    }
+
+    .proj-open-title {
+      font-size: clamp(26px, 3.2vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: #fff;
+      margin: 0 0 36px;
+      line-height: 1.05;
+    }
+
+    .proj-open-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-bottom: 36px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .proj-open-meta-row {
+      display: flex;
+      gap: 16px;
       font-size: 13px;
       line-height: 1.5;
-      color: rgba(255,255,255,0.80);
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     }
 
-    .bubble-card-open {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 12px;
-      font-family: monospace;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.65);
+    .proj-open-meta-label {
+      color: rgba(255,255,255,0.32);
+      width: 72px;
+      flex-shrink: 0;
     }
 
-    /* EXPANDED (hover) — stays circular, grows larger */
-    .bubble.expanded {
-      z-index: 10;
-      box-shadow: 0 20px 70px rgba(0,0,0,0.65);
-      /* overflow:hidden inherited from .bubble — circular clip stays on */
+    .proj-open-meta-val { color: rgba(255,255,255,0.78); }
+
+    .proj-open-desc {
+      font-size: 14px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.58);
     }
 
-    .bubble.expanded .bubble-photo {
-      filter: grayscale(0%);
-    }
+    .proj-open-desc p { margin: 0 0 16px; }
+    .proj-open-desc p:last-child { margin-bottom: 0; }
+    .proj-open-desc a { color: rgba(255,255,255,0.85); text-decoration: underline; }
 
-    .bubble.expanded .bubble-title-bg {
-      opacity: 0;
-    }
-
-    .bubble.expanded .bubble-title {
-      opacity: 0;
-      transform: scale(0.88);
-    }
-
-    /* On hover: card stays hidden — title + desc show in the bottom info bar instead */
-    .bubble.expanded .bubble-card {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    @media (max-width: 768px) {
-      #ball-pit { min-height: 820px; }
-      .bubble-card-desc { display: none; }
-      /* Pill stays visible on mobile — hover expansion disabled but label always shows */
-      .projects-bar-wrap { padding-top: 40px; padding-bottom: 40px; }
-    }
-
-    .project-summary {
-      font-size: 13px;
-      line-height: 1.55;
-      color: var(--gray-light);
-      margin-top: 6px;
-      max-width: 36ch;
+    @media (max-width: 900px) {
+      .proj-open {
+        grid-template-columns: 1fr;
+        grid-template-rows: 50vh 1fr;
+      }
+      .proj-open-info {
+        padding: 36px 24px;
+        border-left: none;
+        border-top: 1px solid rgba(255,255,255,0.07);
+      }
+      .proj-filters { padding: 0 24px 32px; }
+      .proj-strip { padding: 0 24px 36px; }
     }
 
 
@@ -2028,15 +2063,36 @@
     </p>
   </section>
 
-  <!-- Projects Ball-Pit -->
+  <!-- Projects Strip -->
   <section class="projects" id="projects">
-    <p class="section-eyebrow">Selected Work</p>
-    <div id="ball-pit">
-      <!-- bubbles injected by JS -->
+    <p class="section-eyebrow" style="padding:0 48px 32px;">Selected Work</p>
+    <div class="proj-filters">
+      <button class="proj-filter active" data-cat="all">All</button>
+      <button class="proj-filter" data-cat="Design/Build">Design / Build</button>
+      <button class="proj-filter" data-cat="Product Design">Product Design</button>
+      <button class="proj-filter" data-cat="Brand Identity">Brand Identity</button>
     </div>
-    <div class="projects-bar-wrap">
-      <div class="projects-bottom" id="projectsPill">
-        <div class="projects-nav-cards" id="projectsNavCards"></div>
+    <div class="proj-strip-outer">
+      <div class="proj-strip" id="projStrip"></div>
+    </div>
+    <!-- In-section expanded view -->
+    <div class="proj-open" id="projOpen">
+      <button class="proj-open-close" id="projOpenClose" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
+      </button>
+      <div class="proj-open-gallery">
+        <div class="proj-open-imgs" id="projOpenImgs"></div>
+        <div class="proj-open-nav">
+          <button class="proj-open-arrow" id="projOpenPrev"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="proj-open-dots" id="projOpenDots"></div>
+          <button class="proj-open-arrow" id="projOpenNext"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+      <div class="proj-open-info">
+        <p class="proj-open-eyebrow" id="projOpenCat"></p>
+        <h2 class="proj-open-title" id="projOpenTitle"></h2>
+        <div class="proj-open-meta" id="projOpenMeta"></div>
+        <div class="proj-open-desc" id="projOpenDesc"></div>
       </div>
     </div>
   </section>
@@ -2192,60 +2248,6 @@
     </div><!-- /.svc-table-wrap -->
   </section>
 
-  <!-- Project Modal -->
-  <div class="modal" id="projectModal" role="dialog" aria-label="Project details">
-    <div class="modal-backdrop"></div>
-    <div class="modal-frame">
-      <div class="modal-content">
-        <div class="modal-gallery">
-          <div class="modal-gallery-images" id="modalImages">
-            <!-- Images injected by JS -->
-          </div>
-        </div>
-        <div class="modal-info">
-          <!-- Scrollable area: all content except nav arrows -->
-          <div class="modal-info-scroll">
-            <span class="modal-category" id="modalCategory">Exhibition Design</span>
-            <h2 class="modal-title" id="modalTitle">Project Title</h2>
-            <div class="modal-description" id="modalDescription"><p>Project description goes here.</p></div>
-            <div class="modal-details">
-              <div class="modal-detail-item">
-                <h4>Year</h4>
-                <p id="modalYear">2025</p>
-              </div>
-              <div class="modal-detail-item">
-                <h4>Client</h4>
-                <p id="modalClient">Client Name</p>
-              </div>
-              <div class="modal-detail-item">
-                <h4>Services</h4>
-                <p id="modalServices">Design, Development</p>
-              </div>
-              <div class="modal-detail-item">
-                <h4>Status</h4>
-                <p id="modalStatus">Completed</p>
-              </div>
-            </div>
-            <div class="modal-external-media" id="modalExternalMedia">
-              <!-- External media links injected by JS -->
-            </div>
-          </div>
-          <!-- Sticky footer: nav arrows only -->
-          <div class="modal-info-footer">
-            <div class="modal-gallery-nav" id="galleryNav">
-              <button class="modal-gallery-btn" id="prevBtn" aria-label="Previous image">&larr;</button>
-              <div class="modal-gallery-dots" id="galleryDots">
-                <!-- Dots injected by JS -->
-              </div>
-              <button class="modal-gallery-btn" id="nextBtn" aria-label="Next image">&rarr;</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button class="modal-close"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-    </div>
-  </div>
-
   <!-- About Section -->
   <section class="about" id="about">
     <div class="about-container">
@@ -2336,420 +2338,172 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script>
-    // ── Ball-pit Projects ──────────────────────────────────────────────
-    window.addEventListener('load', function () {
-      const PIT = document.getElementById('ball-pit');
-      if (!PIT || typeof Matter === 'undefined') return;
+    // â”€â”€ Projects Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    (function() {
+      const strip     = document.getElementById('projStrip');
+      const openPanel = document.getElementById('projOpen');
+      const openClose = document.getElementById('projOpenClose');
+      const openImgs  = document.getElementById('projOpenImgs');
+      const openDots  = document.getElementById('projOpenDots');
+      const openPrev  = document.getElementById('projOpenPrev');
+      const openNext  = document.getElementById('projOpenNext');
+      const openCat   = document.getElementById('projOpenCat');
+      const openTitle = document.getElementById('projOpenTitle');
+      const openMeta  = document.getElementById('projOpenMeta');
+      const openDesc  = document.getElementById('projOpenDesc');
+      const filters   = document.querySelectorAll('.proj-filter');
+      const outer     = document.querySelector('.proj-strip-outer');
 
-      const PROJECTS = [
-        { key: 'ids-pavilion', title: 'IDS Pavilion',   category: 'Design/Build',   photo: 'images/ids-pavilion/IDS%20Pavilion.jpg', desc: 'A woven-texture pavilion for the 2025 Interior Design Show, merging traditional craft with CNC fabrication.' },
-        { key: 'tiny-house',   title: 'Tiny House',     category: 'Design/Build',   photo: 'images/tiny-house/exterior.jpg',         desc: 'Every surface CNC-milled from sustainable plywood — a fully functional tiny house as seen on HGTV.' },
-        { key: 'lath-bench',   title: 'Lath Bench',     category: 'Product Design', photo: 'images/lath-bench/gallery.jpg',          desc: 'Parametric lath construction over CNC-cut ribs — a sculptural bench in collaboration with Brent Comber Originals.' },
-        { key: 'wall-art',     title: 'Wall Art',       category: 'Product Design', photo: 'images/wall-art/front.jpg',              desc: 'Sculptural cedar wall piece with burl inlays, shaped parametrically and finished by hand.' },
-        { key: 'chair',        title: 'Chair',          category: 'Product Design', photo: 'images/chair/installed.jpg',             desc: 'Solid white oak dining chair with a hand-shaped wraparound back and cognac leather seat.' },
-        { key: 'sage-hayward', title: 'Winery Branding',category: 'Brand Identity', photo: 'images/sage-hayward/sign.jpg',           desc: 'Full brand identity for a Gulf Islands boutique vineyard — signage, labels, packaging, and print.' }
-      ];
+      if (!strip) return;
 
-      const { Engine, Runner, Bodies, Body, Events, World, Mouse, MouseConstraint } = Matter;
+      let currentImgIdx = 0;
 
-      const isMobile = window.innerWidth < 768;
-      const W     = PIT.offsetWidth;
-      const R     = Math.min(Math.floor(W / 5.2), isMobile ? 90 : 145);
-      const ER    = Math.round(R * 1.7);    // expanded visual radius
-      const D     = R * 2;
-      // Ring = outline-offset (5px) + outline-width (2px) — physics bodies use R+RING
-      // so collisions happen at the outer edge of the visible orange border
-      const RING  = 7;
-      const PIT_H = isMobile ? R * 4.5 : R * 4;
-      PIT.style.height    = PIT_H + 'px';
-      PIT.style.minHeight = '0';
-      PIT.style.overflow  = 'visible';
-
-      // Distance from page top to pit top — used to place ceiling wall
-      const pitPageTop = PIT.getBoundingClientRect().top + window.scrollY;
-
-      // ── Engine
-      const engine = Engine.create({ gravity: { x: 0, y: 1.6 } });
-      const world  = engine.world;
-
-      // ── Static boundaries
-      const T = 80;
-      // Ceiling is positioned at the very top of the page in physics space
-      // (physics y=0 is pit top, page top is pitPageTop px above that)
-      const ceilY = -pitPageTop;
-      World.add(world, [
-        // floor
-        Bodies.rectangle(W/2,       PIT_H + T/2,  W*4,    T,          { isStatic:true, restitution:0.35, friction:0.4 }),
-        // left wall
-        Bodies.rectangle(-T/2,      PIT_H/2,       T,      PIT_H*6,   { isStatic:true, restitution:0.25, friction:0.05 }),
-        // right wall
-        Bodies.rectangle(W+T/2,     PIT_H/2,       T,      PIT_H*6,   { isStatic:true, restitution:0.25, friction:0.05 }),
-        // ceiling at page top — tall enough to catch any upward throw
-        Bodies.rectangle(W/2,       ceilY - T/2,   W*4,    T,          { isStatic:true, restitution:0.4,  friction:0.05 }),
-      ]);
-
-      // ── Bodies
-      const dropX = [0.15, 0.35, 0.55, 0.75, 0.45, 0.65];
-      const dropY = [R*0.6, R*1.5, R*0.3, R*1.2, R*2.2, R*0.9];
-      const bodies = PROJECTS.map((p, i) =>
-        Bodies.circle(dropX[i]*W, dropY[i], R + RING, {
-          restitution:0.4, friction:0.04, frictionAir:0.022, density:0.003, label:p.key
-        })
-      );
-      World.add(world, bodies);
-
-      // Track which body is currently scaled up for hover
-      let expandedIdx = -1;
-      // physicsExpanded[i] = true when body[i] has been scaled up in Matter.
-      // Guards against double-scaling on rapid mouseenter/leave.
-      const physicsExpanded = new Array(PROJECTS.length).fill(false);
-      // Visual scale: how much the DOM element grows on hover
-      const EXPAND_SCALE_VIS  = ER / R;
-      // Physics scale: applied to the Matter body (which starts at R+RING)
-      const EXPAND_SCALE_PHYS = (ER + RING) / (R + RING);
-
-      // ── Info bar references & typing helpers
-      const projectsSection = document.getElementById('projects');
-      const hoverTitleEl    = document.getElementById('projectsHoverTitle');
-      const hoverDescEl     = document.getElementById('projectsHoverDesc');
-      const pill            = document.querySelector('.projects-bottom');
-      let   typingTimers    = [];
-
-      function clearTyping() {
-        typingTimers.forEach(t => clearTimeout(t));
-        typingTimers = [];
-        if (hoverTitleEl) hoverTitleEl.textContent = '';
-        if (hoverDescEl)  hoverDescEl.textContent  = '';
+      // â”€â”€ Build cards
+      function buildStrip(category) {
+        strip.innerHTML = '';
+        const keys = Object.keys(projectsData).filter(k =>
+          category === 'all' || projectsData[k].category === category
+        );
+        keys.forEach(key => {
+          const p = projectsData[key];
+          const card = document.createElement('div');
+          card.className = 'proj-card';
+          card.dataset.key = key;
+          card.innerHTML =
+            '<img src="' + p.images[0] + '" alt="' + p.title + '" loading="lazy">' +
+            '<div class="proj-card-overlay"></div>' +
+            '<div class="proj-card-info">' +
+              '<span class="proj-card-cat">' + p.category + '</span>' +
+              '<span class="proj-card-title">' + p.title + '</span>' +
+            '</div>';
+          card.addEventListener('click', () => { if (!wasDrag) openProject(key); });
+          strip.appendChild(card);
+        });
       }
 
-      function typeText(el, text, delayMs) {
-        let i = 0;
-        function tick() {
-          if (i > text.length) return;
-          el.textContent = text.slice(0, i);
-          i++;
-          if (i <= text.length) typingTimers.push(setTimeout(tick, delayMs));
+      // â”€â”€ Drag-to-scroll
+      let isDragging = false, startX = 0, startScroll = 0, wasDrag = false;
+      outer.addEventListener('mousedown', e => {
+        isDragging = true; wasDrag = false;
+        startX = e.pageX; startScroll = outer.scrollLeft;
+        outer.style.cursor = 'grabbing';
+      });
+      window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        const dx = e.pageX - startX;
+        if (Math.abs(dx) > 4) wasDrag = true;
+        outer.scrollLeft = startScroll - dx;
+      });
+      window.addEventListener('mouseup', () => { isDragging = false; outer.style.cursor = ''; });
+
+      // â”€â”€ Open project
+      function openProject(key) {
+        const p = projectsData[key];
+        if (!p) return;
+        currentImgIdx = 0;
+
+        // Gallery
+        openImgs.innerHTML = '';
+        openDots.innerHTML = '';
+        const media = p.images || [];
+        media.forEach((src, i) => {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = p.title;
+          if (i === 0) img.classList.add('active');
+          openImgs.appendChild(img);
+
+          const dot = document.createElement('button');
+          dot.className = 'proj-open-dot' + (i === 0 ? ' active' : '');
+          dot.addEventListener('click', () => goToImg(i));
+          openDots.appendChild(dot);
+        });
+
+        // Info
+        openCat.textContent   = p.category || '';
+        openTitle.textContent = p.title    || '';
+
+        const rows = [
+          p.year     && ['Year',     p.year],
+          p.client   && ['Client',   p.client],
+          p.services && ['Services', p.services],
+          p.status   && ['Status',   p.status],
+        ].filter(Boolean);
+        openMeta.innerHTML = rows.map(function(r) {
+          return '<div class="proj-open-meta-row"><span class="proj-open-meta-label">' + r[0] +
+                 '</span><span class="proj-open-meta-val">' + r[1] + '</span></div>';
+        }).join('');
+
+        // Description
+        const desc = typeof p.description === 'string' ? p.description : '';
+        openDesc.innerHTML = desc.split('\n\n').map(function(para) {
+          return '<p>' + para + '</p>';
+        }).join('');
+
+        // External media links
+        if (p.externalMedia && p.externalMedia.length) {
+          openDesc.innerHTML += p.externalMedia.map(function(m) {
+            return '<p><a href="' + m.url + '" target="_blank" rel="noopener" ' +
+                   'style="color:var(--accent);text-decoration:none;">' + m.title + ' &#x2197;</a></p>';
+          }).join('');
         }
-        tick();
+
+        openPanel.classList.add('active');
+        openPanel.scrollTop = 0;
+        document.body.style.overflow = 'hidden';
       }
 
-      // ── DOM bubbles
-      const bubbleEls = PROJECTS.map((p, i) => {
-        const el = document.createElement('div');
-        el.className = 'bubble';
-        el.dataset.project = p.key;
-        el.style.width  = D + 'px';
-        el.style.height = D + 'px';
-        el.style.left   = (dropX[i]*W - R) + 'px';
-        el.style.top    = (dropY[i] - R) + 'px';
-        el.innerHTML = `
-          <img class="bubble-photo" src="${p.photo}" alt="${p.title}" draggable="false">
-          <div class="bubble-card">
-            <div class="bubble-card-title">${p.title}</div>
-            <div class="bubble-card-desc">${p.desc}</div>
-            <span class="bubble-card-open">View project ↗</span>
-          </div>`;
-        PIT.appendChild(el);
-        return el;
+      function closeProject() {
+        openPanel.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function goToImg(idx) {
+        const imgs = openImgs.querySelectorAll('img');
+        const dots = openDots.querySelectorAll('.proj-open-dot');
+        if (!imgs.length) return;
+        imgs[currentImgIdx] && imgs[currentImgIdx].classList.remove('active');
+        dots[currentImgIdx] && dots[currentImgIdx].classList.remove('active');
+        currentImgIdx = (idx + imgs.length) % imgs.length;
+        imgs[currentImgIdx].classList.add('active');
+        dots[currentImgIdx].classList.add('active');
+      }
+
+      // â”€â”€ Controls
+      openClose.addEventListener('click', closeProject);
+      openPrev.addEventListener('click',  () => goToImg(currentImgIdx - 1));
+      openNext.addEventListener('click',  () => goToImg(currentImgIdx + 1));
+
+      document.addEventListener('keydown', function(e) {
+        if (!openPanel.classList.contains('active')) return;
+        if (e.key === 'Escape')     closeProject();
+        if (e.key === 'ArrowLeft')  goToImg(currentImgIdx - 1);
+        if (e.key === 'ArrowRight') goToImg(currentImgIdx + 1);
       });
 
-      // Max speed cap — prevents balls escaping through walls at high velocity
-      const MAX_SPEED = 28;
-
-      Events.on(engine, 'afterUpdate', () => {
-        bodies.forEach((b, i) => {
-          // Cap velocity
-          const spd = Math.sqrt(b.velocity.x*b.velocity.x + b.velocity.y*b.velocity.y);
-          if (spd > MAX_SPEED) Body.setVelocity(b, { x: b.velocity.x*MAX_SPEED/spd, y: b.velocity.y*MAX_SPEED/spd });
-          // Anchor is always R — visual expansion uses CSS transform, not left/top shift
-          bubbleEls[i].style.left = (b.position.x - R) + 'px';
-          bubbleEls[i].style.top  = (b.position.y - R) + 'px';
+      // â”€â”€ Category filters
+      filters.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          filters.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          buildStrip(btn.dataset.cat);
         });
       });
 
-      Runner.run(Runner.create(), engine);
-
-      // ── Mouse constraint
-      // Mouse.create(PIT) gives coords relative to PIT's top-left.
-      // We also need to tell Matter to subtract the PIT's page offset
-      // so that when the page is scrolled, coordinates stay correct.
-      const mouse = Mouse.create(PIT);
-
-      // Strip Matter's own wheel/touch listeners — they break page scroll
-      mouse.element.removeEventListener('mousewheel',    mouse.mousewheel);
-      mouse.element.removeEventListener('DOMMouseScroll',mouse.mousewheel);
-      mouse.element.removeEventListener('touchstart',    mouse.mousedown);
-      mouse.element.removeEventListener('touchmove',     mouse.mousemove);
-      mouse.element.removeEventListener('touchend',      mouse.mouseup);
-
-      const mc = MouseConstraint.create(engine, {
-        mouse,
-        constraint: { stiffness: 0.06, damping: 0.0, render: { visible: false } }
-      });
-      World.add(world, mc);
-
-      // Translate raw page-coord mouse events → PIT-local coords for Matter
-      function pitLocal(clientX, clientY) {
-        const rect = PIT.getBoundingClientRect();
-        return { x: clientX - rect.left, y: clientY - rect.top };
-      }
-
-      // Desktop mouse — fully manual so offset is always correct
-      PIT.addEventListener('mousedown', e => {
-        const p = pitLocal(e.clientX, e.clientY);
-        mouse.position.x = p.x; mouse.position.y = p.y;
-        mouse.mousedownPosition.x = p.x; mouse.mousedownPosition.y = p.y;
-        mouse.button = 0;
-        Events.trigger(mc, 'mousedown', { mouse });
-      });
-      PIT.addEventListener('mousemove', e => {
-        const p = pitLocal(e.clientX, e.clientY);
-        mouse.position.x = p.x; mouse.position.y = p.y;
-        Events.trigger(mc, 'mousemove', { mouse });
-      });
-      PIT.addEventListener('mouseup', e => {
-        const p = pitLocal(e.clientX, e.clientY);
-        mouse.position.x = p.x; mouse.position.y = p.y;
-        mouse.button = -1;
-        Events.trigger(mc, 'mouseup', { mouse });
-      });
-
-      // Touch — manual feed; only block scroll when a ball is grabbed
-      let touchGrabbed = false;
-      let touchStartPos = null;
-      let touchMoved = false;
-
-      PIT.addEventListener('touchstart', e => {
-        const t = e.touches[0];
-        const p = pitLocal(t.clientX, t.clientY);
-        touchStartPos = { x: t.clientX, y: t.clientY };
-        touchMoved = false;
-
-        // Hit-test against physics bodies (use actual current radius)
-        touchGrabbed = bodies.some((b, i) => {
-          const dx = b.position.x - p.x, dy = b.position.y - p.y;
-          const cr = physicsExpanded[i] ? ER : R;
-          return Math.sqrt(dx*dx + dy*dy) < cr + 12;
-        });
-
-        if (touchGrabbed) {
-          mouse.position.x = p.x; mouse.position.y = p.y;
-          mouse.mousedownPosition.x = p.x; mouse.mousedownPosition.y = p.y;
-          mouse.button = 0;
-          Events.trigger(mc, 'mousedown', { mouse });
-        }
-      }, { passive: true });
-
-      PIT.addEventListener('touchmove', e => {
-        const t = e.touches[0];
-        if (touchStartPos) {
-          const dx = t.clientX - touchStartPos.x, dy = t.clientY - touchStartPos.y;
-          if (dx*dx + dy*dy > 25) touchMoved = true;
-        }
-        if (!touchGrabbed) return;           // not on a ball → let page scroll
-        e.preventDefault();                  // block scroll while dragging ball
-        const p = pitLocal(t.clientX, t.clientY);
-        mouse.position.x = p.x; mouse.position.y = p.y;
-        Events.trigger(mc, 'mousemove', { mouse });
-      }, { passive: false });                // must be non-passive to call preventDefault
-
-      PIT.addEventListener('touchend', e => {
-        if (touchGrabbed) {
-          const t = e.changedTouches[0];
-          const p = pitLocal(t.clientX, t.clientY);
-          mouse.position.x = p.x; mouse.position.y = p.y;
-          mouse.button = -1;
-          Events.trigger(mc, 'mouseup', { mouse });
-
-          // Tap (no significant movement) → open modal
-          if (!touchMoved) {
-            const key = bodies.reduce((hit, b, i) => {
-              if (hit) return hit;
-              const dx = b.position.x - p.x, dy = b.position.y - p.y;
-              const cr = physicsExpanded[i] ? ER : R;
-              return Math.sqrt(dx*dx + dy*dy) < cr + 12 ? PROJECTS[i].key : null;
-            }, null);
-            if (key) setTimeout(() => openModal(key, R), 10);
-          }
-        }
-        touchGrabbed = false;
-        touchStartPos = null;
-      }, { passive: true });
-
-      // ── Desktop drag vs click
-      let pointerDown = null, wasDrag = false;
-      PIT.addEventListener('mousedown', e => { pointerDown = { x:e.clientX, y:e.clientY }; wasDrag = false; }, true);
-      PIT.addEventListener('mousemove', e => {
-        if (!pointerDown) return;
-        const dx = e.clientX - pointerDown.x, dy = e.clientY - pointerDown.y;
-        if (dx*dx + dy*dy > 25) wasDrag = true;
-      }, true);
-      PIT.addEventListener('mouseup', () => {
-        pointerDown = null;
-        // Reset wasDrag after the click event fires (setTimeout 0 puts it at end
-        // of this event-loop turn) so the click handler still sees wasDrag=true
-        // and correctly suppresses the modal, but subsequent hovers work normally.
-        setTimeout(() => { wasDrag = false; }, 0);
-      }, true);
-
-      // ── Pill nav: click to expand / collapse project cards ────────────────
-      const navCardsContainer = document.getElementById('projectsNavCards');
-
-      // Group projects by category, preserving insertion order
-      const catMap = {};
-      PROJECTS.forEach(proj => {
-        if (!catMap[proj.category]) catMap[proj.category] = { photo: proj.photo, projects: [] };
-        catMap[proj.category].projects.push(proj);
-      });
-
-      // Build one card per category
-      Object.entries(catMap).forEach(([label, cat]) => {
-        const card = document.createElement('div');
-        card.className = 'project-nav-card';
-        const linksHTML = cat.projects.map(proj =>
-          `<button class="project-nav-card-link" data-key="${proj.key}">${proj.title}</button>`
-        ).join('');
-        card.innerHTML = `
-          <div class="project-nav-card-body">
-            <span class="project-nav-card-category">${label}</span>
-            <div class="project-nav-card-links">${linksHTML}</div>
-          </div>`;
-        card.querySelectorAll('.project-nav-card-link').forEach(btn => {
-          btn.addEventListener('click', e => {
-            e.stopPropagation();
-            closePillNav();
-            openModal(btn.dataset.key, null);
-          });
-        });
-        navCardsContainer.appendChild(card);
-      });
-
-      const navCardEls = Array.from(navCardsContainer.querySelectorAll('.project-nav-card'));
-      gsap.set(navCardEls, { y: 20, opacity: 0 });
-
-      const PILL_CLOSED_H = 44;
-
-      let pillNavOpen = false;
-
-      function openPillNav() {
-        pillNavOpen = true;
-        pill.setAttribute('data-open', '');
-        pill.classList.add('nav-open');
-        gsap.timeline()
-          .to(pill, { height: 'auto', borderRadius: '20px', duration: 0.45, ease: 'power3.out' })
-          .to(navCardEls, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out', stagger: 0.06 }, '-=0.2');
-        // Give the balls a shove as the pill opens
-        bodies.forEach(body => Body.setVelocity(body, {
-          x: body.velocity.x + (Math.random() - 0.5) * 6,
-          y: body.velocity.y - 10
-        }));
-      }
-
-      function closePillNav() {
-        if (!pillNavOpen) return;
-        pillNavOpen = false;
-        pill.removeAttribute('data-open');
-        pill.classList.remove('nav-open');
-        gsap.timeline()
-          .to(navCardEls, { y: 20, opacity: 0, duration: 0.2, ease: 'power2.in', stagger: { each: 0.03, from: 'end' } })
-          .to(pill, { height: PILL_CLOSED_H, borderRadius: '999px', duration: 0.35, ease: 'power3.inOut' }, '-=0.1');
-      }
-
-      pill.addEventListener('click', () => {
-        if (pillNavOpen) closePillNav();
-        else openPillNav();
-      });
-
-      // ── Expand / collapse — scales the physics body so Matter pushes neighbours
-      function expandBubble(idx) {
-        if (expandedIdx === idx) return;
-
-        // Inline-collapse previous bubble without touching the info bar —
-        // we're about to immediately replace the content, so avoiding the
-        // remove/add flicker on the pill and the hovered class.
-        if (expandedIdx !== -1) {
-          const prev = expandedIdx;
-          expandedIdx = -1;
-          if (physicsExpanded[prev]) {
-            Body.scale(bodies[prev], 1 / EXPAND_SCALE_PHYS, 1 / EXPAND_SCALE_PHYS);
-            physicsExpanded[prev] = false;
-          }
-          bubbleEls[prev].classList.remove('expanded');
-          bubbleEls[prev].style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1)';
-          bubbleEls[prev].style.transform  = 'scale(1)';
-        }
-
-        expandedIdx = idx;
-        // Scale up physics body only once — guard prevents compounding on rapid hover
-        if (!physicsExpanded[idx]) {
-          Body.scale(bodies[idx], EXPAND_SCALE_PHYS, EXPAND_SCALE_PHYS);
-          physicsExpanded[idx] = true;
-        }
-        const el = bubbleEls[idx];
-        el.classList.add('expanded');
-        el.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1)';
-        el.style.transform  = 'scale(' + EXPAND_SCALE_VIS + ')';
-
-        // Bubble expansion only scales the circle; pill nav is click-driven separately.
-      }
-
-      function collapseBubble(idx) {
-        if (idx < 0 || idx >= bubbleEls.length) return;
-        // Only manage the info bar / pill if this bubble is still the active one.
-        // If expandBubble() already transferred ownership to a new bubble, the
-        // delayed timer should leave the bar alone.
-        const isStillActive = (expandedIdx === idx);
-        if (isStillActive) expandedIdx = -1;
-
-        if (physicsExpanded[idx]) {
-          Body.scale(bodies[idx], 1 / EXPAND_SCALE_PHYS, 1 / EXPAND_SCALE_PHYS);
-          physicsExpanded[idx] = false;
-        }
-        const el = bubbleEls[idx];
-        el.classList.remove('expanded');
-        el.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1)';
-        el.style.transform  = 'scale(1)';
-
-        if (isStillActive) {
-          if (projectsSection) projectsSection.classList.remove('hovered');
-        }
-      }
-
-      // ── Hover expand (desktop only — no hover on mobile)
-      // collapseTimers: small grace period before collapsing, prevents physics
-      // micro-jitter from bouncing enter/leave and causing a glitch loop.
-      const collapseTimers = new Array(PROJECTS.length).fill(null);
-
-      bubbleEls.forEach((el, idx) => {
-        if (!isMobile) {
-          el.addEventListener('mouseenter', () => {
-            // Cancel all pending collapse timers — not just this bubble's —
-            // so a delayed collapse from a previous bubble can't interrupt the new expansion.
-            collapseTimers.forEach((t, i) => { if (t) { clearTimeout(t); collapseTimers[i] = null; } });
-            if (wasDrag || mc.body) return;
-            expandBubble(idx);
-          });
-          el.addEventListener('mouseleave', () => {
-            collapseTimers[idx] = setTimeout(() => {
-              collapseTimers[idx] = null;
-              collapseBubble(idx);
-            }, 80);
-          });
-        }
-        el.addEventListener('click', () => {
-          if (wasDrag) return;
-          openModal(el.dataset.project, R);
+      // â”€â”€ Marquee cards open the project panel
+      document.querySelectorAll('.marquee-card').forEach(function(card) {
+        card.style.cursor = 'none';
+        card.addEventListener('click', function() {
+          if (card.dataset.project) openProject(card.dataset.project);
         });
       });
 
-      // Collapse if user starts dragging
-      Events.on(mc, 'startdrag', () => { if (expandedIdx !== -1) collapseBubble(expandedIdx); });
-
-      document.addEventListener('ballpit:open', e => openModal(e.detail));
-    });
-
+      // â”€â”€ Init
+      // Init deferred so projectsData is in scope
+      window.openProject = openProject;
+      setTimeout(function() { buildStrip('all'); }, 0);
+    })();
     // Parallax Dot Grid — with upward drift and cursor repulsion
     (function() {
       const canvas = document.getElementById('dotGrid');
@@ -3241,211 +2995,6 @@
         ]
       }
     };
-
-    // Modal Elements
-    const modal = document.getElementById('projectModal');
-    const modalBackdrop = modal.querySelector('.modal-backdrop');
-    const modalClose = modal.querySelector('.modal-close');
-    const modalFrame = modal.querySelector('.modal-frame');
-    const modalImages = document.getElementById('modalImages');
-    const galleryDots = document.getElementById('galleryDots');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalCategory = document.getElementById('modalCategory');
-    const modalDescription = document.getElementById('modalDescription');
-    const modalYear = document.getElementById('modalYear');
-    const modalClient = document.getElementById('modalClient');
-    const modalServices = document.getElementById('modalServices');
-    const modalStatus = document.getElementById('modalStatus');
-    const modalExternalMedia = document.getElementById('modalExternalMedia');
-    let currentImageIndex = 0;
-    let currentProject = null;
-
-    // ── Auto aspect-ratio gallery sizing ──────────────────────────────────
-    function setGalleryAspect(media) {
-      if (window.innerWidth <= 768) return; // mobile uses full-width bottom sheet; no width override needed
-      const frameH = modalFrame.offsetHeight;
-      if (!frameH) return;
-      const infoW = 420;
-      const maxW = Math.min(window.innerWidth - 24, 1280);
-      let ratio;
-      if (media.tagName === 'VIDEO') {
-        ratio = 16 / 9;
-      } else if (media.naturalWidth > 0 && media.naturalHeight > 0) {
-        ratio = media.naturalWidth / media.naturalHeight;
-      } else {
-        return;
-      }
-      const idealGalleryW = frameH * ratio;
-      const galleryW = Math.round(Math.min(Math.max(idealGalleryW, 320), maxW - infoW));
-      modalFrame.style.width = (galleryW + infoW) + 'px';
-    }
-
-    // Open Modal
-    function openModal(projectKey, bubbleRadius, startImageSrc) {
-      currentProject = projectsData[projectKey];
-      const startIdx = startImageSrc
-        ? Math.max(0, currentProject.images.findIndex(s => s === startImageSrc))
-        : 0;
-      currentImageIndex = startIdx;
-      modalFrame.style.width = '';
-
-      // Update content
-      modalTitle.textContent = currentProject.title;
-      modalCategory.textContent = currentProject.category;
-      modalDescription.innerHTML = currentProject.description
-        .split('\n\n')
-        .map(p => `<p>${p}</p>`)
-        .join('');
-      modalYear.textContent = currentProject.year;
-      modalClient.textContent = currentProject.client;
-      modalServices.textContent = currentProject.services;
-      modalStatus.textContent = currentProject.status;
-
-      // Build gallery (support both images and videos)
-      modalImages.innerHTML = currentProject.images.map((src, i) => {
-        const isVideo = src.endsWith('.mp4') || src.endsWith('.webm') || src.endsWith('.mov');
-        if (isVideo) {
-          return `<video src="${src}" class="${i === startIdx ? 'active' : ''}" autoplay loop muted playsinline></video>`;
-        }
-        return `<img src="${src}" alt="${currentProject.title}" class="${i === startIdx ? 'active' : ''}">`;
-      }).join('');
-
-      // Build dots
-      galleryDots.innerHTML = currentProject.images.map((_, i) =>
-        `<button class="modal-gallery-dot ${i === startIdx ? 'active' : ''}" data-index="${i}"></button>`
-      ).join('');
-
-      // Add dot listeners
-      galleryDots.querySelectorAll('.modal-gallery-dot').forEach(dot => {
-        dot.addEventListener('click', () => goToImage(parseInt(dot.dataset.index)));
-      });
-
-      // Show/hide nav if single image
-      const hasMultiple = currentProject.images.length > 1;
-      document.getElementById('galleryNav').style.display = hasMultiple ? 'flex' : 'none';
-      prevBtn.style.display = hasMultiple ? 'flex' : 'none';
-      nextBtn.style.display = hasMultiple ? 'flex' : 'none';
-      galleryDots.style.display = hasMultiple ? 'flex' : 'none';
-
-      // Build external media links
-      if (currentProject.externalMedia && currentProject.externalMedia.length > 0) {
-        modalExternalMedia.classList.add('has-links');
-        modalExternalMedia.innerHTML = `
-          <h4>External Media</h4>
-          <div class="modal-external-links">
-            ${currentProject.externalMedia.map(link => `
-              <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="modal-external-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="7" y1="17" x2="17" y2="7"></line>
-                  <polyline points="7 7 17 7 17 17"></polyline>
-                </svg>
-                <span>${link.title}</span>
-              </a>
-            `).join('')}
-          </div>
-        `;
-      } else {
-        modalExternalMedia.classList.remove('has-links');
-        modalExternalMedia.innerHTML = '';
-      }
-
-      // Size gallery to first image's aspect ratio
-      const firstMedia = modalImages.querySelector('img.active, video.active');
-      if (firstMedia) {
-        if (firstMedia.tagName === 'VIDEO' || (firstMedia.complete && firstMedia.naturalWidth > 0)) {
-          // Defer one frame so modalFrame has its final height
-          requestAnimationFrame(() => setGalleryAspect(firstMedia));
-        } else {
-          firstMedia.addEventListener('load', () => setGalleryAspect(firstMedia), { once: true });
-        }
-      }
-
-      // Show modal
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    // Close Modal
-    function closeModal() {
-      modal.classList.remove('active');
-      modalFrame.style.width = '';
-      document.body.style.overflow = '';
-    }
-
-    // Navigate Gallery
-    function goToImage(index) {
-      const media = modalImages.querySelectorAll('img, video');
-      const dots = galleryDots.querySelectorAll('.modal-gallery-dot');
-
-      if (media.length === 0) return;
-
-      // Remove active from current
-      media[currentImageIndex].classList.remove('active');
-      dots[currentImageIndex].classList.remove('active');
-
-      // Calculate new index with wrapping
-      currentImageIndex = index;
-      if (currentImageIndex < 0) currentImageIndex = media.length - 1;
-      if (currentImageIndex >= media.length) currentImageIndex = 0;
-
-      // Add active to new
-      media[currentImageIndex].classList.add('active');
-      dots[currentImageIndex].classList.add('active');
-
-      // Auto-size gallery to the new image's aspect ratio
-      const newMedia = media[currentImageIndex];
-      if (newMedia.tagName === 'VIDEO' || (newMedia.complete && newMedia.naturalWidth > 0)) {
-        setGalleryAspect(newMedia);
-      } else {
-        newMedia.addEventListener('load', () => setGalleryAspect(newMedia), { once: true });
-      }
-    }
-
-    function nextImage() {
-      goToImage(currentImageIndex + 1);
-    }
-
-    function prevImage() {
-      goToImage(currentImageIndex - 1);
-    }
-
-    // Event Listeners — project-item (legacy) + bubble
-    document.querySelectorAll('.project-item, .bubble').forEach(item => {
-      const projectKey = item.dataset.project;
-      item.addEventListener('click', () => openModal(projectKey));
-    });
-
-    // Marquee cards link to their respective projects, opening at the clicked image
-    document.querySelectorAll('.marquee-card').forEach(card => {
-      card.style.cursor = 'none';
-      card.addEventListener('click', () => {
-        const imgSrc = card.querySelector('img')?.getAttribute('src');
-        openModal(card.dataset.project, null, imgSrc);
-      });
-    });
-
-    modalClose.addEventListener('click', closeModal);
-    modalBackdrop.addEventListener('click', closeModal);
-    prevBtn.addEventListener('click', prevImage);
-    nextBtn.addEventListener('click', nextImage);
-    modalImages.addEventListener('click', nextImage);
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (!modal.classList.contains('active')) return;
-      if (e.key === 'Escape') closeModal();
-      if (e.key === 'ArrowLeft') prevImage();
-      if (e.key === 'ArrowRight') nextImage();
-    });
-
-    // Add hover effect to modal buttons
-    const modalButtons = modal.querySelectorAll('button');
-    modalButtons.forEach(btn => {
-      btn.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-      btn.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-    });
 
   </script>
 
