@@ -2356,7 +2356,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
-    // â”€â”€ Projects Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // â"€â"€ Projects Strip â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
     (function() {
       const strip     = document.getElementById('projStrip');
       const openPanel = document.getElementById('projOpen');
@@ -2376,7 +2376,7 @@
 
       let currentImgIdx = 0;
 
-      // â”€â”€ Build cards
+      // â"€â"€ Build cards
       function buildStrip(category) {
         strip.innerHTML = '';
         const keys = Object.keys(projectsData).filter(k =>
@@ -2389,18 +2389,18 @@
           card.className = 'proj-card';
           card.dataset.key = key;
           card.innerHTML =
-            '<div class=”proj-card-top”>' +
-              '<span class=”proj-card-cat”>' + p.category + '</span>' +
-              '<h3 class=”proj-card-title”>' + p.title + '</h3>' +
-              '<p class=”proj-card-brief”>' + brief + '</p>' +
+            '<div class="proj-card-top">' +
+              '<span class="proj-card-cat">' + p.category + '</span>' +
+              '<h3 class="proj-card-title">' + p.title + '</h3>' +
+              '<p class="proj-card-brief">' + brief + '</p>' +
             '</div>' +
-            '<img src=”' + p.images[0] + '” alt=”' + p.title + '” loading=”lazy”>';
+            '<img src="' + p.images[0] + '" alt="' + p.title + '" loading="lazy">';
           card.addEventListener('click', function() { openProject(key); });
           strip.appendChild(card);
         });
       }
 
-      // â”€â”€ Open project
+      // â"€â"€ Open project
       function openProject(key) {
         const p = projectsData[key];
         if (!p) return;
@@ -2473,7 +2473,7 @@
         dots[currentImgIdx].classList.add('active');
       }
 
-      // â”€â”€ Controls
+      // â"€â"€ Controls
       openClose.addEventListener('click', closeProject);
       openPrev.addEventListener('click',  () => goToImg(currentImgIdx - 1));
       openNext.addEventListener('click',  () => goToImg(currentImgIdx + 1));
@@ -2485,7 +2485,7 @@
         if (e.key === 'ArrowRight') goToImg(currentImgIdx + 1);
       });
 
-      // â”€â”€ Category filters
+      // â"€â"€ Category filters
       filters.forEach(function(btn) {
         btn.addEventListener('click', function() {
           filters.forEach(function(b) { b.classList.remove('active'); });
@@ -2496,7 +2496,7 @@
         });
       });
 
-      // â”€â”€ Marquee cards open the project panel
+      // â"€â"€ Marquee cards open the project panel
       document.querySelectorAll('.marquee-card').forEach(function(card) {
         card.style.cursor = 'none';
         card.addEventListener('click', function() {
@@ -2504,7 +2504,7 @@
         });
       });
 
-      // â”€â”€ Init
+      // â"€â"€ Init
       // Init deferred so projectsData is in scope
       window.openProject = openProject;
       setTimeout(function() { buildStrip('all'); }, 0);
@@ -3003,11 +3003,11 @@
 
     // -- GSAP Horizontal Scroll (ScrollTrigger pin) --------------------------
     (function() {
-      if (typeof gsap === ‘undefined’ || typeof ScrollTrigger === ‘undefined’) return;
+      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
       gsap.registerPlugin(ScrollTrigger);
 
-      var section = document.getElementById(‘projects’);
-      var strip   = document.getElementById(‘projStrip’);
+      var section = document.getElementById('projects');
+      var strip   = document.getElementById('projStrip');
       if (!section || !strip) return;
 
       function initHorizontalScroll() {
@@ -3024,12 +3024,12 @@
 
         gsap.to(strip, {
           x: -totalScroll,
-          ease: ‘none’,
+          ease: 'none',
           scrollTrigger: {
             trigger: section,
             pin: true,
-            start: ‘top top’,
-            end: ‘+=’ + totalScroll,
+            start: 'top top',
+            end: '+=' + totalScroll,
             scrub: 0.8,
             invalidateOnRefresh: true,
             anticipatePin: 1
@@ -3044,7 +3044,7 @@
 
       window._initHorizontalScroll = initHorizontalScroll;
 
-      window.addEventListener(‘resize’, function() {
+      window.addEventListener('resize', function() {
         ScrollTrigger.refresh();
       });
     })();
