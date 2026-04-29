@@ -125,7 +125,7 @@
     .staggered-toggle {
       position: fixed;
       top: 24px;
-      left: 24px;
+      right: 24px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -360,7 +360,7 @@
     @media (max-width: 640px) {
       .staggered-toggle {
         top: 16px;
-        left: 16px;
+        right: 16px;
         padding: 10px 16px;
         gap: 10px;
         font-size: 13px;
@@ -602,12 +602,12 @@
 
     .proj-card.filtered-out { display: none; }
 
-    /* Image slides DOWN on hover to reveal text panel above */
+    /* Image wipes DOWN on hover to reveal text panel above */
     .proj-card img {
       position: absolute;
       top: 0; left: 0; right: 0;
       width: 100%;
-      height: calc(100% + 160px);
+      height: 100%;
       object-fit: cover;
       z-index: 3;
       transform: translateY(0);
@@ -615,7 +615,7 @@
       pointer-events: none;
     }
 
-    .proj-card:hover img { transform: translateY(160px); }
+    .proj-card:hover img { transform: translateY(100%); }
 
     /* Text panel revealed above image */
     .proj-card-top {
