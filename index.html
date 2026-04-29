@@ -125,7 +125,7 @@
     .staggered-toggle {
       position: fixed;
       top: 24px;
-      left: 24px;
+      right: 24px;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -360,7 +360,7 @@
     @media (max-width: 640px) {
       .staggered-toggle {
         top: 16px;
-        left: 16px;
+        right: 16px;
         padding: 10px 16px;
         gap: 10px;
         font-size: 13px;
@@ -579,20 +579,14 @@
     /* Scroll strip */
     .proj-strip-outer {
       overflow: hidden;
-      cursor: grab;
-      user-select: none;
     }
-    .proj-strip-outer:active { cursor: grabbing; }
 
     .proj-strip {
       display: flex;
       gap: 14px;
       padding: 0 48px 48px;
-      overflow-x: auto;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+      will-change: transform;
     }
-    .proj-strip::-webkit-scrollbar { display: none; }
 
     /* Project card */
     .proj-card {
@@ -608,42 +602,33 @@
 
     .proj-card.filtered-out { display: none; }
 
+    /* Image slides DOWN on hover to reveal text panel above */
     .proj-card img {
+      position: absolute;
+      top: 0; left: 0; right: 0;
       width: 100%;
-      height: 100%;
+      height: calc(100% + 160px);
       object-fit: cover;
-      display: block;
-      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      transform-origin: center 60%;
+      z-index: 3;
+      transform: translateY(0);
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       pointer-events: none;
     }
 
-    .proj-card:hover img { transform: scale(1.12) translateY(-4%); }
+    .proj-card:hover img { transform: translateY(160px); }
 
-    .proj-card-overlay {
+    /* Text panel revealed above image */
+    .proj-card-top {
       position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.28) 50%, rgba(0,0,0,0) 100%);
-      opacity: 0;
-      transition: opacity 0.45s ease;
-    }
-
-    .proj-card:hover .proj-card-overlay { opacity: 1; }
-
-    .proj-card-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 28px 26px;
-      transform: translateY(18px);
-      opacity: 0;
-      transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.45s ease;
-    }
-
-    .proj-card:hover .proj-card-info {
-      transform: translateY(0);
-      opacity: 1;
+      top: 0; left: 0; right: 0;
+      height: 160px;
+      padding: 24px 24px 20px;
+      background: #0d0d0d;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 5px;
     }
 
     .proj-card-cat {
@@ -651,17 +636,44 @@
       font-size: 10px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 5px;
+      color: rgba(255,255,255,0.45);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.4s 0.05s ease, transform 0.4s 0.05s ease;
     }
 
     .proj-card-title {
       display: block;
-      font-size: clamp(17px, 1.8vw, 24px);
+      font-size: clamp(16px, 1.5vw, 22px);
       font-weight: 600;
       color: #fff;
       letter-spacing: -0.02em;
       line-height: 1.2;
+      margin: 0;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.4s 0.1s ease, transform 0.4s 0.1s ease;
+    }
+
+    .proj-card-brief {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.4;
+      margin: 0;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.4s 0.15s ease, transform 0.4s 0.15s ease;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .proj-card:hover .proj-card-cat,
+    .proj-card:hover .proj-card-title,
+    .proj-card:hover .proj-card-brief {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* ── Expanded project view ── */
@@ -2342,6 +2354,7 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
     // â”€â”€ Projects Strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     (function() {
@@ -2371,35 +2384,21 @@
         );
         keys.forEach(key => {
           const p = projectsData[key];
+          const brief = p.description ? p.description.split('. ')[0] + '.' : '';
           const card = document.createElement('div');
           card.className = 'proj-card';
           card.dataset.key = key;
           card.innerHTML =
-            '<img src="' + p.images[0] + '" alt="' + p.title + '" loading="lazy">' +
-            '<div class="proj-card-overlay"></div>' +
-            '<div class="proj-card-info">' +
-              '<span class="proj-card-cat">' + p.category + '</span>' +
-              '<span class="proj-card-title">' + p.title + '</span>' +
-            '</div>';
-          card.addEventListener('click', () => { if (!wasDrag) openProject(key); });
+            '<div class=”proj-card-top”>' +
+              '<span class=”proj-card-cat”>' + p.category + '</span>' +
+              '<h3 class=”proj-card-title”>' + p.title + '</h3>' +
+              '<p class=”proj-card-brief”>' + brief + '</p>' +
+            '</div>' +
+            '<img src=”' + p.images[0] + '” alt=”' + p.title + '” loading=”lazy”>';
+          card.addEventListener('click', function() { openProject(key); });
           strip.appendChild(card);
         });
       }
-
-      // â”€â”€ Drag-to-scroll
-      let isDragging = false, startX = 0, startScroll = 0, wasDrag = false;
-      outer.addEventListener('mousedown', e => {
-        isDragging = true; wasDrag = false;
-        startX = e.pageX; startScroll = strip.scrollLeft;
-        outer.style.cursor = 'grabbing';
-      });
-      window.addEventListener('mousemove', e => {
-        if (!isDragging) return;
-        const dx = e.pageX - startX;
-        if (Math.abs(dx) > 4) wasDrag = true;
-        strip.scrollLeft = startScroll - dx;
-      });
-      window.addEventListener('mouseup', () => { isDragging = false; outer.style.cursor = ''; });
 
       // â”€â”€ Open project
       function openProject(key) {
@@ -2492,8 +2491,8 @@
           filters.forEach(function(b) { b.classList.remove('active'); });
           btn.classList.add('active');
           buildStrip(btn.dataset.cat);
-          // Recalculate sticky wrapper height after strip content changes
-          if (window._updateProjectsWrapper) setTimeout(window._updateProjectsWrapper, 50);
+          // Re-init GSAP horizontal scroll after strip rebuild
+          if (window._initHorizontalScroll) setTimeout(window._initHorizontalScroll, 100);
         });
       });
 
@@ -3002,71 +3001,52 @@
       }
     };
 
-    // â”€â”€ Scroll Hijack: wheel scroll â†’ horizontal strip when section in view â”€
+    // ── GSAP Horizontal Scroll (ScrollTrigger pin) ──────────────────────────
     (function() {
-      var section = document.getElementById('projects');
-      var strip   = document.getElementById('projStrip');
+      if (typeof gsap === ‘undefined’ || typeof ScrollTrigger === ‘undefined’) return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      var section = document.getElementById(‘projects’);
+      var strip   = document.getElementById(‘projStrip’);
       if (!section || !strip) return;
 
-      var snapping = false;
+      function initHorizontalScroll() {
+        // Kill any existing ScrollTriggers on this section
+        ScrollTrigger.getAll().forEach(function(st) {
+          if (st.vars && st.vars.trigger === section) st.kill();
+        });
 
-      window.addEventListener('wheel', function(e) {
-        if (window.innerWidth <= 900) return; // mobile: natural scroll
+        // On mobile: skip pinning, let page scroll naturally
+        if (window.innerWidth <= 900) return;
 
-        var panel = document.getElementById('projOpen');
-        if (panel && panel.classList.contains('active')) return; // project open
+        var totalScroll = strip.scrollWidth - section.offsetWidth;
+        if (totalScroll <= 0) return;
 
-        var rect = section.getBoundingClientRect();
-
-        // Not near section at all â€” ignore
-        if (rect.top > window.innerHeight || rect.bottom < 0) return;
-
-        var max      = strip.scrollWidth - strip.clientWidth;
-        var atStart  = strip.scrollLeft <= 1;
-        var atEnd    = strip.scrollLeft >= max - 2;
-
-        // â”€â”€ Snap section to top when it enters from below and user scrolls down
-        if (!snapping && rect.top > 0 && rect.top < window.innerHeight * 0.65 && e.deltaY > 0 && !atEnd) {
-          e.preventDefault();
-          snapping = true;
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          setTimeout(function() { snapping = false; }, 900);
-          return;
-        }
-
-        // â”€â”€ Redirect wheel to horizontal when section covers viewport
-        if (rect.top <= 2 && rect.bottom >= window.innerHeight * 0.35) {
-          // Release at strip boundaries so user can continue scrolling page
-          if (e.deltaY > 0 && atEnd)   return;
-          if (e.deltaY < 0 && atStart) return;
-
-          e.preventDefault();
-          strip.scrollLeft += e.deltaY * 0.9;
-        }
-      }, { passive: false });
-
-      // Recalculate is a no-op now (kept for compat with filter buttons)
-      window._updateProjectsWrapper = function() {};
-    })();
-    // ---- Auto-open menu after user scrolls past marquee --------------------
-    (function() {
-      var marquee = document.querySelector('.marquee-section');
-      if (!marquee) return;
-      var triggered = false;
-      var obs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (!entry.isIntersecting && !triggered && window.scrollY > 50) {
-            triggered = true;
-            obs.disconnect();
-            // Only auto-open if menu hasn't been interacted with yet
-            var toggle = document.getElementById('menuToggle');
-            if (toggle && !toggle.classList.contains('open')) {
-              toggle.click();
-            }
+        gsap.to(strip, {
+          x: -totalScroll,
+          ease: ‘none’,
+          scrollTrigger: {
+            trigger: section,
+            pin: true,
+            start: ‘top top’,
+            end: ‘+=’ + totalScroll,
+            scrub: 0.8,
+            invalidateOnRefresh: true,
+            anticipatePin: 1
           }
         });
-      }, { threshold: 0 });
-      obs.observe(marquee);
+      }
+
+      // Small delay to ensure DOM widths are accurate before ScrollTrigger calculates pinning
+      setTimeout(initHorizontalScroll, 200);
+      // Second pass after images may have loaded and caused reflow
+      setTimeout(initHorizontalScroll, 1200);
+
+      window._initHorizontalScroll = initHorizontalScroll;
+
+      window.addEventListener(‘resize’, function() {
+        ScrollTrigger.refresh();
+      });
     })();
 
   </script>
