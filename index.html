@@ -2427,13 +2427,14 @@
           const card = document.createElement('div');
           card.className = 'proj-card';
           card.dataset.key = key;
+          const imgStyle = p.cardImagePosition ? ' style="object-position:' + p.cardImagePosition + '"' : '';
           card.innerHTML =
             '<div class="proj-card-top">' +
               '<span class="proj-card-cat">' + p.category + '</span>' +
               '<h3 class="proj-card-title">' + p.title + '</h3>' +
               '<p class="proj-card-brief">' + brief + '</p>' +
             '</div>' +
-            '<img src="' + p.images[0] + '" alt="' + p.title + '" loading="lazy">';
+            '<img src="' + p.images[0] + '" alt="' + p.title + '" loading="lazy"' + imgStyle + '>';
           card.addEventListener('click', function() { openProject(key); });
           strip.appendChild(card);
         });
@@ -3022,6 +3023,7 @@
         services: 'Brand Identity, Signage, Print, Packaging',
         status: 'Completed',
         description: 'Complete brand identity for a boutique Gulf Islands vineyard. The visual language draws from the land — hand-carved wooden signage, organic wave patterns, a bull horn motif, and custom wine labels that carry the same craft into every touchpoint.',
+        cardImagePosition: '25% center',
         images: [
           'images/sage-hayward/sign.jpg',
           'images/sage-hayward/tasting-room.jpg',
