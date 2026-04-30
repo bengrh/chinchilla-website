@@ -1391,11 +1391,48 @@
       min-width: 0;
     }
 
-    .about-title {
+    /* About / Team tab row */
+    .about-tabs {
+      display: flex;
+      align-items: baseline;
+      padding: 0 48px;
+      margin-bottom: 48px;
+    }
+
+    .about-tab {
       font-size: clamp(32px, 5vw, 56px);
       font-weight: 700;
       letter-spacing: -0.03em;
-      margin-bottom: 40px;
+      line-height: 1;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      color: rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: color 0.35s ease;
+    }
+
+    .about-tab.active {
+      color: #E8E8E8;
+      cursor: default;
+    }
+
+    .about-tab:not(.active):hover {
+      color: rgba(255,255,255,0.55);
+    }
+
+    .about-tab-divider {
+      width: 1.5px;
+      height: 0.65em;
+      background: rgba(255,255,255,0.2);
+      flex-shrink: 0;
+      margin: 0 28px;
+      align-self: center;
+    }
+
+    @media (max-width: 900px) {
+      .about-tabs { padding: 0 24px; margin-bottom: 32px; }
     }
 
     .about-paragraphs {
@@ -1448,42 +1485,6 @@
       }
     }
 
-    .team-reveal-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 16px;
-      padding: 12px 20px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
-      border-radius: 999px;
-      color: rgba(255, 255, 255, 0.75);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
-    }
-
-    .team-reveal-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.45);
-      color: #fff;
-      transform: scale(1.03);
-    }
-
-    .team-arrow {
-      display: inline-block;
-      transition: transform 0.2s ease;
-    }
-
-    .team-reveal-btn:hover .team-arrow {
-      transform: translateX(4px);
-    }
 
     /* Name accordion */
     .name-accordion {
@@ -1571,31 +1572,6 @@
       transform: translateX(0);
       opacity: 1;
       pointer-events: auto;
-    }
-
-    .team-close-btn {
-      flex-shrink: 0;
-      width: 72px;
-      height: 72px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      border-radius: 50%;
-      color: #F0F0F0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.5s var(--ease-premium);
-    }
-
-    .team-close-btn:hover {
-      background: rgba(255, 255, 255, 0.25);
-      color: #FFFFFF;
-      transform: scale(1.05);
-    }
-
-    .team-close-btn svg {
-      width: 32px;
-      height: 32px;
     }
 
     .team-track {
@@ -2381,10 +2357,14 @@
 
   <!-- About Section -->
   <section class="about" id="about">
+    <div class="about-tabs">
+      <button class="about-tab active" id="tabAbout" onclick="switchAboutTab('about')">About</button>
+      <span class="about-tab-divider"></span>
+      <button class="about-tab" id="tabTeam" onclick="switchAboutTab('team')">Team</button>
+    </div>
     <div class="about-container">
       <div class="about-inner">
         <div class="about-text-section">
-          <h2 class="about-title">About</h2>
           <div class="about-paragraphs">
             <p>Chinchilla Design is a multidisciplinary design and fabrication studio specializing in complex woodwork, digital fabrication, and precision craft.</p>
             <p>We operate at the intersection of advanced design technology and traditional making, helping designers and clients realize ambitious ideas that would otherwise be difficult to build. Contemporary design software and CNC technologies are expanding what is possible in wood and material fabrication and in turn, a new design language is emerging. To best explore this language, we believe it is best achieved through a company with a fluency in design and a deep understanding of material.</p>
@@ -2406,18 +2386,9 @@
               <p>As for the name: chinchillas bathe in dust. They roll in fine volcanic powder to keep their coats clean, a grooming ritual that looks, from the outside, like deliberate immersion in the stuff most animals try to avoid. Anyone who has spent a full day in a woodworking shop will understand the reference immediately. The dust gets in your hair, your clothes, your coffee. By the end of the day you have been thoroughly coated in it. It started as an inside joke and ended up sticking.</p>
             </div>
           </div>
-          <button class="team-reveal-btn" id="teamRevealBtn">
-            Meet the team <span class="team-arrow">→</span>
-          </button>
         </div>
       </div>
       <div class="team-section" id="teamSection">
-        <button class="team-close-btn" id="teamCloseBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-        </button>
         <div class="team-track">
           <div class="team-card">
             <div class="team-image"><img loading="lazy" decoding="async" src="images/team/ben-hayward.jpg" alt="Ben Hayward" style="width:100%;height:100%;object-fit:cover;"></div>
@@ -2953,31 +2924,26 @@
       document.getElementById('nameAccordion').classList.toggle('open');
     };
 
-    // Team Section Reveal
-    const teamRevealBtn = document.getElementById('teamRevealBtn');
-    const teamCloseBtn = document.getElementById('teamCloseBtn');
+    // About / Team tab switcher
     const aboutContainer = document.querySelector('.about-container');
-
-    teamRevealBtn.addEventListener('click', () => {
-      aboutContainer.classList.add('show-team');
-      // On mobile, scroll to about section after animation completes (900ms > 0.8s transition)
-      // Scroll to #about (not #teamSection) to avoid the browser trying to chase a transformed element
-      if (window.innerWidth < 769) {
-        setTimeout(() => {
-          document.querySelector('#about').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 900);
+    window.switchAboutTab = function(tab) {
+      const tabAbout = document.getElementById('tabAbout');
+      const tabTeam  = document.getElementById('tabTeam');
+      if (tab === 'team') {
+        aboutContainer.classList.add('show-team');
+        tabAbout.classList.remove('active');
+        tabTeam.classList.add('active');
+        if (window.innerWidth < 769) {
+          setTimeout(() => {
+            document.querySelector('#about').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 900);
+        }
+      } else {
+        aboutContainer.classList.remove('show-team');
+        tabAbout.classList.add('active');
+        tabTeam.classList.remove('active');
       }
-    });
-
-    teamCloseBtn.addEventListener('click', () => {
-      aboutContainer.classList.remove('show-team');
-    });
-
-    // Add hover effect to team buttons
-    [teamRevealBtn, teamCloseBtn].forEach(btn => {
-      btn.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-      btn.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-    });
+    };
 
     // Project Data
     const projectsData = {
