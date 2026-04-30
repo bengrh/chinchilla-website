@@ -1455,7 +1455,7 @@
       margin-right: -48px;
     }
 
-    /* Illustration wrap — clips the sliding image */
+    /* Illustration wrap — clips the sliding image, matching border-radius */
     .about-illus-wrap {
       position: relative;
       width: 100%;
@@ -1497,17 +1497,23 @@
       margin: 0;
     }
 
-    /* Image sits on top of the text panel */
+    /* Image IS the frame — border-radius + overflow:hidden sit on this element
+       so the entire rounded shape moves as one unit when it slides up */
     .about-illustration-img {
       position: relative;
       z-index: 2;
       width: 100%;
       aspect-ratio: 3/4;
+      overflow: hidden;
+      border-top-right-radius: 120px;
+      border-bottom-left-radius: 120px;
+      border-top-left-radius: 24px;
+      border-bottom-right-radius: 24px;
       transform: translateY(0);
       transition: transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* Image slides up to reveal the text panel beneath */
+    /* Whole framed image slides up to reveal the text panel beneath */
     .about-illustration.open .about-illustration-img {
       transform: translateY(-220px);
     }
