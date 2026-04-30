@@ -1465,21 +1465,29 @@
       padding-bottom: 133.333%;
     }
 
-    /* Text panel: pinned to the bottom of the wrap, hidden behind the image */
+    /* Text panel: pinned to the bottom of the wrap, behind the image.
+       - Matches the image's bottom border-radius exactly so it clips to
+         the same rounded shape — no text bleeds into the corner zones.
+       - Solid page-background fill so the image's transparent corner area
+         reads as background, not as visible text, when the image is closed.
+       - Padding keeps text clear of the 120px bottom-left curve. */
     .about-name-panel {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 260px;
+      height: 320px;
       z-index: 1;
-      padding: 0 4px 8px;
+      background: #0A0A0A;
       overflow: hidden;
+      border-bottom-left-radius: 120px;
+      border-bottom-right-radius: 24px;
+      padding: 24px 36px 64px 52px;
     }
 
     .about-name-panel p {
-      font-size: 17px;
-      line-height: 1.8;
+      font-size: 13px;
+      line-height: 1.6;
       color: #C8C8C8;
       margin: 0;
     }
@@ -1503,9 +1511,9 @@
       transition: transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* Whole framed image slides up — top clears the About/Team titles */
+    /* Slide distance matches panel height so full text area is revealed */
     .about-illustration.open .about-illustration-img {
-      transform: translateY(-260px);
+      transform: translateY(-320px);
     }
 
     .about-illustration-img img {
