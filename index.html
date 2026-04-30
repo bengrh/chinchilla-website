@@ -1889,20 +1889,6 @@
       transition: opacity 0.25s ease, transform 0.25s ease;
     }
 
-    .svc-detail-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      color: rgba(255,255,255,0.55);
-      text-decoration: none;
-      transition: color 0.2s, gap 0.2s;
-    }
-
-    .svc-detail-cta:hover { color: #fff; gap: 13px; }
-
     /* Fade-swap animation */
     .svc-detail-panel.is-changing .svc-detail-tag,
     .svc-detail-panel.is-changing .svc-detail-name,
@@ -2183,10 +2169,7 @@
         <span class="svc-detail-tag" id="svcDetailTag"></span>
         <h3 class="svc-detail-name" id="svcDetailName"></h3>
         <p class="svc-detail-desc" id="svcDetailDesc"></p>
-        <a href="#about" class="svc-detail-cta">
-          Start a project
-          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+        <a href="mailto:ben@chinchilla.design" class="footer-cta-btn">Book an Appointment</a>
       </div>
 
       <!-- LEGACY HTML kept for data preservation, hidden -->
