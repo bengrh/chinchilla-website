@@ -1485,6 +1485,74 @@
       transform: translateX(4px);
     }
 
+    /* Name accordion */
+    .name-accordion {
+      width: 100%;
+      margin-top: 14px;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .name-accordion-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.03);
+      border: none;
+      color: rgba(255,255,255,0.65);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .name-accordion-btn:hover {
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+    }
+
+    .name-accordion-btn svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      color: rgba(255,255,255,0.35);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .name-accordion.open .name-accordion-btn {
+      color: #fff;
+    }
+
+    .name-accordion.open .name-accordion-btn svg {
+      transform: rotate(180deg);
+    }
+
+    .name-accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .name-accordion.open .name-accordion-body {
+      max-height: 500px;
+    }
+
+    .name-accordion-body p {
+      margin: 0;
+      padding: 14px 16px 16px;
+      font-size: 13px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.5);
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
     /* Team Section */
     .team-section {
       position: absolute;
@@ -2323,12 +2391,20 @@
             <p>Our role is often that of a bridge. We help connect design intent and physical execution, digital models and real materials, and creative ambition and manufacturing reality. We specialize in projects where standard fabrication methods fall short.</p>
             <p>We frequently work in a design-assist capacity, advising on material strategy, fabrication logic, and production methods early in the design process to ensure efficiency, feasibility, and design integrity.</p>
             <p>Based in Vancouver and working internationally, we partner with designers and clients who are pursuing technically ambitious, materially expressive, and carefully executed projects.</p>
-            <p>As for the name: chinchillas bathe in dust. They roll in fine volcanic powder to keep their coats clean, a grooming ritual that looks, from the outside, like deliberate immersion in the stuff most animals try to avoid. Anyone who has spent a full day in a woodworking shop will understand the reference immediately. The dust gets in your hair, your clothes, your coffee. By the end of the day you have been thoroughly coated in it. It started as an inside joke and ended up sticking.</p>
           </div>
         </div>
         <div class="about-illustration">
           <div class="about-illustration-img">
             <img src="images/Chinchilla in a dust bath with cap.png" alt="Chinchilla in a dust bath" draggable="false">
+          </div>
+          <div class="name-accordion" id="nameAccordion">
+            <button class="name-accordion-btn" onclick="toggleNameAccordion()">
+              What's with the Name?
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="name-accordion-body">
+              <p>As for the name: chinchillas bathe in dust. They roll in fine volcanic powder to keep their coats clean, a grooming ritual that looks, from the outside, like deliberate immersion in the stuff most animals try to avoid. Anyone who has spent a full day in a woodworking shop will understand the reference immediately. The dust gets in your hair, your clothes, your coffee. By the end of the day you have been thoroughly coated in it. It started as an inside joke and ended up sticking.</p>
+            </div>
           </div>
           <button class="team-reveal-btn" id="teamRevealBtn">
             Meet the team <span class="team-arrow">→</span>
@@ -2871,6 +2947,11 @@
       el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
+
+    // Name accordion toggle
+    window.toggleNameAccordion = function() {
+      document.getElementById('nameAccordion').classList.toggle('open');
+    };
 
     // Team Section Reveal
     const teamRevealBtn = document.getElementById('teamRevealBtn');
