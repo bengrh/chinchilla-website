@@ -863,21 +863,32 @@
       }
       .proj-strip-outer::-webkit-scrollbar { display: none; }
 
+      /* Filter pills: single scrollable row on mobile */
+      .proj-filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 0 24px 28px;
+      }
+      .proj-filters::-webkit-scrollbar { display: none; }
+
       /* Cards: 75vw so next card peeks in */
       .proj-card {
         width: 75vw;
         overflow: hidden; /* restore clipping — image doesn't hang on mobile */
       }
 
-      /* Image stays fixed — no slide animation on touch */
+      /* Image stays fixed, z-index lowered so text overlay shows on top */
       .proj-card img {
         height: 100%;
         transform: none !important;
         transition: none;
         border-radius: 0;
+        z-index: 1;
       }
 
-      /* Text: bottom gradient overlay, always visible */
+      /* Text: bottom gradient overlay, always visible, on top of image */
       .proj-card-top {
         top: auto;
         bottom: 0;
@@ -887,6 +898,7 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 4px;
+        z-index: 2;
       }
 
       .proj-card-cat,
@@ -1899,20 +1911,21 @@
 
     /* Mobile */
     @media (max-width: 900px) {
-      .svc-section { padding: 60px 20px; }
-      .svc-section-title { font-size: clamp(16px, 4vw, 20px); margin-bottom: 24px; }
+      .svc-section { padding: 48px 16px; }
       .svc-card {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto;
-        padding: 32px 24px 40px;
-        gap: 32px 0;
+        padding: 28px 20px 36px;
+        gap: 28px 0;
         min-height: unset;
+        border-radius: 20px;
       }
+      .svc-grid-panel { gap: 0; }
       .svc-v-divider { height: 1px; width: 100%; align-self: auto; background: rgba(255,255,255,0.09); }
       .svc-icon-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
       .svc-detail-panel { padding: 0; justify-content: flex-start; }
-      .svc-detail-name { font-size: clamp(24px, 6vw, 36px); }
-      .svc-detail-desc { font-size: 14px; }
+      .svc-detail-name { font-size: clamp(22px, 6vw, 32px); margin-bottom: 12px; }
+      .svc-detail-desc { font-size: 14px; margin-bottom: 24px; }
     }
 
 
@@ -2151,13 +2164,10 @@
 
   <!-- Services & What We Do -->
   <section class="svc-section" id="services">
-    <p class="svc-section-title">We specialize in Design for Manufacturing and Assembly and offer the following services</p>
-
     <div class="svc-card">
 
       <!-- Left: icon grid (populated by JS) -->
       <div class="svc-grid-panel">
-        <p class="svc-panel-eyebrow">Services</p>
         <div class="svc-icon-grid" id="svcIconGrid"></div>
       </div>
 
