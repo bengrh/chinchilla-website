@@ -1455,9 +1455,10 @@
       margin-right: -48px;
     }
 
-    .about-illustration-img {
+    /* Illustration wrap — clips the sliding image */
+    .about-illus-wrap {
+      position: relative;
       width: 100%;
-      aspect-ratio: 3/4;
       overflow: hidden;
       border-top-right-radius: 120px;
       border-bottom-left-radius: 120px;
@@ -1465,12 +1466,50 @@
       border-bottom-right-radius: 24px;
     }
 
-    .about-illustration-img {
-      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Text panel hidden behind the image at the bottom of the wrap */
+    .about-name-panel {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 220px;
+      z-index: 1;
+      background: #111111;
+      padding: 24px 24px 20px;
+      overflow: hidden;
     }
 
+    .about-name-panel::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: linear-gradient(to top, #111111, transparent);
+      pointer-events: none;
+    }
+
+    .about-name-panel p {
+      font-size: 13px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.5);
+      margin: 0;
+    }
+
+    /* Image sits on top of the text panel */
+    .about-illustration-img {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      aspect-ratio: 3/4;
+      transform: translateY(0);
+      transition: transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Image slides up to reveal the text panel beneath */
     .about-illustration.open .about-illustration-img {
-      transform: translateY(-70px);
+      transform: translateY(-220px);
     }
 
     .about-illustration-img img {
@@ -1487,15 +1526,10 @@
       }
     }
 
-
-    /* Name accordion */
-    .name-accordion {
-      width: 100%;
-      margin-top: 14px;
-    }
-
+    /* "What's with the Name?" button — pill style, sits below the wrap */
     .name-accordion-btn {
       width: 100%;
+      margin-top: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1518,7 +1552,7 @@
       border-color: rgba(255,255,255,0.45);
     }
 
-    .name-accordion.open .name-accordion-btn {
+    .about-illustration.open .name-accordion-btn {
       background: rgba(255,255,255,0.08);
       border-color: rgba(255,255,255,0.35);
     }
@@ -1528,31 +1562,12 @@
       height: 14px;
       flex-shrink: 0;
       color: rgba(255,255,255,0.6);
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .name-accordion.open .name-accordion-btn svg {
+    /* Chevron flips to point down when open (was pointing up = "drop up" hint) */
+    .about-illustration.open .name-accordion-btn svg {
       transform: rotate(180deg);
-    }
-
-    .name-accordion-body {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-    }
-
-    .name-accordion.open .name-accordion-body {
-      max-height: 500px;
-      opacity: 1;
-    }
-
-    .name-accordion-body p {
-      margin: 0;
-      padding: 14px 4px 4px;
-      font-size: 13px;
-      line-height: 1.75;
-      color: rgba(255,255,255,0.5);
     }
 
     /* Team Section */
@@ -2374,18 +2389,18 @@
           </div>
         </div>
         <div class="about-illustration">
-          <div class="about-illustration-img">
-            <img src="images/Chinchilla in a dust bath with cap.png" alt="Chinchilla in a dust bath" draggable="false">
-          </div>
-          <div class="name-accordion" id="nameAccordion">
-            <button class="name-accordion-btn" onclick="toggleNameAccordion()">
-              What's with the Name?
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div class="name-accordion-body">
+          <div class="about-illus-wrap">
+            <div class="about-name-panel">
               <p>As for the name: chinchillas bathe in dust. They roll in fine volcanic powder to keep their coats clean, a grooming ritual that looks, from the outside, like deliberate immersion in the stuff most animals try to avoid. Anyone who has spent a full day in a woodworking shop will understand the reference immediately. The dust gets in your hair, your clothes, your coffee. By the end of the day you have been thoroughly coated in it. It started as an inside joke and ended up sticking.</p>
             </div>
+            <div class="about-illustration-img">
+              <img src="images/Chinchilla in a dust bath with cap.png" alt="Chinchilla in a dust bath" draggable="false">
+            </div>
           </div>
+          <button class="name-accordion-btn" onclick="toggleNameAccordion()">
+            What's with the Name?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+          </button>
         </div>
       </div>
       <div class="team-section" id="teamSection">
@@ -2919,12 +2934,9 @@
       el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
 
-    // Name accordion toggle — also slides the chinchilla image up
+    // Drop-up toggle — slides the chinchilla image up to reveal text panel beneath
     window.toggleNameAccordion = function() {
-      const accordion = document.getElementById('nameAccordion');
-      const illus = document.querySelector('.about-illustration');
-      accordion.classList.toggle('open');
-      if (illus) illus.classList.toggle('open', accordion.classList.contains('open'));
+      document.querySelector('.about-illustration').classList.toggle('open');
     };
 
     // About / Team tab switcher
