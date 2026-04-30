@@ -1466,17 +1466,17 @@
     }
 
     /* Text panel: pinned to the bottom of the wrap, behind the image.
-       - Matches the image's bottom border-radius exactly so it clips to
-         the same rounded shape — no text bleeds into the corner zones.
-       - Solid page-background fill so the image's transparent corner area
-         reads as background, not as visible text, when the image is closed.
-       - Padding keeps text clear of the 120px bottom-left curve. */
+       - Matches the image's bottom border-radius so content clips to the
+         same rounded shape — no text bleeds into the corner zones.
+       - Solid page-background fill so the image's transparent corner reads
+         as background, not visible text, when the image is closed.
+       - Generous left/bottom padding keeps text clear of the 120px curve. */
     .about-name-panel {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 320px;
+      height: 360px;
       z-index: 1;
       background: #0A0A0A;
       overflow: hidden;
@@ -1486,8 +1486,8 @@
     }
 
     .about-name-panel p {
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.55;
       color: #C8C8C8;
       margin: 0;
     }
@@ -1511,9 +1511,9 @@
       transition: transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* Slide distance matches panel height so full text area is revealed */
+    /* Slide matches panel height so the full text area is revealed */
     .about-illustration.open .about-illustration-img {
-      transform: translateY(-320px);
+      transform: translateY(-360px);
     }
 
     .about-illustration-img img {
@@ -1525,8 +1525,25 @@
     }
 
     @media (max-width: 900px) {
+      /* Show illustration on mobile, stacked below about text */
       .about-illustration {
-        display: none;
+        display: flex;
+        position: static;   /* not sticky on mobile */
+        top: auto;
+        width: min(75vw, 300px);
+        margin: 0 auto;     /* centred in the column */
+        margin-right: auto; /* reset desktop -48px */
+      }
+
+      /* Smaller text + tighter corner padding for narrower container */
+      .about-name-panel {
+        padding: 16px 24px 48px 36px;
+        height: 360px;
+      }
+
+      .about-name-panel p {
+        font-size: 13px;
+        line-height: 1.5;
       }
     }
 
