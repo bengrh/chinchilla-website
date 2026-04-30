@@ -1454,25 +1454,27 @@
       margin-right: -48px;
     }
 
-    /* Wrap defines the height — aspect-ratio sets it explicitly so
-       both absolutely-positioned children (image + text) have a real
-       containing block to reference */
+    /* Wrap: padding-bottom forces a 3:4 aspect ratio reliably in all browsers.
+       height:0 + padding-bottom:133.333% = same as aspect-ratio:3/4 but
+       works even when all children are position:absolute (no in-flow height).
+       No overflow:hidden so the image can slide freely above the section. */
     .about-illus-wrap {
       position: relative;
       width: 100%;
-      aspect-ratio: 3/4;
-      /* NO overflow: hidden — image must be free to slide upward */
+      height: 0;
+      padding-bottom: 133.333%;
     }
 
-    /* Text panel: pinned to the bottom of the wrap, behind the image */
+    /* Text panel: pinned to the bottom of the wrap, hidden behind the image */
     .about-name-panel {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 200px;
+      height: 260px;
       z-index: 1;
-      padding: 4px 4px 8px;
+      padding: 0 4px 8px;
+      overflow: hidden;
     }
 
     .about-name-panel p {
@@ -1482,12 +1484,15 @@
       margin: 0;
     }
 
-    /* Image: absolutely fills the wrap and sits ON TOP of the text panel.
-       border-radius + overflow:hidden make the rounded frame.
-       The whole frame slides up as one unit on click. */
+    /* Image: fills the wrap completely, sits on top of the text panel.
+       Border-radius + overflow:hidden form the rounded frame.
+       The whole frame slides up as one unit when clicked. */
     .about-illustration-img {
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       z-index: 2;
       overflow: hidden;
       border-top-right-radius: 120px;
@@ -1498,9 +1503,9 @@
       transition: transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* Whole framed image slides up 200px — top goes past About/Team titles */
+    /* Whole framed image slides up — top clears the About/Team titles */
     .about-illustration.open .about-illustration-img {
-      transform: translateY(-200px);
+      transform: translateY(-260px);
     }
 
     .about-illustration-img img {
