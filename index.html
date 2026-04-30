@@ -1394,7 +1394,8 @@
     /* About / Team tab row */
     .about-tabs {
       display: flex;
-      align-items: baseline;
+      align-items: flex-end;
+      gap: 64px;
       padding: 0 48px;
       margin-bottom: 48px;
     }
@@ -1406,15 +1407,17 @@
       line-height: 1;
       background: none;
       border: none;
-      padding: 0;
+      border-bottom: 2.5px solid transparent;
+      padding: 0 0 6px;
       font-family: 'Inter', sans-serif;
       color: rgba(255,255,255,0.25);
       cursor: pointer;
-      transition: color 0.35s ease;
+      transition: color 0.35s ease, border-color 0.35s ease;
     }
 
     .about-tab.active {
       color: #E8E8E8;
+      border-bottom-color: rgba(255,255,255,0.65);
       cursor: default;
     }
 
@@ -1422,17 +1425,8 @@
       color: rgba(255,255,255,0.55);
     }
 
-    .about-tab-divider {
-      width: 2px;
-      height: 0.85em;
-      background: rgba(255,255,255,0.25);
-      flex-shrink: 0;
-      margin: 0 28px;
-      align-self: center;
-    }
-
     @media (max-width: 900px) {
-      .about-tabs { padding: 0 24px; margin-bottom: 32px; }
+      .about-tabs { padding: 0 24px; margin-bottom: 32px; gap: 40px; }
     }
 
     .about-paragraphs {
@@ -1471,6 +1465,14 @@
       border-bottom-right-radius: 24px;
     }
 
+    .about-illustration-img {
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .about-illustration.open .about-illustration-img {
+      transform: translateY(-70px);
+    }
+
     .about-illustration-img img {
       width: 100%;
       height: 100%;
@@ -1506,8 +1508,7 @@
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      letter-spacing: 0.01em;
       cursor: pointer;
       transition: background 0.3s ease, border-color 0.3s ease;
     }
@@ -2359,7 +2360,6 @@
   <section class="about" id="about">
     <div class="about-tabs">
       <button class="about-tab active" id="tabAbout" onclick="switchAboutTab('about')">About</button>
-      <span class="about-tab-divider"></span>
       <button class="about-tab" id="tabTeam" onclick="switchAboutTab('team')">Team</button>
     </div>
     <div class="about-container">
@@ -2919,9 +2919,12 @@
       el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
 
-    // Name accordion toggle
+    // Name accordion toggle — also slides the chinchilla image up
     window.toggleNameAccordion = function() {
-      document.getElementById('nameAccordion').classList.toggle('open');
+      const accordion = document.getElementById('nameAccordion');
+      const illus = document.querySelector('.about-illustration');
+      accordion.classList.toggle('open');
+      if (illus) illus.classList.toggle('open', accordion.classList.contains('open'));
     };
 
     // About / Team tab switcher
