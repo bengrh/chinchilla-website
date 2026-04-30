@@ -1752,6 +1752,16 @@
       padding: 80px 48px;
     }
 
+    .svc-section-title {
+      max-width: 1100px;
+      margin: 0 auto 32px;
+      font-size: clamp(18px, 2vw, 26px);
+      font-weight: 500;
+      color: rgba(255,255,255,0.72);
+      letter-spacing: -0.02em;
+      line-height: 1.35;
+    }
+
     .svc-card {
       max-width: 1100px;
       margin: 0 auto;
@@ -1811,8 +1821,8 @@
     }
 
     .svc-icon-btn svg {
-      width: 20px;
-      height: 20px;
+      width: 26px;
+      height: 26px;
       color: rgba(255,255,255,0.38);
       transition: color 0.2s;
       flex-shrink: 0;
@@ -1821,7 +1831,7 @@
     .svc-icon-btn.active svg { color: #fff; }
 
     .svc-icon-btn .svc-btn-label {
-      font-size: 7.5px;
+      font-size: 9.5px;
       letter-spacing: 0.02em;
       color: rgba(255,255,255,0.28);
       text-align: center;
@@ -1904,6 +1914,7 @@
     /* Mobile */
     @media (max-width: 900px) {
       .svc-section { padding: 60px 20px; }
+      .svc-section-title { font-size: clamp(16px, 4vw, 20px); margin-bottom: 24px; }
       .svc-card {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto;
@@ -2154,6 +2165,8 @@
 
   <!-- Services & What We Do -->
   <section class="svc-section" id="services">
+    <p class="svc-section-title">We specialize in Design for Manufacturing and Assembly and offer the following services</p>
+
     <div class="svc-card">
 
       <!-- Left: icon grid (populated by JS) -->
