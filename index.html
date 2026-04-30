@@ -1745,186 +1745,179 @@
       }
     }
     /* ── Services & What We Do Table ── */
-    .svc-table-section {
+    /* -- Services interactive section -- */
+    .svc-section {
       position: relative;
       z-index: 1;
       padding: 80px 48px;
     }
 
-    .svc-table-wrap {
+    .svc-card {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 72px 56px 80px;
-      background: rgba(255, 255, 255, 0.11);
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      padding: 56px;
+      background: rgba(255,255,255,0.07);
+      border: 1.5px solid rgba(255,255,255,0.14);
       border-radius: 40px;
-    }
-
-    /* Column header row */
-    .svc-table-head {
       display: grid;
-      grid-template-columns: 1fr 1px 1fr;
-      gap: 0 56px;
-      padding-bottom: 32px;
-      margin-bottom: 0;
-      border-bottom: 1px solid var(--border);
+      grid-template-columns: 420px 1px 1fr;
+      gap: 0 48px;
+      min-height: 520px;
     }
 
-    .svc-col-label {
+    /* Left: icon grid */
+    .svc-grid-panel {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 24px;
     }
 
-    /* "Process" / "Scope" — the prominent labels */
-    .svc-col-label .section-eyebrow {
-      font-size: clamp(30px, 4vw, 52px);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      text-transform: none;
-      color: var(--black);
-      line-height: 1;
-      margin-bottom: 8px;
+    .svc-panel-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
     }
 
-    /* "How We Work" / "What We Do" — secondary subtitle */
-    .svc-col-title {
-      font-size: 13px;
-      font-weight: 400;
+    .svc-icon-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
+
+    .svc-icon-btn {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      cursor: pointer;
+      padding: 10px 4px 8px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .svc-icon-btn:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .svc-icon-btn.active {
+      background: rgba(255,255,255,0.13);
+      border-color: rgba(255,255,255,0.38);
+    }
+
+    .svc-icon-btn svg {
+      width: 20px;
+      height: 20px;
+      color: rgba(255,255,255,0.38);
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .svc-icon-btn.active svg { color: #fff; }
+
+    .svc-icon-btn .svc-btn-label {
+      font-size: 7.5px;
       letter-spacing: 0.02em;
-      color: var(--gray);
+      color: rgba(255,255,255,0.28);
+      text-align: center;
+      line-height: 1.25;
+      transition: color 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      padding: 0 2px;
     }
 
-    /* Vertical divider */
-    .svc-col-divider {
-      width: 1px;
-      background: var(--border);
+    .svc-icon-btn.active .svc-btn-label { color: rgba(255,255,255,0.65); }
+
+    /* Divider */
+    .svc-v-divider {
+      background: rgba(255,255,255,0.09);
       align-self: stretch;
     }
 
-    /* Table body — two independent flex columns side by side */
-    .svc-table-body {
-      display: grid;
-      grid-template-columns: 1fr 1px 1fr;
-      gap: 0 56px;
-      align-items: start;
-      border-bottom: 1px solid var(--border);
-    }
-
-    /* Each column is a flex stack so hover only shifts its own side */
-    .svc-cells-col {
+    /* Right: detail panel */
+    .svc-detail-panel {
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      padding: 8px 0 8px 8px;
     }
 
-    /* Individual cell */
-    .svc-cell {
-      display: grid;
-      grid-template-columns: 44px 1fr;
-      align-items: start;
-      cursor: default;
-      overflow: hidden;
-      border-bottom: 1px solid var(--border);
-    }
-    .svc-cell:last-child {
-      border-bottom: none;
+    .svc-detail-tag {
+      display: inline-block;
+      font-size: 9.5px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 16px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
     }
 
-    .svc-num {
-      font-family: monospace;
-      font-size: 10px;
-      color: #3a3a3a;
-      letter-spacing: 0.05em;
-      padding: 26px 0;
-      transition: color 0.25s;
+    .svc-detail-name {
+      font-size: clamp(28px, 3.2vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #fff;
+      line-height: 1.05;
+      margin: 0 0 20px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
     }
 
-    .svc-cell-body {
-      padding: 24px 0 0;
+    .svc-detail-desc {
+      font-size: 15px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.5);
+      margin: 0 0 32px;
+      max-width: 440px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
     }
 
-    .svc-title {
-      display: block;
-      font-size: clamp(14px, 1.5vw, 19px);
+    .svc-detail-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
       font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--black);
-      padding-bottom: 24px;
-      transition: color 0.25s ease;
-      line-height: 1.2;
+      letter-spacing: 0.01em;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s, gap 0.2s;
     }
 
-    .svc-desc {
-      font-size: 12.5px;
-      color: rgba(255,255,255,0.42);
-      line-height: 1.65;
-      max-height: 0;
-      overflow: hidden;
+    .svc-detail-cta:hover { color: #fff; gap: 13px; }
+
+    /* Fade-swap animation */
+    .svc-detail-panel.is-changing .svc-detail-tag,
+    .svc-detail-panel.is-changing .svc-detail-name,
+    .svc-detail-panel.is-changing .svc-detail-desc {
       opacity: 0;
-      padding-bottom: 0;
-      transition:
-        max-height 0.38s cubic-bezier(0.16,1,0.3,1),
-        opacity 0.28s ease,
-        padding-bottom 0.28s ease;
+      transform: translateY(6px);
     }
 
-    /* Hover state */
-    .svc-cell:hover .svc-desc {
-      max-height: 100px;
-      opacity: 1;
-      padding-bottom: 28px;
-    }
-
-    .svc-cell:hover .svc-title {
-      color: rgba(255,255,255,0.45);
-    }
-
-    .svc-cell:hover .svc-num {
-      color: #555;
-    }
-
-    /* Mobile: stack columns */
-    @media (max-width: 767px) {
-      .svc-table-section {
-        padding: 40px 16px;
-      }
-
-      .svc-table-wrap {
-        padding: 48px 24px 56px;
-        border-radius: 28px;
-      }
-
-      .svc-table-head {
+    /* Mobile */
+    @media (max-width: 900px) {
+      .svc-section { padding: 60px 20px; }
+      .svc-card {
         grid-template-columns: 1fr;
-        gap: 40px 0;
-        border-bottom: none;
+        grid-template-rows: auto auto auto;
+        padding: 32px 24px 40px;
+        gap: 32px 0;
+        min-height: unset;
       }
-
-      .svc-table-head .svc-col-divider {
-        display: none;
-      }
-
-      .svc-col-label:first-child {
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 32px;
-      }
-
-      .svc-table-body {
-        grid-template-columns: 1fr;
-      }
-
-      .svc-table-body .svc-col-divider {
-        display: none;
-      }
-
-      .svc-cells-col + .svc-cells-col {
-        border-top: 1px solid var(--border);
-      }
-
-      .svc-title {
-        font-size: 16px;
-      }
+      .svc-v-divider { height: 1px; width: 100%; align-self: auto; background: rgba(255,255,255,0.09); }
+      .svc-icon-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+      .svc-detail-panel { padding: 0; justify-content: flex-start; }
+      .svc-detail-name { font-size: clamp(24px, 6vw, 36px); }
+      .svc-detail-desc { font-size: 14px; }
     }
+
 
     /* Press badge */
     .press-badge {
@@ -2160,24 +2153,31 @@
   </section>
 
   <!-- Services & What We Do -->
-  <section class="svc-table-section" id="services">
-    <div class="svc-table-wrap">
+  <section class="svc-section" id="services">
+    <div class="svc-card">
 
-      <!-- Column headers -->
-      <div class="svc-table-head">
-        <div class="svc-col-label">
-          <p class="section-eyebrow">Process</p>
-          <h2 class="svc-col-title">How We Work</h2>
-        </div>
-        <div class="svc-col-divider"></div>
-        <div class="svc-col-label">
-          <p class="section-eyebrow">Scope</p>
-          <h2 class="svc-col-title">What We Do</h2>
-        </div>
+      <!-- Left: icon grid (populated by JS) -->
+      <div class="svc-grid-panel">
+        <p class="svc-panel-eyebrow">Services</p>
+        <div class="svc-icon-grid" id="svcIconGrid"></div>
       </div>
 
-      <!-- Two independent columns — hover expands only within its column -->
-      <div class="svc-table-body">
+      <!-- Divider -->
+      <div class="svc-v-divider"></div>
+
+      <!-- Right: detail panel -->
+      <div class="svc-detail-panel" id="svcDetailPanel">
+        <span class="svc-detail-tag" id="svcDetailTag"></span>
+        <h3 class="svc-detail-name" id="svcDetailName"></h3>
+        <p class="svc-detail-desc" id="svcDetailDesc"></p>
+        <a href="#about" class="svc-detail-cta">
+          Start a project
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <!-- LEGACY HTML kept for data preservation, hidden -->
+      <div style="display:none">
 
         <div class="svc-cells-col svc-cells-left">
           <div class="svc-cell">
@@ -2299,8 +2299,8 @@
           </div>
         </div>
 
-      </div><!-- /.svc-table-body -->
-    </div><!-- /.svc-table-wrap -->
+      </div><!-- /.legacy -->
+    </div><!-- /.svc-card -->
   </section>
 
   <!-- About Section -->
@@ -3088,6 +3088,135 @@
       window.addEventListener('resize', function() {
         ScrollTrigger.refresh();
       });
+    })();
+
+    // -- Services interactive grid ------------------------------------------
+    (function() {
+      var services = [
+        {
+          id: 'feasibility', name: 'Feasibility & Quoting', short: 'Feasibility', tag: 'PROCESS',
+          desc: 'Honest scope, materials and budget before you\'re committed. We give you real numbers early so nothing surprises you later.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h4"/><polyline points="15 15 17 17 21 13"/></svg>'
+        },
+        {
+          id: 'design-assist', name: 'Design Assist', short: 'Design Assist', tag: 'PROCESS',
+          desc: 'Embedded in your design process to refine details, resolve fabrication problems and select materials before they become costly surprises.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>'
+        },
+        {
+          id: 'drawing', name: 'Technical Drawing', short: 'Drawing', tag: 'PROCESS',
+          desc: 'Fabrication-ready shop drawings produced directly from your design intent — precise, dimensioned, and ready for the floor.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>'
+        },
+        {
+          id: 'prototyping', name: 'Prototyping', short: 'Prototyping', tag: 'PROCESS',
+          desc: 'Physical tests of form, joinery, texture and finish before full production. Reduce risk and refine the outcome before committing to material.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 4.9V17L12 22 3 17V6.9L12 2z"/><polyline points="12 22 12 12"/><polyline points="3 7 12 12 21 7"/></svg>'
+        },
+        {
+          id: 'cnc', name: 'CNC Fabrication', short: 'CNC', tag: 'PROCESS',
+          desc: 'Precision 3-axis routing, cutting and forming in wood and sheet materials. Complex geometry executed with repeatability and care.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><line x1="12" y1="4" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="20"/><line x1="4" y1="12" x2="2" y2="12"/><line x1="22" y1="12" x2="20" y2="12"/></svg>'
+        },
+        {
+          id: 'woodwork', name: 'Woodwork & Joinery', short: 'Woodwork', tag: 'PROCESS',
+          desc: 'Complex traditional and contemporary wood construction — from intricate cabinetry to architectural-scale installations.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="3" y1="14" x2="21" y2="14"/><line x1="3" y1="18" x2="21" y2="18"/><line x1="8" y1="4" x2="8" y2="20"/><line x1="16" y1="4" x2="16" y2="20"/></svg>'
+        },
+        {
+          id: 'finishing', name: 'Finishing', short: 'Finishing', tag: 'PROCESS',
+          desc: 'Surface preparation, staining, lacquering, texture and hardware. Finish is where craft becomes visible.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4c-1.5 0-3 1-3 3 0 1.5 1 2.5 1 4 0 2-1.5 3-3 3"/><path d="M6 4c1.5 0 3 1 3 3 0 1.5-1 2.5-1 4 0 2 1.5 3 3 3"/><line x1="12" y1="14" x2="12" y2="20"/><line x1="9" y1="20" x2="15" y2="20"/></svg>'
+        },
+        {
+          id: 'installation', name: 'Installation', short: 'Install', tag: 'PROCESS',
+          desc: 'On-site delivery, assembly and final placement. We see every project through to the last fastener.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>'
+        },
+        {
+          id: 'hospitality', name: 'Hospitality', short: 'Hospitality', tag: 'SCOPE',
+          desc: 'Bars, restaurants, hotels and spas. Custom millwork, feature walls and bespoke furniture that defines a guest\'s first impression.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V12a9 9 0 0 1 18 0v10"/><path d="M3 14h18"/><path d="M8 22v-4h8v4"/></svg>'
+        },
+        {
+          id: 'residential', name: 'Custom Residential', short: 'Residential', tag: 'SCOPE',
+          desc: 'Kitchens, living spaces and private commissions designed and built to a level of craft that production furniture cannot reach.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'
+        },
+        {
+          id: 'commercial', name: 'Commercial Interiors', short: 'Commercial', tag: 'SCOPE',
+          desc: 'Offices, retail and branded environments where material quality and spatial detail communicate directly with the people in them.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>'
+        },
+        {
+          id: 'architectural', name: 'Architectural Features', short: 'Architectural', tag: 'SCOPE',
+          desc: 'Staircases, ceilings, cladding and structural elements that are both load-bearing and sculptural, fabricated to tolerance.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="21" x2="21" y2="21"/><line x1="6" y1="21" x2="6" y2="12"/><line x1="18" y1="21" x2="18" y2="12"/><path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9"/></svg>'
+        },
+        {
+          id: 'art', name: 'Art Installations', short: 'Art', tag: 'SCOPE',
+          desc: 'Gallery and public work at the intersection of parametric design and hand craft. Objects that hold up under close inspection.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
+        },
+        {
+          id: 'furnishings', name: 'Custom Furnishings', short: 'Furnishings', tag: 'SCOPE',
+          desc: 'Tables, seating, shelving and storage designed for a specific room, a specific client, and a specific life. Available for commission.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0z"/><line x1="6" y1="18" x2="6" y2="22"/><line x1="18" y1="18" x2="18" y2="22"/></svg>'
+        },
+        {
+          id: 'lighting', name: 'Built-in Lighting', short: 'Lighting', tag: 'SCOPE',
+          desc: 'Integrated lighting designed as part of the millwork, not added after. Coves, reveals and diffused surfaces that feel inevitable.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><circle cx="12" cy="12" r="4"/></svg>'
+        },
+        {
+          id: 'tradeshow', name: 'Trade Show & Exhibition', short: 'Exhibition', tag: 'SCOPE',
+          desc: 'Pavilions, booths and event installations built to perform under scrutiny and ship reliably. From the IDS to international venues.',
+          icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>'
+        }
+      ];
+
+      var grid      = document.getElementById('svcIconGrid');
+      var panel     = document.getElementById('svcDetailPanel');
+      var tagEl     = document.getElementById('svcDetailTag');
+      var nameEl    = document.getElementById('svcDetailName');
+      var descEl    = document.getElementById('svcDetailDesc');
+      if (!grid || !panel) return;
+
+      var activeId  = 'cnc';
+
+      function buildGrid() {
+        grid.innerHTML = '';
+        services.forEach(function(svc) {
+          var btn = document.createElement('button');
+          btn.className = 'svc-icon-btn' + (svc.id === activeId ? ' active' : '');
+          btn.setAttribute('aria-label', svc.name);
+          btn.innerHTML = svc.icon + '<span class="svc-btn-label">' + svc.short + '</span>';
+          btn.addEventListener('click', function() {
+            activeId = svc.id;
+            buildGrid();
+            swapDetail(svc);
+          });
+          grid.appendChild(btn);
+        });
+      }
+
+      function swapDetail(svc) {
+        panel.classList.add('is-changing');
+        setTimeout(function() {
+          tagEl.textContent  = svc.tag;
+          nameEl.textContent = svc.name;
+          descEl.textContent = svc.desc;
+          panel.classList.remove('is-changing');
+        }, 160);
+      }
+
+      buildGrid();
+      var initial = services.find(function(s) { return s.id === activeId; });
+      if (initial) {
+        tagEl.textContent  = initial.tag;
+        nameEl.textContent = initial.name;
+        descEl.textContent = initial.desc;
+      }
     })();
 
   </script>
