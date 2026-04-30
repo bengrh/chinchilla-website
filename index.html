@@ -1369,7 +1369,6 @@
 
     .about-container {
       position: relative;
-      overflow: hidden;
     }
 
     /* About layout: text left, button right */
@@ -1455,50 +1454,32 @@
       margin-right: -48px;
     }
 
-    /* Illustration wrap — clips the sliding image, matching border-radius */
+    /* Wrap is just a sizing/positioning context — no overflow clipping */
     .about-illus-wrap {
       position: relative;
       width: 100%;
-      overflow: hidden;
-      border-top-right-radius: 120px;
-      border-bottom-left-radius: 120px;
-      border-top-left-radius: 24px;
-      border-bottom-right-radius: 24px;
     }
 
-    /* Text panel hidden behind the image at the bottom of the wrap */
+    /* Text panel lives at the bottom of the wrap, hidden behind the image */
     .about-name-panel {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 220px;
+      height: 200px;
       z-index: 1;
-      background: #111111;
-      padding: 24px 24px 20px;
-      overflow: hidden;
-    }
-
-    .about-name-panel::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 48px;
-      background: linear-gradient(to top, #111111, transparent);
-      pointer-events: none;
+      padding: 0 4px 8px;
     }
 
     .about-name-panel p {
-      font-size: 13px;
-      line-height: 1.75;
-      color: rgba(255,255,255,0.5);
+      font-size: 17px;
+      line-height: 1.8;
+      color: #C8C8C8;
       margin: 0;
     }
 
-    /* Image IS the frame — border-radius + overflow:hidden sit on this element
-       so the entire rounded shape moves as one unit when it slides up */
+    /* Image IS the frame — border-radius and overflow:hidden live here
+       so the entire rounded shape slides as one unit */
     .about-illustration-img {
       position: relative;
       z-index: 2;
@@ -1513,9 +1494,9 @@
       transition: transform 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* Whole framed image slides up to reveal the text panel beneath */
+    /* Whole framed image slides up — top goes above the About/Team titles */
     .about-illustration.open .about-illustration-img {
-      transform: translateY(-220px);
+      transform: translateY(-200px);
     }
 
     .about-illustration-img img {
