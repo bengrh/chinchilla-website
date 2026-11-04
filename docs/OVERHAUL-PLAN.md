@@ -94,7 +94,7 @@ Open questions for Ben (one at a time):
 ## Phases
 
 1. **Housekeeping.** Fast-forward stale local `main`, retire the Documents clone and the old worktree, delete leftover `claude/*` branches on GitHub. _(done: branch `site-overhaul` created)_
-2. **Content.** Answer the open questions, write the explainer, migrate the seven project stories into markdown, write the studio and contact copy.
+2. **Content.** Answer the open questions, write the explainer, migrate the seven project stories into markdown, write the studio and contact copy. _(2026-11-04: questions answered; seven stories migrated; Process page drafted with outcome headings, Stalactite Table process photos on the CNC, joinery and install steps, and a Singing Hollow proof story with two bracketed gaps for Ben; Stalactite Table and Saturna stories drafted with brackets. Still to do: Ben's edits, studio page photos, capacity sentence.)_
 3. **Scaffold.** Astro project, content collection, image pipeline, Netlify build, deploy preview URL. _(done 2026-11-04 on `site-overhaul`: Astro 5, seven projects migrated to `src/content/projects/<slug>/index.md` with their photos, pages for home, process, projects, project detail, studio, contact and thanks; old page kept at `legacy/index.html`. `npm run dev` to preview, `npm run build` to build. Deploy preview URL comes when the branch is pushed and Netlify builds it.)_
 
    To add a project: copy a folder in `src/content/projects/`, replace the photos, edit `index.md`. The frontmatter fields are documented in `src/content.config.ts`.

@@ -1,27 +1,88 @@
 ---
 import Base from '../layouts/Base.astro';
-// Structure follows docs/OVERHAUL-PLAN.md, "The explainer". Copy marked TODO is placeholder
-// and is written in the content phase. Headings are outcomes for the designer, not our capabilities.
-const steps = [
-  ['Feasibility and quoting', 'Honest scope, materials and budget before you are committed.'],
-  ['Design assist', 'Embedded in your process to refine details, resolve fabrication problems and choose materials early.'],
-  ['Shop drawings', 'Fabrication-ready drawings produced directly from your design intent.'],
-  ['Prototyping', 'Physical tests of form, joinery, texture and finish before full production.'],
-  ['CNC fabrication', 'Complex geometry in wood and sheet material, executed with repeatability.'],
-  ['Joinery and finishing', 'Traditional and contemporary wood construction, finished by hand.'],
-  ['Installation', 'Delivery, assembly and final placement. We see it through to the last fastener.'],
-];
+import { Image } from 'astro:assets';
+// Copy follows docs/OVERHAUL-PLAN.md, "The explainer". Written 2026-11-04 for Ben to edit.
+// Square brackets mark facts only Ben can supply.
+import cnc from '../content/projects/stalactite-table/process-cnc.jpg';
+import glueUp from '../content/projects/stalactite-table/process-glue-up.jpg';
+import clamps from '../content/projects/stalactite-table/process-clamps.jpg';
+import installed from '../content/projects/stalactite-table/installed-wide.jpg';
+import hollowShop from '../content/projects/singing-hollow/workshop.jpg';
+import hollowHero from '../content/projects/singing-hollow/hero.jpg';
+
 const different = [
-  ['A new language in wood', 'Parametric design and CNC are not a faster way to make the same things. They are a way to make different things: projects whose language and scope would be near impossible any other way.'],
-  ['In from the first concept', 'Material strategy, fabrication logic and real feasibility while the idea is still forming, before the design is locked.'],
-  ['Design fluency and a shop, together', 'One studio carries the intent from sketch to install. Nothing is lost in a handoff.'],
-  ['Hand finish over machine precision', 'Digital precision in the toolpaths, hand work in the final surface. Both are left visible in the finished piece.'],
-  ['A close working relationship', 'You deal directly with a hardworking, highly capable collaborator who is developing and building the piece, here in Vancouver.'],
+  [
+    'A new language in wood',
+    'Parametric design and CNC are not a faster way to make the same things. They are a way to make different things: forms, textures and assemblies whose language and scope would be near impossible any other way. We are not replacing carvers with robots. We are using the tools to open up what wood can be asked to do.',
+  ],
+  [
+    'In from the first concept',
+    'The earlier we are in, the more of the idea survives. Material strategy, fabrication logic and real feasibility while the design is still forming, before it is locked and before the awkward conversations start.',
+  ],
+  [
+    'Design fluency and a shop, together',
+    'One studio carries the intent from the first sketch to the installed piece. The person who understood the idea is the person building it, so nothing is lost in a handoff to a shop that only cuts what it is sent.',
+  ],
+  [
+    'Hand work where it shows',
+    'Digital precision in the toolpaths, hand work in the final surface. Both are left visible in the finished piece. The machine makes the geometry possible; the hand makes it worth touching.',
+  ],
+  [
+    'A close working relationship',
+    'You deal directly with a hardworking, highly capable collaborator who is developing and building the piece, here in Vancouver. Questions get answered by the person at the machine, not relayed through an office.',
+  ],
+];
+
+const steps = [
+  {
+    phase: 'Feasibility and quoting',
+    title: 'Know what it will take, early',
+    text: 'Honest scope, material and budget before you are committed to anything. Real numbers while there is still room to move, so nothing surprises you later.',
+  },
+  {
+    phase: 'Design assist',
+    title: 'Keep the idea intact',
+    text: 'We work inside your design process: refining details, resolving how a thing will actually be made, choosing material with you. The goal is that the built piece is the one you drew, not a version of it the shop found easier.',
+  },
+  {
+    phase: 'Shop drawings',
+    title: 'Drawings the shop can build from',
+    text: 'Fabrication-ready drawings produced directly from your design intent and from the same model that drives the machines. Dimensioned, resolved, and checked against what we are about to cut.',
+  },
+  {
+    phase: 'Prototyping',
+    title: 'Test it before committing material',
+    text: 'Physical samples of form, joinery, texture and finish before full production. A texture you can hold beats a render. It reduces risk for you and lets us refine the result while changes are still cheap.',
+    image: hollowShop,
+    alt: 'Singing Hollow in the shop before finishing',
+  },
+  {
+    phase: 'CNC fabrication',
+    title: 'Geometry a conventional shop cannot cut',
+    text: 'Precision three-axis routing, cutting and forming in wood and sheet material. Complex, repeatable, and traceable back to the model you approved.',
+    image: cnc,
+    alt: 'Blocks for the Stalactite Table on the CNC bed',
+  },
+  {
+    phase: 'Joinery and finishing',
+    title: 'Fitted and finished by hand',
+    text: 'Traditional and contemporary wood construction, from fine cabinetry to architectural-scale assemblies, glued up, fitted and finished by hand. Finish is where the craft becomes visible.',
+    image: glueUp,
+    alt: 'A glued-up section of the Stalactite Table',
+  },
+  {
+    phase: 'Installation',
+    title: 'Through to the last fastener',
+    text: 'Delivery, assembly and final placement on site. We see every project through to the moment it is standing where it was meant to be.',
+    image: installed,
+    alt: 'The Stalactite Table installed',
+  },
 ];
 ---
 <Base
   title="Process"
-  description="How Chinchilla Design works with architects and designers: in from the first concept, developing the core idea through to a built reality."
+  description="How Chinchilla Design works with interior designers, architects and clients: in from the first concept, developing the core idea through to a built reality in wood."
+  ogImage={hollowHero}
 >
   <section class="section">
     <div class="wrap">
@@ -35,7 +96,8 @@ const different = [
     <div class="wrap">
       <p class="eyebrow">Who it is for</p>
       <h2>You can picture the piece. You can't find the shop.</h2>
-      <p class="todo">TODO (content phase): the designer's situation in two or three sentences. A feature, a detail or a piece they can see but no conventional millwork shop will take on. Architects and clients named too, designers first.</p>
+      <p class="lede">You are an interior designer with a feature wall, a ceiling, a table or a detail that you can already see, and every millwork shop you call wants to simplify it. Or you are an architect with a geometry that the drawings can describe but no one will price. Or you are a client who wants one thing in the room that could not have come from a catalogue.</p>
+      <p>That is the work we are set up for. Bring us the idea while it is still an idea, and we will help you find out what it wants to be made of, how it goes together, and what it will take to build. Then we build it.</p>
     </div>
   </section>
 
@@ -51,19 +113,37 @@ const different = [
   <section class="section" style="padding-top:0">
     <div class="wrap">
       <p class="eyebrow">How a project runs</p>
-      <div class="steps">
-        {steps.map(([h, p]) => <div class="step"><h3>{h}</h3><p>{p}</p></div>)}
+      <p class="lede">Not every project needs every step. Most start at the first one and go as far as they need to.</p>
+      <div class="steps" style="margin-top:40px">
+        {steps.map((s) => (
+          <div class="step">
+            {s.image && (
+              <Image src={s.image} alt={s.alt} widths={[600, 900, 1400]} sizes="(min-width: 720px) 50vw, 100vw" />
+            )}
+            <p class="eyebrow" style="margin-bottom:4px">{s.phase}</p>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </div>
+        ))}
       </div>
-      <p class="todo" style="margin-top:32px">TODO (content phase): one shop photo per step from the Singing Hollow process set.</p>
     </div>
   </section>
 
   <section class="section" style="padding-top:0">
     <div class="wrap">
       <p class="eyebrow">Proof</p>
-      <h2>Singing Hollow</h2>
-      <p class="todo">TODO (Ben): two or three sentences on what being in from the first idea changed. What Brent came with, what the parametric model and the shop made possible that would not have been otherwise.</p>
-      <a class="btn" href="/projects/singing-hollow">See the project</a>
+      <div class="project-head" style="margin-top:0">
+        <div>
+          <Image src={hollowHero} alt="Singing Hollow installed at IDS West 2026" widths={[600, 900, 1400]} sizes="(min-width: 900px) 33vw, 100vw" />
+        </div>
+        <div class="story">
+          <h2>Singing Hollow</h2>
+          <p>Singing Hollow started as a conversation with artist Brent Comber about [Ben: what Brent came with: a sketch, a sound, a shape]. It became a sound amplifier you step up to: put your head into the opening, close your eyes and hum, and a carved cedar chamber returns your own voice to you.</p>
+          <p>Because we were in from the first idea, the sphere could be developed as one parametric model from the start. That model generated every one of the western red cedar tiles that wrap it, no two alike, and the toolpaths that milled the yellow cedar core in our North Vancouver shop. [Ben: what the model and the shop made possible that would not have been otherwise: the funnel, the lighting, the tile count, the schedule.]</p>
+          <p>It was installed at IDS West 2026. Designed together by Ben Hayward and Brent Comber.</p>
+          <a class="btn" href="/projects/singing-hollow">See the project</a>
+        </div>
+      </div>
     </div>
   </section>
 

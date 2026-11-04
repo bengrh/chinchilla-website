@@ -81,6 +81,7 @@ p { margin: 0 0 1em; max-width: 65ch; }
 .steps { display: grid; gap: 32px; grid-template-columns: 1fr; counter-reset: step; }
 @media (min-width: 720px) { .steps { grid-template-columns: repeat(2, 1fr); } }
 .step h3::before { counter-increment: step; content: counter(step, decimal-leading-zero) " "; color: var(--muted); font-weight: 400; margin-right: 0.5em; }
+.step img { aspect-ratio: 4 / 3; object-fit: cover; width: 100%; border-radius: 4px; margin-bottom: 16px; }
 .todo { border-left: 3px solid var(--accent); padding: 8px 16px; color: var(--muted); font-size: 0.95rem; background: color-mix(in srgb, var(--accent) 6%, transparent); }
 
 /* Forms */
