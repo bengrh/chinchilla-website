@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Menu from '../components/Menu.astro';
+import Backdrop from '../components/Backdrop.astro';
 import { getImage } from 'astro:assets';
 import defaultOg from '../content/projects/singing-hollow/hero.jpg';
 
@@ -8,7 +9,7 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: ImageMetadata;
-  models?: boolean; // load <model-viewer> (same build the earlier 3D viewers used)
+  models?: boolean; // load <model-viewer>; unused while the 3D library is parked
 }
 const site = 'Chinchilla Design';
 const {
@@ -73,6 +74,7 @@ const schema = {
     <slot name="head" />
   </head>
   <body>
+    <Backdrop />
     <header class="site-header">
       <div class="wrap">
         <a class="brand" href="/">Chinchilla Design</a>

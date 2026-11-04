@@ -9,7 +9,7 @@ order: 2
 summary: "A stepped table of stacked blocks, designed with Fay Mihailides Design."
 model: "/models/stalactite-table.glb"
 hero: "./hero.jpg"
-heroAlt: "The Stalactite Table installed"
+heroAlt: "The Stalactite Table installed, cream ottomans tucked beneath the stepped underside"
 gallery:
   - image: "./process-saw.jpg"
     caption: "Cutting blocks on the radial arm saw"
@@ -23,18 +23,14 @@ gallery:
     caption: "Clamped up"
   - image: "./shop.jpg"
     caption: "The table in the shop before finishing"
-  - image: "./installed-wide.jpg"
-    caption: "Installed"
+  - image: "./ottomans.jpg"
+    caption: "Installed, with the ottomans tucked under the steps"
+  - image: "./end.jpg"
+    caption: "From the end"
   - image: "./underside.jpg"
     caption: "The stepped underside"
-  - image: "./detail-1.jpg"
-    caption: "Detail"
-  - image: "./detail-2.jpg"
-    caption: "Detail"
   - image: "./detail-dark.jpg"
     caption: "Detail of the stepped blocks"
-  - image: "./side.jpg"
-    caption: "From the side"
 ---
 
 Fay Mihailides Design came to us with a piece for [the client's space: what kind of room, what it is used for]. The brief was a long table with a presence of its own: a flat, quiet top, and an underside that steps down in a field of blocks, like a cave ceiling growing toward the floor. Internally we called it the Minecraft table. Stalactite Table is the name that stuck.
