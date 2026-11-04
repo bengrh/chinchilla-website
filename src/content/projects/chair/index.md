@@ -6,7 +6,7 @@ client: "Private"
 scope: ["Furniture Design", "Woodworking", "Upholstery"]
 status: "Completed"
 featured: true
-order: 4
+order: 5
 summary: "Solid white oak dining chair with a continuous wraparound backrest shaped by hand and spokeshave."
 hero: "./detail.jpg"
 heroAlt: "Chair detail — hand-shaped wraparound back transitioning to armrest"

@@ -6,7 +6,7 @@ client: "Private"
 scope: ["CNC Milling", "Woodworking", "Product Design"]
 status: "Completed"
 featured: true
-order: 5
+order: 6
 summary: "Laminated cedar with burl wood inlays, CNC-milled into flowing topographic relief."
 hero: "./detail.jpg"
 heroAlt: "Surface detail — burl inlay against the milled cedar grain"

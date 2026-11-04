@@ -6,7 +6,7 @@ client: "Interior Design Show"
 scope: ["Spatial Design", "Fabrication"]
 status: "Completed"
 featured: true
-order: 2
+order: 3
 summary: "When observing how visitors walk through our pavilion, nearly every person had the automatic reaction to run their hands over the sweeping curves of the maple countertop."
 hero: "./ids-pavilion.jpg"
 heroAlt: "Full pavilion view at IDS 2025"

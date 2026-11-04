@@ -6,7 +6,7 @@ client: "Research Project"
 scope: ["Digital Fabrication", "Interior Design", "CNC Milling"]
 status: "Completed"
 featured: true
-order: 6
+order: 7
 summary: "Every curved surface — kitchen counter, ceiling forms, cabinetry — was designed parametrically and CNC-milled from sustainable plywood."
 hero: "./exterior.jpg"
 heroAlt: "Exterior — cedar cladding and custom laser-cut entry door"

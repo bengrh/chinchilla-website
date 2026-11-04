@@ -6,7 +6,7 @@ client: "Sage Hayward Vineyards"
 scope: ["Brand Identity", "Signage", "Print", "Packaging"]
 status: "Completed"
 featured: true
-order: 7
+order: 8
 summary: "Complete brand identity for a boutique Gulf Islands vineyard."
 hero: "./sign.jpg"
 heroAlt: "Hand-carved exterior signage — wave-pattern relief in solid wood"
