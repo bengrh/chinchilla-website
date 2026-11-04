@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import chinchilla from '../assets/chinchilla-dust-bath.png';
+---
+<Base
+  title="Studio"
+  description="Chinchilla Design is a design and fabrication studio in North Vancouver working at the intersection of advanced design technology and traditional making."
+>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Studio</p>
+      <h1>Design fluency and a deep understanding of material.</h1>
+      <div class="project-head">
+        <div class="story">
+          <p>Chinchilla Design is a multidisciplinary design and fabrication studio specializing in complex woodwork, digital fabrication, and precision craft.</p>
+          <p>We operate at the intersection of advanced design technology and traditional making, helping designers and clients realize ambitious ideas that would otherwise be difficult to build. Contemporary design software and CNC technologies are expanding what is possible in wood, and in turn a new design language is emerging. Exploring that language takes a company with a fluency in design and a deep understanding of material.</p>
+          <p>Our role is often that of a bridge: between design intent and physical execution, digital models and real materials, creative ambition and manufacturing reality. We specialize in projects where standard fabrication methods fall short.</p>
+          <p>We frequently work in a design-assist capacity, advising on material strategy, fabrication logic and production methods early in the design process to ensure efficiency, feasibility and design integrity.</p>
+          <p>Based in North Vancouver and working internationally, we partner with designers and clients who are pursuing technically ambitious, materially expressive and carefully executed projects.</p>
+        </div>
+        <div>
+          <Image src={chinchilla} alt="Illustration of a chinchilla in a dust bath, wearing a cap" widths={[480, 800]} sizes="(min-width: 900px) 40vw, 100vw" />
+          <p style="font-size:0.95rem;color:var(--muted);margin-top:12px">Chinchillas bathe in dust. They roll in fine volcanic powder to keep their coats clean, a grooming ritual that looks, from the outside, like deliberate immersion in the stuff most animals try to avoid. Anyone who has spent a full day in a woodworking shop will understand the reference immediately. It started as an inside joke and ended up sticking.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">People</p>
+      <div class="steps" style="counter-reset:none">
+        <div><h3>Ben Hayward</h3><p>Founder and lead designer. Designer and builder specializing in digital fabrication and traditional craftsmanship. Graduate of Architectural Studies, Carleton University. His tiny house designs were featured on HGTV's "Tiny House Big Living."</p></div>
+        <div><h3>Jamil Kabani</h3><p>Shop manager. Oversees day-to-day operations of the fabrication shop, managing CNC machinery, material sourcing and production workflows.</p></div>
+      </div>
+      <p class="todo" style="margin-top:32px">TODO (content phase): shop and work-in-progress photos carry this page; no portraits. One sentence of shop capacity if Ben decides to list it.</p>
+    </div>
+  </section>
+</Base>

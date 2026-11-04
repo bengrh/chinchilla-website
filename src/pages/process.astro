@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+// Structure follows docs/OVERHAUL-PLAN.md, "The explainer". Copy marked TODO is placeholder
+// and is written in the content phase. Headings are outcomes for the designer, not our capabilities.
+const steps = [
+  ['Feasibility and quoting', 'Honest scope, materials and budget before you are committed.'],
+  ['Design assist', 'Embedded in your process to refine details, resolve fabrication problems and choose materials early.'],
+  ['Shop drawings', 'Fabrication-ready drawings produced directly from your design intent.'],
+  ['Prototyping', 'Physical tests of form, joinery, texture and finish before full production.'],
+  ['CNC fabrication', 'Complex geometry in wood and sheet material, executed with repeatability.'],
+  ['Joinery and finishing', 'Traditional and contemporary wood construction, finished by hand.'],
+  ['Installation', 'Delivery, assembly and final placement. We see it through to the last fastener.'],
+];
+const different = [
+  ['A new language in wood', 'Parametric design and CNC are not a faster way to make the same things. They are a way to make different things: projects whose language and scope would be near impossible any other way.'],
+  ['In from the first concept', 'Material strategy, fabrication logic and real feasibility while the idea is still forming, before the design is locked.'],
+  ['Design fluency and a shop, together', 'One studio carries the intent from sketch to install. Nothing is lost in a handoff.'],
+  ['Hand finish over machine precision', 'Digital precision in the toolpaths, hand work in the final surface. Both are left visible in the finished piece.'],
+  ['A close working relationship', 'You deal directly with a hardworking, highly capable collaborator who is developing and building the piece, here in Vancouver.'],
+];
+---
+<Base
+  title="Process"
+  description="How Chinchilla Design works with architects and designers: in from the first concept, developing the core idea through to a built reality."
+>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Process</p>
+      <h1>A design partner, not just a fabricator.</h1>
+      <p class="lede">Chinchilla Design is a Vancouver design and fabrication studio that helps architects, designers and clients take on complex projects in wood. We develop ambitious ideas with you from the first sketch, then build them ourselves.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Who it is for</p>
+      <h2>You can picture the piece. You can't find the shop.</h2>
+      <p class="todo">TODO (content phase): the designer's situation in two or three sentences. A feature, a detail or a piece they can see but no conventional millwork shop will take on. Architects and clients named too, designers first.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">How we are different</p>
+      <div class="steps" style="counter-reset:none">
+        {different.map(([h, p]) => <div><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">How a project runs</p>
+      <div class="steps">
+        {steps.map(([h, p]) => <div class="step"><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+      <p class="todo" style="margin-top:32px">TODO (content phase): one shop photo per step from the Singing Hollow process set.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Proof</p>
+      <h2>Singing Hollow</h2>
+      <p class="todo">TODO (Ben): two or three sentences on what being in from the first idea changed. What Brent came with, what the parametric model and the shop made possible that would not have been otherwise.</p>
+      <a class="btn" href="/projects/singing-hollow">See the project</a>
+    </div>
+  </section>
+
+  <section class="section" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <h2>Bring us in early.</h2>
+      <p class="lede">The earlier we are involved, the more of the idea survives contact with material, budget and schedule.</p>
+      <a class="btn" href="/contact">Start a conversation</a>
+    </div>
+  </section>
+</Base>

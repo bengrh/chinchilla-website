@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+const featured = (await getCollection('projects', (p) => p.data.featured))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 6);
+---
+<Base title="Chinchilla Design">
+  <!-- Old single-page anchors (#projects, #about, #contact) map to the new pages. -->
+  <script is:inline>
+    (function () {
+      var m = { '#projects': '/projects', '#work': '/projects', '#services': '/process', '#about': '/studio', '#team': '/studio', '#contact': '/contact' };
+      var to = m[location.hash.toLowerCase()];
+      if (to) location.replace(to);
+    })();
+  </script>
+
+  <section class="section">
+    <div class="wrap">
+      <h1>We design and build things in wood you didn't know were possible.</h1>
+      <p class="lede">Chinchilla Design is a Vancouver design and fabrication studio that helps architects, designers and clients take on complex projects in wood. We develop ambitious ideas with you from the first sketch, then build them ourselves.</p>
+      <a class="btn" href="/process">How we work</a>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow">Selected work</p>
+      <div class="grid cols-3">
+        {featured.map((p, i) => <ProjectCard project={p} eager={i < 3} />)}
+      </div>
+      <p style="margin-top:32px"><a class="btn" href="/projects">All projects</a></p>
+    </div>
+  </section>
+
+  <section class="section" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <p class="eyebrow">Bring us in early</p>
+      <h2>The best results start before the drawings are finished.</h2>
+      <p class="lede">We work as a design partner, not just a fabricator. Material strategy, fabrication logic and honest feasibility while the idea is still forming.</p>
+      <a class="btn" href="/contact">Start a conversation</a>
+    </div>
+  </section>
+</Base>

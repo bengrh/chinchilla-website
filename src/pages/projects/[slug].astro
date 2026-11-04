@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+const { project } = Astro.props;
+const d = project.data;
+const { Content } = await render(project);
+const related = (
+  await getCollection('projects', (p) => p.id !== project.id && p.data.category === d.category)
+).slice(0, 3);
+const facts: [string, string | undefined][] = [
+  ['Client', d.client],
+  ['Designer', d.designer],
+  ['Location', d.location],
+  ['Year', String(d.year)],
+  ['Type', d.category],
+  ['Our scope', d.scope.join(', ') || undefined],
+  ['Collaborators', d.collaborators.join(', ') || undefined],
+  ['Materials', d.materials.join(', ') || undefined],
+];
+const description = d.summary ?? `${d.title}, ${d.category.toLowerCase()} by Chinchilla Design, ${d.year}.`;
+---
+<Base title={d.title} description={description} ogImage={d.hero}>
+  <article class="section">
+    <div class="wrap">
+      <div class="hero-img">
+        <Image
+          src={d.hero}
+          alt={d.heroAlt}
+          widths={[800, 1200, 1800, 2400]}
+          sizes="(min-width: 1280px) 1200px, 100vw"
+          loading="eager"
+        />
+      </div>
+      <div class="project-head">
+        <div>
+          <p class="eyebrow">{d.category}</p>
+          <h1>{d.title}</h1>
+          <dl class="facts">
+            {facts.filter(([, v]) => v).map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+          </dl>
+        </div>
+        <div class="story"><Content /></div>
+      </div>
+
+      {d.gallery.length > 0 && (
+        <div class="gallery">
+          {d.gallery.map((g) => (
+            <figure>
+              {g.image && (
+                <Image src={g.image} alt={g.caption} widths={[600, 900, 1400]} sizes="(min-width: 720px) 50vw, 100vw" />
+              )}
+              {g.video && <video controls preload="none" playsinline src={g.video}></video>}
+              <figcaption>{g.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
+
+      {d.press.length > 0 && (
+        <div class="press">
+          <p class="eyebrow">Press</p>
+          <ul>
+            {d.press.map((p) => (
+              <li><a href={p.url} rel="noopener" target="_blank">{p.title}</a></li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {related.length > 0 && (
+        <div class="related">
+          <p class="eyebrow">Related</p>
+          <div class="grid cols-3">{related.map((p) => <ProjectCard project={p} />)}</div>
+        </div>
+      )}
+    </div>
+  </article>
+</Base>

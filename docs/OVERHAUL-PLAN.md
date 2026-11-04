@@ -95,7 +95,9 @@ Open questions for Ben (one at a time):
 
 1. **Housekeeping.** Fast-forward stale local `main`, retire the Documents clone and the old worktree, delete leftover `claude/*` branches on GitHub. _(done: branch `site-overhaul` created)_
 2. **Content.** Answer the open questions, write the explainer, migrate the seven project stories into markdown, write the studio and contact copy.
-3. **Scaffold.** Astro project, content collection, image pipeline, Netlify build, deploy preview URL.
+3. **Scaffold.** Astro project, content collection, image pipeline, Netlify build, deploy preview URL. _(done 2026-11-04 on `site-overhaul`: Astro 5, seven projects migrated to `src/content/projects/<slug>/index.md` with their photos, pages for home, process, projects, project detail, studio, contact and thanks; old page kept at `legacy/index.html`. `npm run dev` to preview, `npm run build` to build. Deploy preview URL comes when the branch is pushed and Netlify builds it.)_
+
+   To add a project: copy a folder in `src/content/projects/`, replace the photos, edit `index.md`. The frontmatter fields are documented in `src/content.config.ts`.
 4. **Templates.** Home, process, projects index, project page, studio, contact. Mobile first.
 5. **Design pass.** Typography, colour, motion, hero imagery.
 6. **Launch.** Lighthouse on phone and desktop, redirects, sitemap, LocalBusiness schema, social share images, merge to `main`.
