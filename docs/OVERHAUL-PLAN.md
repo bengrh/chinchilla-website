@@ -54,6 +54,15 @@ Ben's curveball after design pass 1: he loves https://2019.makemepulse.com/ (an 
 
 Update later on 2026-11-04: Ben rejected both lab prototypes (the WebGL toolpath surface and the pinned scroll journey). The precedent he says is more in line with Chinchilla is https://artificialia.digital (Bridgette Ashton): a white field of cut-out ceramic objects arranged like specimens, objects are the navigation, click one and it opens in place with a short caption (title, year, material, size) and BACK; a two-circle menu; nothing animates on its own. Quiet, museum-like, object-first. Read: a cabinet of curiosities, not a showreel. Direction to test, pending Ben's confirmation: the home page as a field of cut-out pieces and samples on paper, each opening in place.
 
+**The brief, settled 2026-11-04 (Ben's words, condensed):**
+
+- Objects as navigation, evolved to make it ours. Keep the black background of the live site, and keep some of the live site's animation character (Ben prefers the original site's style to design pass 1; he wants the new functionality and sections kept).
+- Unify every project with its 3D model rendered as a pen drawing. Ben has highly resolved models for basically every project. The home page is the object library; dive into a project and orbit its model, as Artificialia lets you orbit her 3D-scanned pieces.
+- Opening a project brings up a side panel with the photo gallery and a comprehensive write-up. Each project must be directly linkable (for emails), so no one has to pan around the library to reach it.
+- The menu goes further than hers: three or four options, so a viewer is guided through the process and what the studio is about.
+
+Technical direction (to prototype first): Three.js, glTF models exported from Rhino and decimated for the web, an ink-line look from a screen-space edge pass (depth + normals) plus crease edges so it works for any mesh without hand prep, pale lines on black. The home library shows pre-rendered line images and loads live 3D only when a project opens. `/projects/<slug>` is the project page itself (viewer, gallery, write-up), reached from the library with a view transition, so deep links are free. Design pass 1 (light, serif) is superseded by this direction; the dark palette becomes the default.
+
 Working position: play as a layer, not the structure. Pages stay real HTML (speed, search, phones); the play lives on the home page journey, in a signature parametric element that is literally the studio's craft, and in transitions. Options ranked in the 2026-11-04 conversation; prototype on a `/lab` page before committing. The full makemepulse-style world is out: months of work and it fights the speed and search goals.
 
 ## The explainer (replaces "DFMA")
