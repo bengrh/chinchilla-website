@@ -1,13 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import band from '../content/projects/singing-hollow/glow-wide.jpg';
 
-const featured = (await getCollection('projects', (p) => p.data.featured))
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 6);
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const withModel = projects.filter((p) => p.data.model);
+const withoutModel = projects.filter((p) => !p.data.model);
+const library = [...withModel, ...withoutModel];
+
+// Character animation for the headline, as on the original site.
+const headline = "We design and build things in wood you didn't know were possible.";
+let n = 0;
+const split = headline.split(' ').map((w) => ({ chars: [...w].map((c) => ({ c, d: 0.04 + 0.018 * n++ })) }));
 
 const different = [
   ['A new language in wood', 'Parametric design and CNC are not a faster way to make the same things. They are a way to make different things.'],
@@ -15,8 +19,7 @@ const different = [
   ['One studio, sketch to install', 'The person who understood the idea is the person building it. Nothing is lost in a handoff.'],
 ];
 ---
-<Base title="Chinchilla Design">
-  <!-- Old single-page anchors (#projects, #about, #contact) map to the new pages. -->
+<Base title="Chinchilla Design" models>
   <script is:inline>
     (function () {
       var m = { '#projects': '/projects', '#work': '/projects', '#services': '/process', '#about': '/studio', '#team': '/studio', '#contact': '/contact' };
@@ -27,47 +30,65 @@ const different = [
 
   <section class="hero">
     <div class="wrap">
-      <h1>We design and build things in wood you didn't know were possible.</h1>
-      <p class="lede">A Vancouver design and fabrication studio that helps architects, designers and clients take on complex projects in wood. We develop ambitious ideas with you from the first sketch, then build them ourselves.</p>
-      <a class="btn" href="/process">How we work</a>
+      <h1 class="split" aria-label={headline}>
+        {split.map((w, i) => (
+          <><span class="w">{w.chars.map(({ c, d }) => <span class="ch" style={`animation-delay:${d.toFixed(3)}s`}>{c}</span>)}</span>{i < split.length - 1 ? ' ' : ''}</>
+        ))}
+      </h1>
+      <p class="lede fade-up">A Vancouver design and fabrication studio. We develop ambitious ideas with architects, designers and clients from the first sketch, then build them ourselves.</p>
     </div>
   </section>
 
-  <figure class="band" style="margin:0">
-    <Image src={band} alt="Singing Hollow: the tiled cedar surface funnelling inward to the lit hollow" widths={[800, 1200, 1616]} sizes="100vw" loading="eager" />
-    <figcaption>Singing Hollow, IDS West 2026</figcaption>
-  </figure>
-
-  <section class="section">
+  <section class="library" id="library">
     <div class="wrap">
-      <p class="eyebrow">Selected work</p>
-      <div class="grid cols-3 editorial">
-        {featured.map((p, i) => <ProjectCard project={p} eager={i < 3} />)}
+      <p class="lib-hint">Objects · pick one up</p>
+      <div class="lib-grid">
+        {library.map((p, i) => (
+          <a class="lib-cell" href={`/projects/${p.id}`} data-slug={p.id}>
+            {p.data.model ? (
+              <model-viewer
+                class="lib-mv"
+                src={p.data.model}
+                alt={p.data.heroAlt}
+                auto-rotate
+                auto-rotate-delay="0"
+                rotation-per-second="10deg"
+                shadow-intensity="0.5"
+                environment-image="neutral"
+                exposure="1"
+                camera-orbit="45deg 68deg auto"
+                interaction-prompt="none"
+                loading={i < 3 ? 'eager' : 'lazy'}
+                reveal="auto"
+              ></model-viewer>
+            ) : (
+              <div class="plate">
+                <Image src={p.data.hero} alt="" widths={[400, 700]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw" loading="lazy" />
+              </div>
+            )}
+            <span class="lbl"><strong>{p.data.title}</strong><span>{p.data.model ? p.data.category : <span class="soon">Model coming</span>}</span></span>
+          </a>
+        ))}
       </div>
-      <p style="margin-top:clamp(48px,6vw,88px)"><a class="btn" href="/projects">All projects</a></p>
     </div>
   </section>
 
-  <hr class="rule" />
-
-  <section class="section">
+  <section class="section" style="border-top:1px solid var(--line)">
     <div class="wrap">
       <p class="eyebrow">How we are different</p>
       <p class="statement">A design partner, <em>not just a fabricator.</em> The earlier we are in, the more of the idea survives contact with material, budget and schedule.</p>
       <div class="three" style="margin-top:clamp(32px,4vw,56px)">
         {different.map(([h, p]) => <div><h3>{h}</h3><p>{p}</p></div>)}
       </div>
-      <p style="margin-top:clamp(32px,4vw,56px)"><a class="btn" href="/process">Read how a project runs</a></p>
+      <p style="margin-top:clamp(32px,4vw,56px)"><a class="btn" href="/process">How a project runs</a></p>
     </div>
   </section>
 
-  <hr class="rule" />
-
-  <section class="section">
+  <section class="section" style="border-top:1px solid var(--line)">
     <div class="wrap">
       <p class="eyebrow">Bring us in early</p>
       <h2 style="max-width:18ch">You can picture the piece. We can help you build it.</h2>
-      <a class="btn" href="/contact">Start a conversation</a>
+      <a class="btn solid" href="/contact">Start a conversation</a>
     </div>
   </section>
 </Base>

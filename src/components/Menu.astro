@@ -1,0 +1,96 @@
+---
+// Staggered menu, ported from the original site: MENU pill top right, two pre-layers sweep in
+// from the right, then the panel, then the items rise one after another. CSS transitions only.
+const items = [
+  ['/projects', 'Work'],
+  ['/process', 'Process'],
+  ['/studio', 'Studio'],
+  ['/contact', 'Contact'],
+];
+---
+<button class="sm-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="menuPanel">
+  <span class="sm-toggle-label"><span class="l-menu">Menu</span><span class="l-close">Close</span></span>
+  <span class="sm-toggle-icon"><span class="bar bar-h"></span><span class="bar bar-v"></span></span>
+</button>
+<div class="sm-prelayer sm-prelayer-1" aria-hidden="true"></div>
+<div class="sm-prelayer sm-prelayer-2" aria-hidden="true"></div>
+<aside class="sm-panel" id="menuPanel" aria-hidden="true">
+  <nav class="sm-items" aria-label="Main">
+    {items.map(([href, label], i) => (
+      <a class="sm-item" href={href} style={`--i:${i}`}>
+        <span class="sm-num">{String(i + 1).padStart(2, '0')}</span>
+        <span class="sm-label-wrap"><span class="sm-label">{label}</span></span>
+      </a>
+    ))}
+  </nav>
+  <div class="sm-socials">
+    <a href="https://www.instagram.com/chinchilla.design.vancouver/" target="_blank" rel="noopener" style="--i:0">Instagram</a>
+    <a href="mailto:ben@chinchilla.design" style="--i:1">Email</a>
+  </div>
+</aside>
+
+<style is:global>
+  .sm-toggle {
+    position: fixed; top: 22px; right: 22px; z-index: 201;
+    display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+    background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.2); border-radius: 999px;
+    color: #fff; font: 600 13px/1 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer;
+    transition: background .3s ease, border-color .3s ease, transform .3s ease;
+  }
+  .sm-toggle:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.45); transform: scale(1.03); }
+  .sm-toggle-label { position: relative; overflow: hidden; width: 50px; height: 14px; }
+  .sm-toggle-label span { position: absolute; left: 0; width: 100%; text-align: center; transition: transform .4s var(--ease); }
+  .sm-toggle-label .l-close { transform: translateY(140%); }
+  .sm-toggle.open .l-menu { transform: translateY(-140%); }
+  .sm-toggle.open .l-close { transform: translateY(0); }
+  .sm-toggle-icon { position: relative; width: 18px; height: 18px; }
+  .sm-toggle-icon .bar { position: absolute; top: calc(50% - 1px); left: 0; width: 18px; height: 2px; background: #fff; border-radius: 1px; transition: transform .4s var(--ease); }
+  .sm-toggle-icon .bar-v { transform: rotate(90deg); }
+  .sm-toggle.open .bar-h { transform: rotate(45deg); }
+  .sm-toggle.open .bar-v { transform: rotate(-45deg); }
+
+  .sm-prelayer, .sm-panel { position: fixed; top: 0; right: 0; height: 100%; width: 100vw; transform: translateX(100%); }
+  @media (min-width: 769px) { .sm-prelayer, .sm-panel { width: 40vw; min-width: 420px; } }
+  .sm-prelayer-1 { background: #fff; z-index: 190; transition: transform .6s var(--ease-io); }
+  .sm-prelayer-2 { background: #adadad; z-index: 191; transition: transform .6s var(--ease-io) .08s; }
+  .sm-panel {
+    background: #fff; color: #0a0a0a; z-index: 192; display: flex; flex-direction: column; justify-content: center;
+    padding: 90px 48px 48px; overflow-y: auto; transition: transform .6s var(--ease-io) .16s; pointer-events: none;
+  }
+  @media (max-width: 640px) { .sm-panel { padding: 90px 24px 32px; } }
+  body.menu-open .sm-prelayer, body.menu-open .sm-panel { transform: translateX(0); }
+  body.menu-open .sm-panel { pointer-events: auto; }
+  body.menu-closing .sm-panel { transition-delay: 0s; transition-duration: .5s; }
+  body.menu-closing .sm-prelayer-2 { transition-delay: .05s; transition-duration: .5s; }
+  body.menu-closing .sm-prelayer-1 { transition-delay: .1s; transition-duration: .5s; }
+
+  .sm-items { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+  .sm-item { display: flex; align-items: baseline; gap: 20px; text-decoration: none; color: #0a0a0a; }
+  .sm-num { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; color: #6b6b6b; letter-spacing: .05em; }
+  .sm-label-wrap { overflow: hidden; display: inline-block; padding-bottom: .1em; }
+  .sm-label {
+    display: inline-block; font-size: clamp(34px, 5vw, 52px); font-weight: 700; letter-spacing: -.03em; text-transform: uppercase; line-height: 1.2;
+    transform: translateY(140%) rotate(10deg); transform-origin: left bottom; transition: transform .7s var(--ease) calc(.4s + var(--i) * .06s), color .3s ease;
+  }
+  body.menu-open .sm-label { transform: translateY(0) rotate(0); }
+  .sm-item:hover .sm-label { color: #6b6b6b; }
+  .sm-socials { display: flex; gap: 32px; padding-top: 32px; border-top: 1px solid #e5e5e5; margin-top: auto; }
+  .sm-socials a { font-size: 13px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #6b6b6b; opacity: 0; transition: opacity .4s ease calc(.6s + var(--i) * .05s), color .3s ease; }
+  body.menu-open .sm-socials a { opacity: 1; }
+  .sm-socials a:hover { color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) {
+    .sm-prelayer, .sm-panel, .sm-label, .sm-socials a, .sm-toggle-label span, .sm-toggle-icon .bar { transition-duration: .01s; transition-delay: 0s; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var body = document.body, t = document.getElementById('menuToggle'), panel = document.getElementById('menuPanel');
+    if (!t || !panel) return;
+    function open() { body.classList.remove('menu-closing'); body.classList.add('menu-open'); t.classList.add('open'); t.setAttribute('aria-expanded', 'true'); t.setAttribute('aria-label', 'Close menu'); panel.setAttribute('aria-hidden', 'false'); }
+    function close() { body.classList.add('menu-closing'); body.classList.remove('menu-open'); t.classList.remove('open'); t.setAttribute('aria-expanded', 'false'); t.setAttribute('aria-label', 'Open menu'); panel.setAttribute('aria-hidden', 'true'); setTimeout(function () { body.classList.remove('menu-closing'); }, 700); }
+    t.addEventListener('click', function (e) { e.stopPropagation(); body.classList.contains('menu-open') ? close() : open(); });
+    document.addEventListener('click', function (e) { if (body.classList.contains('menu-open') && !panel.contains(e.target) && !t.contains(e.target)) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && body.classList.contains('menu-open')) close(); });
+  })();
+</script>

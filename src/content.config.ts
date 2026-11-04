@@ -22,6 +22,7 @@ const projects = defineCollection({
       featured: z.boolean().default(false), // shows on the home page
       order: z.number().default(100), // lower = earlier in the grid
       summary: z.string().optional(), // one line for cards and the meta description
+      model: z.string().optional(), // glTF under /public/models, e.g. /models/singing-hollow.glb
       hero: image(),
       heroAlt: z.string(),
       gallery: z

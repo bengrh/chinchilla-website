@@ -9,6 +9,7 @@ status: "Available to Order"
 featured: true
 order: 4
 summary: "The Lath Bench is a sculptural seating piece developed with local artist and shop neighbour, Brent Comber."
+model: "/models/lath-bench.glb"
 hero: "./gallery.jpg"
 heroAlt: "Back view — the continuous sweep of laths along the full length"
 gallery:

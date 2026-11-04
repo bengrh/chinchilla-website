@@ -7,6 +7,7 @@ scope: ["Design assist", "Fabrication"]
 featured: true
 order: 2
 summary: "A stepped table of stacked blocks, designed with Fay Mihailides Design."
+model: "/models/stalactite-table.glb"
 hero: "./hero.jpg"
 heroAlt: "The Stalactite Table installed"
 gallery:

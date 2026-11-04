@@ -9,6 +9,7 @@ status: "Completed"
 featured: true
 order: 1
 summary: "Humming may be our oldest form of healing — an ancient technology of self-restoration through the sound of our own voice."
+model: "/models/singing-hollow.glb"
 hero: "./hero.jpg"
 heroAlt: "Singing Hollow installed at IDS West 2026"
 gallery:
