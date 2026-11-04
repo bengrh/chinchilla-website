@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+// LAB: pen-drawing orbit viewer over the three prepared models. Not linked, not in the sitemap.
+const models = [
+  ['singing-hollow', 'Singing Hollow'],
+  ['stalactite-table', 'Stalactite Table'],
+  ['lath-bench', 'Lath Bench'],
+];
+---
+<Base title="Lab: orbit" description="Prototype.">
+  <Fragment slot="head"><meta name="robots" content="noindex, nofollow" /></Fragment>
+
+  <section class="hero" style="padding-bottom:24px">
+    <div class="wrap">
+      <p class="eyebrow">Lab 03</p>
+      <h1 style="max-width:16ch">Every project, drawn the same way.</h1>
+      <p class="lede">The real models, rendered as pen drawings. Drag to orbit, scroll to zoom. Lines are found on the fly from the geometry, so any model gets the same treatment with no hand work.</p>
+      <div class="orbit-tabs" role="tablist">
+        {models.map(([slug, name], i) => <button role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-model={slug}>{name}</button>)}
+      </div>
+    </div>
+  </section>
+
+  <div class="orbit-stage" id="orbit" data-model={models[0][0]}>
+    <div class="orbit-loading" id="orbitLoading">Loading…</div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="orbit-ui">
+        <label>Ink <input type="color" id="ink" value="#efe9dc" /></label>
+        <label>Paper <input type="color" id="paper" value="#0a0a0a" /></label>
+        <label>Wash <input type="range" id="wash" min="0" max="2" step="0.1" value="1" /></label>
+      </div>
+      <p class="eyebrow" style="margin-top:40px">Where this goes</p>
+      <div class="three">
+        <div><h3>The library</h3><p>The home page is a field of these drawings. Each one turns slowly. Click one and it comes forward.</p></div>
+        <div><h3>The project page</h3><p>The drawing takes the top of the page, orbitable. The photos and the write-up sit beside it, and the URL is the project's own.</p></div>
+        <div><h3>Any model</h3><p>Saturna sign, IDS 2025 and the wall art slot in the same way once their models arrive. Nothing is drawn by hand.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .orbit-stage { position: relative; width: 100%; height: min(78vh, 820px); background: var(--bg); cursor: grab; }
+    .orbit-stage:active { cursor: grabbing; }
+    .orbit-stage canvas { width: 100% !important; height: 100% !important; display: block; }
+    .orbit-loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; pointer-events: none; }
+    .orbit-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 24px; }
+    .orbit-tabs button { font: inherit; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.6em 1.1em; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; }
+    .orbit-tabs button[aria-selected="true"] { border-color: var(--fg); color: var(--fg); }
+    .orbit-ui { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .orbit-ui label { display: flex; align-items: center; gap: 10px; }
+  </style>
+
+  <script>
+    import { mountSketchViewer } from '../../scripts/sketch-viewer';
+    const stage = document.getElementById('orbit') as HTMLDivElement;
+    const loading = document.getElementById('orbitLoading') as HTMLDivElement;
+    const inkIn = document.getElementById('ink') as HTMLInputElement;
+    const paperIn = document.getElementById('paper') as HTMLInputElement;
+    const washIn = document.getElementById('wash') as HTMLInputElement;
+
+    let current: ReturnType<typeof mountSketchViewer> | null = null;
+    function load(slug: string) {
+      loading.style.display = 'grid';
+      if (current) { current.renderer.dispose(); current.renderer.domElement.remove(); }
+      current = mountSketchViewer(stage, {
+        url: `/models/${slug}.glb`, ink: inkIn.value, paper: paperIn.value, wash: parseFloat(washIn.value),
+        onLoad: () => { loading.style.display = 'none'; },
+      });
+      (window as any).__viewer = current;
+    }
+    document.querySelectorAll<HTMLButtonElement>('.orbit-tabs button').forEach((b) => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.orbit-tabs button').forEach((x) => x.setAttribute('aria-selected', 'false'));
+        b.setAttribute('aria-selected', 'true');
+        load(b.dataset.model!);
+      });
+    });
+    [inkIn, paperIn, washIn].forEach((i) => i.addEventListener('change', () => {
+      const active = document.querySelector<HTMLButtonElement>('.orbit-tabs button[aria-selected="true"]');
+      load(active?.dataset.model ?? 'singing-hollow');
+    }));
+    load(stage.dataset.model!);
+  </script>
+</Base>
