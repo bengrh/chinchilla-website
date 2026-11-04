@@ -137,9 +137,29 @@ Cleared by Ben as a source. Signed out, Instagram shows only the twelve most rec
 
 Profile bio reads "Designer and builder. Merging digital fabrication and traditional craftsmanship to create art with wood." Follower count is substantial and is worth a line on the site as social proof.
 
+### Instagram export (received 2026-11-04)
+
+Parsed `instagram-chinchilla.design.vancouver-2026-11-04-*.zip`: 579 posts, 377 media files, originals at 2000–3600 px. Everything before 2022 is Ben's earlier personal account (canoe slalom, Carleton, the 2017–2018 tiny house build). Since 2022: 69 posts. Staged copies, named by post date, are in the session scratch folder under `ig-out/picks/` (not in the repo; move into project folders as they are assigned).
+
+What the export adds to the inventory:
+
+| Found | Use |
+| --- | --- |
+| Saturna Island Emergency Services sign, carved cedar with black lettering, several shots (Aug 2026) | The install photos the Saturna project needed. Ben still to confirm it is installed, not just finished. |
+| Black stepped-block installation over cream ottomans, plus a black stacked-block column (Aug–Sep 2026) | Unknown project. Ben to identify (client, designer, location). Looks like a hospitality or commercial piece and would be the first designer-client project page. |
+| White oak chairs around a dining table in a house (Sep 2026) | Context shots for the Chair project. |
+| Dark CNC-textured block, wave relief (Aug 2026) | Texture sample, possibly Baldwin. Process page material. |
+| Singing Hollow at IDS 2026, including team photo on the bench with Brent (Sep 2026) | Adds to the drive set. |
+| IDS 2025 pavilion build and show (Sep 2025), with short captions | Process page and IDS Pavilion gallery. |
+| Sage Hayward signs, wine display, coasters (Jun–Jul 2024), captions in Ben's voice | Sage Hayward gallery and copy. |
+| Tiny house build, 64 posts 2017–2018 with captions (386-piece CNC frame, HGTV finale, sponsors) | Tiny House page gets a real build story and process photos. Staged under `ig-out/picks/tiny-house-build/`. |
+| Laser-cut stellated lamps, bull horn carving (Dec 2022) | Possibly Product Design extras. |
+
+Captions from 2025–2026 are mostly empty, so project copy for the newer work still comes from Ben.
+
 ### Not found
 
-No local photos for Danco Interiors or Rethink. If they were photographed, they are somewhere else (phone, Instagram, the client).
+No local photos for Danco Interiors or Rethink, and nothing in the Instagram export is labelled as either. The black stepped-block installation above may be one of them.
 
 ### Shortlist for launch
 
