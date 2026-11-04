@@ -126,6 +126,15 @@ Surveyed this computer and the shared drive's Share folder. Paths below are what
 | First & Royal | `Active Projects\First & Royal\Render` | Column wrap and capital renders. Status unknown. |
 | Darya sign, CA Lyceum art hanging, Danco, POGO, Tactile Formation, Jacob Antoni, Andrew Van Egmond, Marko, Nexcore | Active Projects | No photos found locally. Danco and Rethink are paying clients in the suite with nothing on disk. |
 
+### Instagram (chinchilla.design.vancouver)
+
+Cleared by Ben as a source. Signed out, Instagram shows only the twelve most recent posts, which are nearly all Singing Hollow, and serves images compressed to about 1080 px. Two ways to get the whole feed at a usable size:
+
+1. **Instagram data export** (Settings > Accounts Center > Your information and permissions > Download your information, choose "Media" and JSON or HTML). Returns every original upload with its caption and date. Best option: original files, captions double as draft project copy. Ben requests it; it arrives by email within a day or two.
+2. Ben signs in to Instagram in the Claude browser pane himself; the full grid can then be browsed and shortlisted, but files are still 1080 px.
+
+Profile bio reads "Designer and builder. Merging digital fabrication and traditional craftsmanship to create art with wood." Follower count is substantial and is worth a line on the site as social proof.
+
 ### Not found
 
 No local photos for Danco Interiors or Rethink. If they were photographed, they are somewhere else (phone, Instagram, the client).
@@ -140,7 +149,7 @@ No local photos for Danco Interiors or Rethink. If they were photographed, they 
 6. Tiny House.
 7. Sage Hayward Vineyards.
 
-Plus whichever of Baldwin, Ian & Wendy and Saturna Ben clears. Seven projects is enough to launch; designer-client work is the gap to fill over time.
+Ben (2026-11-04): Saturna sign photos are coming from him. The Chinchilla Instagram (chinchilla.design.vancouver) is cleared as a source; pull from it at liberty. Baldwin and Ian & Wendy still open. Seven projects is enough to launch; designer-client work is the gap to fill over time.
 
 Housekeeping note: the Drive folder "Folder for Darya" contains a Google Doc titled "Instagram Login" alongside the photos. Worth moving out of a share folder.
 
