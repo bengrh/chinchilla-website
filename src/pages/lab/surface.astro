@@ -1,0 +1,160 @@
+---
+import Base from '../../layouts/Base.astro';
+// LAB: parametric surface prototype (2026-11-04). Not linked from the site, not in the sitemap.
+// A WebGL fragment shader that behaves like a ball-nose CNC texture: parallel toolpath rows
+// with scalloped cusps riding over a slowly drifting relief. The cursor presses a pocket into it;
+// scrolling slides the field. No libraries. Static fallback for no-WebGL and reduced motion.
+---
+<Base title="Lab: surface" description="Prototype.">
+  <Fragment slot="head"><meta name="robots" content="noindex, nofollow" /></Fragment>
+
+  <section class="hero" style="padding-bottom:24px">
+    <div class="wrap">
+      <p class="eyebrow">Lab 01</p>
+      <h1 style="max-width:16ch">A surface that behaves like our toolpaths.</h1>
+      <p class="lede">Move the cursor over it. Scroll. It is a ball-nose texture: rows of passes, each one scalloped, riding over a relief. Where the cursor goes, the tool cuts deeper.</p>
+    </div>
+  </section>
+
+  <div class="surface-wrap">
+    <canvas id="surface" aria-label="Interactive CNC-textured wood surface"></canvas>
+    <div class="surface-fallback" id="surfaceFallback"></div>
+    <div class="surface-ui">
+      <label>Step over <input type="range" id="stepover" min="4" max="18" step="0.5" value="8" /></label>
+      <label>Ball <input type="range" id="ball" min="3" max="16" step="0.5" value="6" /></label>
+      <label>Relief <input type="range" id="relief" min="0" max="4" step="0.1" value="1.6" /></label>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">What this could become</p>
+      <div class="three">
+        <div><h3>The hero</h3><p>The home page opens on this instead of a photo. The headline sits on top. The surface is alive but quiet until you touch it.</p></div>
+        <div><h3>The transition</h3><p>Moving between pages, the surface sweeps across like a pass of the cutter, and the next page is revealed underneath.</p></div>
+        <div><h3>A sample</h3><p>The three sliders are the real variables of a texture: step over, ball diameter, relief depth. A designer could play with the same dials we use.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .surface-wrap { position: relative; width: 100%; height: min(72vh, 760px); background: #2a211a; overflow: hidden; }
+    .surface-wrap canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+    .surface-fallback { position: absolute; inset: 0; display: none; background: radial-gradient(ellipse at 40% 40%, #b8804e, #6b4a2e 70%); }
+    .surface-wrap.static canvas { display: none; }
+    .surface-wrap.static .surface-fallback { display: block; }
+    .surface-ui { position: absolute; right: var(--gutter); bottom: 16px; display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.8); }
+    .surface-ui label { display: flex; align-items: center; gap: 8px; }
+    .surface-ui input { width: 90px; accent-color: #e08a4e; }
+    @media (max-width: 640px) { .surface-ui { left: var(--gutter); right: auto; } }
+  </style>
+
+  <script>
+    const wrap = document.querySelector('.surface-wrap') as HTMLDivElement;
+    const canvas = document.getElementById('surface') as HTMLCanvasElement;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' });
+    // Reduced motion: the surface still answers the pointer, but it does not drift on its own.
+    if (!gl) {
+      wrap.classList.add('static');
+    } else {
+      const vs = `attribute vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }`;
+      const fs = `
+precision highp float;
+uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse; uniform float u_scroll;
+uniform float u_step; uniform float u_ball; uniform float u_relief; uniform float u_press;
+
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float noise(vec2 p){
+  vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
+}
+float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 4; i++) { v += a * noise(p); p = p * 2.03 + 17.0; a *= 0.5; } return v; }
+
+// The relief the cutter follows, in "mm". Slow drift, plus a pocket under the cursor.
+float relief(vec2 p){
+  float base = (fbm(p * 0.006 + vec2(u_time * 0.015, u_scroll * 0.0008)) - 0.5) * 2.0 * u_relief * 6.0;
+  vec2 d = p - u_mouse; float r2 = dot(d, d);
+  float pocket = -u_press * 9.0 * exp(-r2 / (2.0 * 150.0 * 150.0));
+  return base + pocket;
+}
+// Ball-nose passes run along x, spaced u_step apart. Between passes the ball leaves a cusp.
+float surface(vec2 p){
+  float row = floor(p.y / u_step + 0.5) * u_step;
+  float dy = abs(p.y - row);
+  float R = u_ball;
+  float cusp = R - sqrt(max(R * R - dy * dy, 0.0));
+  return relief(vec2(p.x, row)) + cusp;
+}
+void main(){
+  vec2 px = gl_FragCoord.xy;
+  vec2 p = px + vec2(0.0, u_scroll * 0.25);
+  float e = 1.0;
+  float h  = surface(p);
+  float hx = surface(p + vec2(e, 0.0));
+  float hy = surface(p + vec2(0.0, e));
+  vec3 n = normalize(vec3(h - hx, h - hy, 1.6));
+  vec3 L = normalize(vec3(-0.6, 0.7, 0.55));
+  float diff = max(dot(n, L), 0.0);
+  float spec = pow(max(dot(reflect(-L, n), vec3(0.0, 0.0, 1.0)), 0.0), 28.0) * 0.18;
+
+  // Wood: long grain along x, a little figure, lighter where the cutter has gone deep (end grain opens up).
+  float grain = fbm(vec2(p.x * 0.012, p.y * 0.35 + fbm(p * 0.01) * 2.0));
+  vec3 dark = vec3(0.38, 0.22, 0.11);
+  vec3 light = vec3(0.78, 0.55, 0.32);
+  vec3 wood = mix(dark, light, smoothstep(0.25, 0.8, grain));
+  wood = mix(wood, wood * 1.12, clamp(-relief(p) * 0.06, 0.0, 0.35));
+  vec3 col = wood * (0.42 + 0.75 * diff) + spec;
+  // Soft vignette so the band sits in the page.
+  vec2 uv = px / u_res; float vig = smoothstep(0.0, 0.18, uv.x) * smoothstep(1.0, 0.82, uv.x);
+  col *= mix(0.85, 1.0, vig);
+  gl_FragColor = vec4(col, 1.0);
+}`;
+      const sh = (type: number, src: string) => { const s = gl.createShader(type)!; gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(s)); return s; };
+      const prog = gl.createProgram()!;
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(prog); gl.useProgram(prog);
+      const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+      const a = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
+      const U = (n: string) => gl.getUniformLocation(prog, n);
+      const uRes = U('u_res'), uTime = U('u_time'), uMouse = U('u_mouse'), uScroll = U('u_scroll'), uStep = U('u_step'), uBall = U('u_ball'), uRelief = U('u_relief'), uPress = U('u_press');
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      function resize() {
+        const r = canvas.getBoundingClientRect();
+        canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+      resize(); window.addEventListener('resize', resize);
+
+      let target = { x: canvas.width * 0.5, y: canvas.height * 0.5 }, mouse = { ...target }, press = 0, pressTarget = 0;
+      const toCanvas = (cx: number, cy: number) => { const r = canvas.getBoundingClientRect(); return { x: (cx - r.left) * dpr, y: (r.height - (cy - r.top)) * dpr }; };
+      canvas.addEventListener('pointermove', (e) => { target = toCanvas(e.clientX, e.clientY); pressTarget = 1; });
+      canvas.addEventListener('pointerleave', () => { pressTarget = 0; });
+      canvas.addEventListener('pointerdown', (e) => { target = toCanvas(e.clientX, e.clientY); pressTarget = 1.8; });
+      canvas.addEventListener('pointerup', () => { pressTarget = 1; });
+
+      const sliders = { step: document.getElementById('stepover') as HTMLInputElement, ball: document.getElementById('ball') as HTMLInputElement, relief: document.getElementById('relief') as HTMLInputElement };
+      let visible = true;
+      new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(canvas);
+
+      const t0 = performance.now();
+      function frame() {
+        requestAnimationFrame(frame);
+        if (!visible) return;
+        mouse.x += (target.x - mouse.x) * 0.08; mouse.y += (target.y - mouse.y) * 0.08;
+        press += (pressTarget - press) * 0.06;
+        gl.uniform2f(uRes, canvas.width, canvas.height);
+        gl.uniform1f(uTime, reduce ? 0 : (performance.now() - t0) / 1000);
+        gl.uniform2f(uMouse, mouse.x, mouse.y);
+        gl.uniform1f(uScroll, window.scrollY * dpr);
+        gl.uniform1f(uStep, parseFloat(sliders.step.value) * dpr);
+        gl.uniform1f(uBall, parseFloat(sliders.ball.value) * dpr);
+        gl.uniform1f(uRelief, parseFloat(sliders.relief.value));
+        gl.uniform1f(uPress, press);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
+      frame();
+    }
+  </script>
+</Base>

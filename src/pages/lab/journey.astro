@@ -1,0 +1,136 @@
+---
+import Base from '../../layouts/Base.astro';
+import { Image } from 'astro:assets';
+// LAB: guided scroll journey prototype (2026-11-04). Not linked, not in the sitemap.
+// Five stages, scroll is the only control. Stage one and two are pinned: a sketch line draws
+// itself, then multiplies into ribs. Then the shop and the piece reveal as you scroll on.
+// GSAP ScrollTrigger from cdnjs (the old site used the same). Reduced motion: final states, no pin.
+import cnc from '../../content/projects/stalactite-table/process-cnc.jpg';
+import bench from '../../content/projects/lath-bench/bench-01.jpg';
+import benchWide from '../../content/projects/lath-bench/bench-02.jpg';
+
+const ribs = Array.from({ length: 11 }, (_, i) => i);
+---
+<Base title="Lab: journey" description="Prototype.">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  </Fragment>
+
+  <section class="hero" style="padding-bottom:0">
+    <div class="wrap">
+      <p class="eyebrow">Lab 02</p>
+      <h1 style="max-width:16ch">Scroll. We'll walk you through it.</h1>
+      <p class="lede">The home page as a guided journey: an idea becomes a sketch, the sketch becomes a model, the model goes to the shop, and the piece comes out the other end.</p>
+      <p class="eyebrow" style="margin-top:40px">↓ Scroll</p>
+    </div>
+  </section>
+
+  <!-- Stage 1 + 2: pinned panel -->
+  <section class="j-pin" id="jPin">
+    <div class="wrap j-pin-inner">
+      <div class="j-copy">
+        <p class="eyebrow">01 · An idea</p>
+        <h2 class="j-h j-h-1">You can picture the piece.</h2>
+        <h2 class="j-h j-h-2">We give it a geometry.</h2>
+        <h2 class="j-h j-h-3">The geometry drives the cutter.</h2>
+      </div>
+      <svg class="j-svg" viewBox="0 0 800 480" aria-hidden="true">
+        <g class="j-ribs" fill="none" stroke="currentColor" stroke-width="1.2">
+          {ribs.map((i) => (
+            <path class="j-rib" d="M 40 300 C 180 120, 330 440, 470 250 S 700 120, 770 260" style={`transform: translateY(${(i - 5) * 16}px) scale(${1 - Math.abs(i - 5) * 0.035}); transform-origin: 400px 260px;`} />
+          ))}
+        </g>
+        <path class="j-sketch" d="M 40 300 C 180 120, 330 440, 470 250 S 700 120, 770 260" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+        <g class="j-paths" fill="none" stroke="var(--accent)" stroke-width="0.8">
+          {ribs.map((i) => (
+            <path class="j-path" d="M 40 300 C 180 120, 330 440, 470 250 S 700 120, 770 260" style={`transform: translateY(${(i - 5) * 16 + 8}px) scale(${1 - Math.abs(i - 5) * 0.035}); transform-origin: 400px 260px;`} />
+          ))}
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Stage 3: the shop -->
+  <section class="j-stage">
+    <div class="wrap j-two">
+      <div>
+        <p class="eyebrow">03 · The shop</p>
+        <h2>Then it gets real.</h2>
+        <p class="lede">Every rib is cut from the same model you approved. What was a line is now a part on the bed.</p>
+      </div>
+      <figure class="j-reveal"><Image src={cnc} alt="Blocks on the CNC bed" widths={[700, 1100, 1600]} sizes="(min-width: 900px) 55vw, 100vw" /></figure>
+    </div>
+  </section>
+
+  <!-- Stage 4: the piece -->
+  <section class="j-stage">
+    <div class="wrap">
+      <p class="eyebrow">04 · The piece</p>
+      <h2 style="max-width:16ch">The thing you pictured, standing in the room.</h2>
+    </div>
+    <figure class="j-big"><Image src={benchWide} alt="The Lath Bench" widths={[900, 1400, 2000]} sizes="100vw" /></figure>
+    <div class="wrap j-two" style="margin-top:clamp(24px,4vw,56px)">
+      <figure class="j-reveal j-small"><Image src={bench} alt="Lath Bench detail" widths={[600, 900]} sizes="(min-width: 900px) 33vw, 100vw" /></figure>
+      <div><p class="lede">Lath Bench, with Brent Comber Originals. Each rib's profile generated from one ruled surface, steam bent and fixed over CNC-cut ribs.</p><a class="btn" href="/projects/lath-bench">See the project</a></div>
+    </div>
+  </section>
+
+  <!-- Stage 5 -->
+  <section class="section" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <p class="eyebrow">05 · Yours</p>
+      <h2 style="max-width:18ch">What are you picturing?</h2>
+      <a class="btn" href="/contact">Start a conversation</a>
+    </div>
+  </section>
+
+  <style>
+    .j-pin { min-height: 100vh; display: flex; align-items: center; }
+    .j-pin-inner { display: grid; gap: 32px; grid-template-columns: 1fr; align-items: center; width: 100%; }
+    @media (min-width: 900px) { .j-pin-inner { grid-template-columns: 4fr 7fr; } }
+    .j-copy { position: relative; min-height: 8em; }
+    .j-h { position: absolute; left: 0; top: 0; margin: 0; max-width: 12ch; opacity: 0; }
+    .j-h-1 { opacity: 1; }
+    .j-svg { width: 100%; height: auto; color: var(--fg); overflow: visible; }
+    .j-sketch { stroke-dasharray: 1400; stroke-dashoffset: 1400; }
+    .j-rib, .j-path { opacity: 0; }
+    .j-stage { padding: clamp(56px, 10vw, 140px) 0; }
+    .j-two { display: grid; gap: clamp(24px, 4vw, 56px); grid-template-columns: 1fr; align-items: center; }
+    @media (min-width: 900px) { .j-two { grid-template-columns: 5fr 7fr; } }
+    .j-reveal { margin: 0; clip-path: inset(0 100% 0 0); }
+    .j-reveal img { border-radius: var(--radius); }
+    .j-small { max-width: 420px; }
+    .j-big { margin: clamp(24px, 4vw, 56px) 0 0; overflow: hidden; }
+    .j-big img { width: 100%; aspect-ratio: 16 / 8; object-fit: cover; transform: scale(1.08); }
+    @media (max-width: 640px) { .j-big img { aspect-ratio: 4 / 3; } }
+    /* LAB NOTE: everything here is scroll-driven (the reader controls it), so the prototype runs
+       under prefers-reduced-motion too. A production version should offer the static states. */
+  </style>
+
+  <script is:inline>
+    (function () {
+      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Pinned sequence: draw the sketch, swap the headline, multiply into ribs, swap again, show toolpaths.
+      var tl = gsap.timeline({ scrollTrigger: { trigger: '#jPin', start: 'top top', end: '+=2200', pin: true, scrub: 0.6 } });
+      tl.to('.j-sketch', { strokeDashoffset: 0, duration: 3, ease: 'none' })
+        .to('.j-h-1', { opacity: 0, y: -12, duration: 0.6 }, '>-0.3')
+        .to('.j-h-2', { opacity: 1, y: 0, duration: 0.6 }, '<')
+        .to('.j-rib', { opacity: 1, duration: 2, stagger: { each: 0.15, from: 'center' } }, '<')
+        .to('.j-sketch', { opacity: 0.25, duration: 1 }, '<1')
+        .to('.j-h-2', { opacity: 0, y: -12, duration: 0.6 }, '>')
+        .to('.j-h-3', { opacity: 1, y: 0, duration: 0.6 }, '<')
+        .to('.j-path', { opacity: 1, duration: 2, stagger: { each: 0.1, from: 'start' } }, '<')
+        .to('.j-svg', { rotateX: 42, rotateZ: -8, transformPerspective: 900, duration: 2.5, ease: 'power1.inOut' }, '<');
+
+      // Reveals further down: wipe photos in as they enter, settle the big image.
+      gsap.utils.toArray('.j-reveal').forEach(function (el) {
+        gsap.to(el, { clipPath: 'inset(0 0% 0 0)', ease: 'none', scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 35%', scrub: true } });
+      });
+      gsap.to('.j-big img', { scale: 1, ease: 'none', scrollTrigger: { trigger: '.j-big', start: 'top 90%', end: 'bottom 40%', scrub: true } });
+    })();
+  </script>
+</Base>
