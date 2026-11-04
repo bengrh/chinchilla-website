@@ -100,6 +100,50 @@ Open questions for Ben (one at a time):
 5. **Design pass.** Typography, colour, motion, hero imagery.
 6. **Launch.** Lighthouse on phone and desktop, redirects, sitemap, LocalBusiness schema, social share images, merge to `main`.
 
+## Photo inventory (2026-11-04)
+
+Surveyed this computer and the shared drive's Share folder. Paths below are what to pull from.
+
+### Ready to use
+
+| Project | Where | What |
+| --- | --- | --- |
+| Singing Hollow (2026) | Drive: Share / Folder for Darya / Singing Hollow | Professional set: Matthew Thornhill (5+ files, 9–12 MB each, full-res), Iryna Avilova (IDS Design Festival / DelightMedia set, 12 files, web-res), Ben/Darya Photos (DSC JPGs + phone video), Video folder (5+ MOV clips, 5–55 MB). Also local: `Downloads\BEN HAYWARD` (the 12 DelightMedia files). **Best material we have.** |
+| Singing Hollow process | `Desktop\New folder` (30 DSC photos, May 2026) | Shop photos: radial arm saw, stacked yellow cedar blocks, glued-up core. Good for the Process page. |
+| IDS Pavilion (2025) | `Downloads\Images` (6 phone photos), existing site folder, Drive: Share / Photos to Share (HEIC originals) | What is on the site now plus a few more. |
+| Lath Bench (2026) | `Active Projects\Brent Comber\extracted_images`, `Fay Mihailides\Baldwin\work\furniture` (DSC03668–03681) | Gallery and shop shots, same as site. |
+| Chair (2025) | Drive: Share / Chair Photos (HEIC) | Same as site. |
+| Tiny House, Sage Hayward, Wall Art | Existing site `images/`, Drive: Share / Photos to Share | As on site. Wall Art originals are 7008 x 4672. |
+
+### Candidates needing a decision or more photos
+
+| Project | Where | Notes |
+| --- | --- | --- |
+| Saturna Fire & Rescue sign | `Active Projects\Saturna Fire Department\Share` | Site photos of the old sign plus three rendered options and a texture close-up. No photo of the installed piece yet. Needs an install photo to be a project page; could be a Process page example of design options. |
+| Ian & Wendy headboards | `Active Projects\Ian & Wendy Interior` | Grasshopper files (fluted headboard versions) and reference photos only. No photos of the built piece found locally. Ben to say whether it was built and photographed. |
+| Havn Spa benches | `Active Projects\Havn Spa\Brief` | Four drawings (S-curve, hook, stair benches, vessel plan). Prospect, not built. Not for the site yet. |
+| Fay Mihailides / Baldwin | `Active Projects\Fay Mihailides\Baldwin\work\*` | Renders, texture samples, precedents, egg_pro, relief, equilibrium. Designer client, so high value for the audience, but it is work in progress. Ben to say what is finished and cleared to show. |
+| First & Royal | `Active Projects\First & Royal\Render` | Column wrap and capital renders. Status unknown. |
+| Darya sign, CA Lyceum art hanging, Danco, POGO, Tactile Formation, Jacob Antoni, Andrew Van Egmond, Marko, Nexcore | Active Projects | No photos found locally. Danco and Rethink are paying clients in the suite with nothing on disk. |
+
+### Not found
+
+No local photos for Danco Interiors or Rethink. If they were photographed, they are somewhere else (phone, Instagram, the client).
+
+### Shortlist for launch
+
+1. Singing Hollow, as the lead project and the Process page proof story.
+2. IDS Pavilion.
+3. Lath Bench.
+4. Chair.
+5. Wall Art.
+6. Tiny House.
+7. Sage Hayward Vineyards.
+
+Plus whichever of Baldwin, Ian & Wendy and Saturna Ben clears. Seven projects is enough to launch; designer-client work is the gap to fill over time.
+
+Housekeeping note: the Drive folder "Folder for Darya" contains a Google Doc titled "Instagram Login" alongside the photos. Worth moving out of a share folder.
+
 ## Current site inventory (for migration)
 
 Projects: Singing Hollow (2026, IDS West, with Brent Comber), IDS Pavilion (2025), Tiny House (2023, HGTV feature, 4 press links), Lath Bench (2026, Brent Comber Originals), Wall Art (2026, private), Chair (2025, private), Winery Branding (2024, Sage Hayward Vineyards, Nuvo press link).
