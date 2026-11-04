@@ -16,7 +16,7 @@ const categories = [...new Set(projects.map((p) => p.data.category))];
       <p class="eyebrow">Work</p>
       <h1>Projects</h1>
       <p class="lede">{categories.join(' · ')}</p>
-      <div class="grid cols-3" style="margin-top:40px">
+      <div class="grid cols-3 editorial" style="margin-top:clamp(32px,4vw,56px)">
         {projects.map((p, i) => <ProjectCard project={p} eager={i < 3} />)}
       </div>
     </div>

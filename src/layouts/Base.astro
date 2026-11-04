@@ -44,7 +44,7 @@ const schema = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#f7f5f1" />
+    <meta name="theme-color" content="#f4f1ea" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site} />
     <meta property="og:title" content={fullTitle} />
@@ -55,7 +55,14 @@ const schema = {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="geo.region" content="CA-BC" />
     <meta name="geo.placename" content="North Vancouver" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <!-- Theme: apply a saved preview choice before paint to avoid a flash. -->
+    <script is:inline>
+      try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+    </script>
     <!-- Google tag (gtag.js) -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-V2MNQ235HZ"></script>
     <script is:inline>
@@ -83,8 +90,8 @@ const schema = {
     <footer class="site-footer">
       <div class="wrap">
         <div>
-          <strong style="color:var(--fg)">Chinchilla Design</strong>
-          <p>Design and fabrication in wood. North Vancouver, BC.</p>
+          <a class="brand" href="/">Chinchilla Design</a>
+          <p>Design and fabrication in wood.<br />North Vancouver, BC.</p>
         </div>
         <div>
           <div><a href="mailto:ben@chinchilla.design">ben@chinchilla.design</a></div>
@@ -92,9 +99,35 @@ const schema = {
         </div>
         <div>
           {nav.map(([href, label]) => <div><a href={href}>{label}</a></div>)}
-          <div style="margin-top:12px">&copy; {new Date().getFullYear()} Chinchilla Design</div>
+        </div>
+        <div class="bottom">
+          <span>&copy; {new Date().getFullYear()} Chinchilla Design</span>
+          <span class="theme-switch" role="group" aria-label="Preview theme">
+            <button type="button" data-theme-set="light">Light</button>
+            <button type="button" data-theme-set="dark">Dark</button>
+            <button type="button" data-theme-set="auto">Auto</button>
+          </span>
         </div>
       </div>
     </footer>
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var btns = document.querySelectorAll('[data-theme-set]');
+        function sync() {
+          var cur = root.dataset.theme || 'auto';
+          btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.themeSet === cur)); });
+        }
+        btns.forEach(function (b) {
+          b.addEventListener('click', function () {
+            var v = b.dataset.themeSet;
+            if (v === 'auto') { delete root.dataset.theme; try { localStorage.removeItem('theme'); } catch (e) {} }
+            else { root.dataset.theme = v; try { localStorage.setItem('theme', v); } catch (e) {} }
+            sync();
+          });
+        });
+        sync();
+      })();
+    </script>
   </body>
 </html>

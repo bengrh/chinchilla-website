@@ -99,7 +99,7 @@ Open questions for Ben (one at a time):
 
    To add a project: copy a folder in `src/content/projects/`, replace the photos, edit `index.md`. The frontmatter fields are documented in `src/content.config.ts`.
 4. **Templates.** Home, process, projects index, project page, studio, contact. Mobile first.
-5. **Design pass.** Typography, colour, motion, hero imagery.
+5. **Design pass.** Typography, colour, motion, hero imagery. _(first pass 2026-11-04: Fraunces serif display + Inter, warm paper palette with a dark variant, editorial offset project grid, full-bleed Singing Hollow band on the home page, hairline facts and landscape-spanning galleries on project pages, underlined form fields. A Light / Dark / Auto switch in the footer is for comparing palettes during review; remove or keep before launch. Open: typeface choice is Ben's call, home band photo should come from the Matthew Thornhill full-res set, favicon still the placeholder circle.)_
 6. **Launch.** Lighthouse on phone and desktop, redirects, sitemap, LocalBusiness schema, social share images, merge to `main`.
 
 ## Photo inventory (2026-11-04)

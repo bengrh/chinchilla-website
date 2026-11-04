@@ -25,23 +25,25 @@ const facts: [string, string | undefined][] = [
   ['Materials', d.materials.join(', ') || undefined],
 ];
 const description = d.summary ?? `${d.title}, ${d.category.toLowerCase()} by Chinchilla Design, ${d.year}.`;
+// Landscape photos span both gallery columns; portraits sit side by side.
+const isWide = (img?: ImageMetadata) => !!img && img.width / img.height > 1.25;
 ---
 <Base title={d.title} description={description} ogImage={d.hero}>
-  <article class="section">
+  <article class="section" style="padding-top:clamp(16px,2vw,32px)">
     <div class="wrap">
       <div class="hero-img">
         <Image
           src={d.hero}
           alt={d.heroAlt}
           widths={[800, 1200, 1800, 2400]}
-          sizes="(min-width: 1280px) 1200px, 100vw"
+          sizes="(min-width: 1280px) 1280px, 100vw"
           loading="eager"
         />
       </div>
       <div class="project-head">
         <div>
           <p class="eyebrow">{d.category}</p>
-          <h1>{d.title}</h1>
+          <h1 style="font-size:clamp(2.2rem,4.5vw,3.8rem)">{d.title}</h1>
           <dl class="facts">
             {facts.filter(([, v]) => v).map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
           </dl>
@@ -52,9 +54,9 @@ const description = d.summary ?? `${d.title}, ${d.category.toLowerCase()} by Chi
       {d.gallery.length > 0 && (
         <div class="gallery">
           {d.gallery.map((g) => (
-            <figure>
+            <figure class={isWide(g.image) || g.video ? 'wide' : undefined}>
               {g.image && (
-                <Image src={g.image} alt={g.caption} widths={[600, 900, 1400]} sizes="(min-width: 720px) 50vw, 100vw" />
+                <Image src={g.image} alt={g.caption} widths={[600, 900, 1400, 2000]} sizes={isWide(g.image) ? '(min-width: 1280px) 1280px, 100vw' : '(min-width: 720px) 50vw, 100vw'} />
               )}
               {g.video && <video controls preload="none" playsinline src={g.video}></video>}
               <figcaption>{g.caption}</figcaption>
