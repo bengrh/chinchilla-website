@@ -48,6 +48,12 @@ Reference sites:
 
 Equipment question: a designer deciding whether to call cares about capacity (sheet size, thickness, three-axis vs five-axis, finishing on site), not brand names. Recommendation: one sentence of capacity on the studio page, no tool inventory. Ben to confirm.
 
+## Play (added 2026-11-04)
+
+Ben's curveball after design pass 1: he loves https://2019.makemepulse.com/ (an illustrated, narrative, scroll-guided WebGL journey) and wants some kind of creative play and playful navigation with subtle animation. Instagram becomes the deep portfolio; the site is a curated, playful experience. Take it with a grain of salt, his words.
+
+Working position: play as a layer, not the structure. Pages stay real HTML (speed, search, phones); the play lives on the home page journey, in a signature parametric element that is literally the studio's craft, and in transitions. Options ranked in the 2026-11-04 conversation; prototype on a `/lab` page before committing. The full makemepulse-style world is out: months of work and it fights the speed and search goals.
+
 ## The explainer (replaces "DFMA")
 
 This is the heart of the rebuild and needs Ben's input before anything is written. Working structure:
