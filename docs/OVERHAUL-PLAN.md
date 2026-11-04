@@ -111,7 +111,7 @@ Surveyed this computer and the shared drive's Share folder. Paths below are what
 | Project | Where | What |
 | --- | --- | --- |
 | Singing Hollow (2026) | Drive: Share / Folder for Darya / Singing Hollow | Professional set: Matthew Thornhill (5+ files, 9–12 MB each, full-res), Iryna Avilova (IDS Design Festival / DelightMedia set, 12 files, web-res), Ben/Darya Photos (DSC JPGs + phone video), Video folder (5+ MOV clips, 5–55 MB). Also local: `Downloads\BEN HAYWARD` (the 12 DelightMedia files). **Best material we have.** |
-| Equilibrium table process | `Desktop\New folder` (30 DSC photos, May 2026) and `Active Projects\Fay Mihailides\Baldwin\work\equilibrium` (14 photos, blocks to glue-up to installed) | Corrected 2026-11-04: these are the stepped-block table, not Singing Hollow. A complete process-to-install sequence, the best Process page material we have. |
+| Stalactite Table process | `Desktop\New folder` (30 DSC photos, May 2026) and `Active Projects\Fay Mihailides\Baldwin\work\equilibrium` (14 photos, blocks to glue-up to installed) | Corrected 2026-11-04: these are the stepped-block table, not Singing Hollow. A complete process-to-install sequence, the best Process page material we have. |
 | IDS Pavilion (2025) | `Downloads\Images` (6 phone photos), existing site folder, Drive: Share / Photos to Share (HEIC originals) | What is on the site now plus a few more. |
 | Lath Bench (2026) | `Active Projects\Brent Comber\extracted_images`, `Fay Mihailides\Baldwin\work\furniture` (DSC03668–03681) | Gallery and shop shots, same as site. |
 | Chair (2025) | Drive: Share / Chair Photos (HEIC) | Same as site. |
@@ -146,7 +146,7 @@ What the export adds to the inventory:
 | Found | Use |
 | --- | --- |
 | Saturna Island Emergency Services sign, carved cedar with black lettering, several shots (Aug 2026) | The install photos the Saturna project needed. Ben still to confirm it is installed, not just finished. |
-| Black stepped-block table over cream ottomans, plus the stacked-block column (Aug–Sep 2026) | Identified by Ben 2026-11-04: the table for Equilibrium, designed with Fay Mihailides Design. Internal name "the Minecraft table". Do not use Equilibrium's name in the project title; public name to be chosen. This is the first designer-client project page. Local material: `Active Projects\Fay Mihailides\Baldwin\work\equilibrium` (14 files) plus the Instagram shots. Designer credit: Fay Mihailides Design. |
+| Black stepped-block table over cream ottomans, plus the stacked-block column (Aug–Sep 2026) | Identified by Ben 2026-11-04: the table for Equilibrium, designed with Fay Mihailides Design. Public name: **Stalactite Table** (Ben, 2026-11-04). Internal name was "the Minecraft table". Equilibrium is not named in the title. This is the first designer-client project page. Local material: `Active Projects\Fay Mihailides\Baldwin\work\equilibrium` (14 files) plus the Instagram shots. Designer credit: Fay Mihailides Design. |
 | White oak chairs around a dining table in a house (Sep 2026) | Context shots for the Chair project. |
 | Dark CNC-textured block, wave relief (Aug 2026) | Texture sample, possibly Baldwin. Process page material. |
 | Singing Hollow at IDS 2026, including team photo on the bench with Brent (Sep 2026) | Adds to the drive set. |
