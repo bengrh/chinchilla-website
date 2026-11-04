@@ -7,10 +7,11 @@ import { getCollection } from 'astro:content';
 const featured = (await getCollection('projects', (p) => p.data.featured)).sort((a, b) => a.data.order - b.data.order);
 const marquee = featured.slice(0, 8);
 
-// Character animation for the headline, as on the original site.
-const headline = "We design and build things in wood you didn't know were possible.";
+// The giant wordmark with the character reveal, as on the original site.
+const headline = 'Chinchilla Design';
 let n = 0;
 const split = headline.split(' ').map((w) => ({ chars: [...w].map((c) => ({ c, d: 0.1 + 0.02 * n++ })) }));
+const tagline = "We design and build things in wood you didn't know were possible.";
 
 const different = [
   ['A new language in wood', 'Parametric design and CNC are not a faster way to make the same things. They are a way to make different things.'],
@@ -18,7 +19,7 @@ const different = [
   ['One studio, sketch to install', 'The person who understood the idea is the person building it. Nothing is lost in a handoff.'],
 ];
 ---
-<Base title="Chinchilla Design">
+<Base title="Chinchilla Design" hideBrand>
   <!-- Old single-page anchors (#projects, #about, #contact) map to the new pages. -->
   <script is:inline>
     (function () {
@@ -30,12 +31,12 @@ const different = [
 
   <section class="hero">
     <div class="wrap">
-      <h1 class="split" aria-label={headline}>
+      <h1 class="split wordmark" aria-label={headline}>
         {split.map((w, i) => (
           <><span class="w">{w.chars.map(({ c, d }) => <span class="ch" style={`animation-delay:${d.toFixed(2)}s`}>{c}</span>)}</span>{i < split.length - 1 ? ' ' : ''}</>
         ))}
       </h1>
-      <p class="hero-sub fade-up">Design and fabrication in wood for architects, designers and clients. North Vancouver.</p>
+      <p class="hero-sub fade-up">{tagline}</p>
     </div>
   </section>
 

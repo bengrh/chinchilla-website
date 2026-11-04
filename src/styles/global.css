@@ -88,9 +88,10 @@ p { margin: 0 0 1em; max-width: 64ch; }
 @keyframes fadeUp { to { opacity: 1; transform: none; } }
 
 /* Home */
-.hero { padding: clamp(48px, 10vw, 150px) 0 clamp(40px, 6vw, 90px); }
-.hero h1 { max-width: 14ch; margin-bottom: 0; }
-.hero-sub { font-size: clamp(1rem, 2vw, 1.5rem); letter-spacing: -0.02em; color: var(--muted); margin: 32px 0 0; max-width: 40ch; }
+.hero { min-height: calc(80vh - 80px); display: flex; align-items: center; text-align: center; padding: clamp(24px, 4vw, 48px) 0 clamp(40px, 6vw, 80px); }
+.hero .wrap { width: 100%; }
+.hero .wordmark { font-size: clamp(48px, 10vw, 160px); letter-spacing: -0.05em; line-height: 1; max-width: none; margin: 0; }
+.hero-sub { font-size: clamp(1rem, 2vw, 1.5rem); letter-spacing: -0.02em; color: var(--muted); margin: 32px auto 0; max-width: 40ch; }
 
 .marquee { padding: 20px 0; overflow: hidden; }
 .marquee-container { display: flex; width: max-content; animation: marquee 30s linear infinite; }

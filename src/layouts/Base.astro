@@ -10,6 +10,7 @@ interface Props {
   description?: string;
   ogImage?: ImageMetadata;
   models?: boolean; // load <model-viewer>; unused while the 3D library is parked
+  hideBrand?: boolean; // the home page carries the wordmark in its hero instead
 }
 const site = 'Chinchilla Design';
 const {
@@ -17,6 +18,7 @@ const {
   description = 'Chinchilla Design is a Vancouver design and fabrication studio that helps architects, designers and clients take on complex projects in wood. We develop ambitious ideas with you from the first sketch, then build them ourselves.',
   ogImage = defaultOg,
   models = false,
+  hideBrand = false,
 } = Astro.props;
 const fullTitle = title === site ? `${site} | Design and fabrication in wood, Vancouver` : `${title} | ${site}`;
 const og = await getImage({ src: ogImage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
@@ -77,7 +79,7 @@ const schema = {
     <Backdrop />
     <header class="site-header">
       <div class="wrap">
-        <a class="brand" href="/">Chinchilla Design</a>
+        <a class="brand" href="/" style={hideBrand ? 'visibility:hidden' : undefined} aria-hidden={hideBrand ? 'true' : undefined} tabindex={hideBrand ? -1 : undefined}>Chinchilla Design</a>
       </div>
     </header>
     <Menu />
