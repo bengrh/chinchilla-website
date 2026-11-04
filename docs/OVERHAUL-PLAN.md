@@ -111,7 +111,7 @@ Surveyed this computer and the shared drive's Share folder. Paths below are what
 | Project | Where | What |
 | --- | --- | --- |
 | Singing Hollow (2026) | Drive: Share / Folder for Darya / Singing Hollow | Professional set: Matthew Thornhill (5+ files, 9–12 MB each, full-res), Iryna Avilova (IDS Design Festival / DelightMedia set, 12 files, web-res), Ben/Darya Photos (DSC JPGs + phone video), Video folder (5+ MOV clips, 5–55 MB). Also local: `Downloads\BEN HAYWARD` (the 12 DelightMedia files). **Best material we have.** |
-| Singing Hollow process | `Desktop\New folder` (30 DSC photos, May 2026) | Shop photos: radial arm saw, stacked yellow cedar blocks, glued-up core. Good for the Process page. |
+| Equilibrium table process | `Desktop\New folder` (30 DSC photos, May 2026) and `Active Projects\Fay Mihailides\Baldwin\work\equilibrium` (14 photos, blocks to glue-up to installed) | Corrected 2026-11-04: these are the stepped-block table, not Singing Hollow. A complete process-to-install sequence, the best Process page material we have. |
 | IDS Pavilion (2025) | `Downloads\Images` (6 phone photos), existing site folder, Drive: Share / Photos to Share (HEIC originals) | What is on the site now plus a few more. |
 | Lath Bench (2026) | `Active Projects\Brent Comber\extracted_images`, `Fay Mihailides\Baldwin\work\furniture` (DSC03668–03681) | Gallery and shop shots, same as site. |
 | Chair (2025) | Drive: Share / Chair Photos (HEIC) | Same as site. |
