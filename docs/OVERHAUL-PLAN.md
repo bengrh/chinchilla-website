@@ -146,7 +146,7 @@ What the export adds to the inventory:
 | Found | Use |
 | --- | --- |
 | Saturna Island Emergency Services sign, carved cedar with black lettering, several shots (Aug 2026) | The install photos the Saturna project needed. Ben still to confirm it is installed, not just finished. |
-| Black stepped-block installation over cream ottomans, plus a black stacked-block column (Aug–Sep 2026) | Unknown project. Ben to identify (client, designer, location). Looks like a hospitality or commercial piece and would be the first designer-client project page. |
+| Black stepped-block table over cream ottomans, plus the stacked-block column (Aug–Sep 2026) | Identified by Ben 2026-11-04: the table for Equilibrium, designed with Fay Mihailides Design. Internal name "the Minecraft table". Do not use Equilibrium's name in the project title; public name to be chosen. This is the first designer-client project page. Local material: `Active Projects\Fay Mihailides\Baldwin\work\equilibrium` (14 files) plus the Instagram shots. Designer credit: Fay Mihailides Design. |
 | White oak chairs around a dining table in a house (Sep 2026) | Context shots for the Chair project. |
 | Dark CNC-textured block, wave relief (Aug 2026) | Texture sample, possibly Baldwin. Process page material. |
 | Singing Hollow at IDS 2026, including team photo on the bench with Brent (Sep 2026) | Adds to the drive set. |
