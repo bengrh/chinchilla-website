@@ -14,7 +14,9 @@ gallery:
   - image: "./letter-detail.jpg"
     caption: "Letter detail"
 ---
-<!-- TODO (Ben): installed photos of the sign on site, and the story: what the old sign was,
-     the three options, why this one. -->
 
-Signage for the Saturna Island emergency services building, with a CNC-milled wave texture behind the lettering.
+The emergency services building on Saturna Island had a painted plywood sign on timber posts that had seen a lot of island weather. Saturna Fire & Rescue asked for a replacement that would last and that would look like it belonged to the place.
+
+We drew three options for the panel and the lettering and modelled each one so the department could see them side by side before choosing. [Ben: which option was chosen and why.] The lettering sits proud of a background that is CNC-milled with a wave texture, so the sign reads at a distance as a block of text and up close as a carved surface that catches the light.
+
+[Ben: material and finish, size, how it is mounted, whether it is installed yet.]
