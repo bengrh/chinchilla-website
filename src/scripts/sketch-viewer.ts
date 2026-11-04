@@ -110,7 +110,12 @@ export function mountSketchViewer(el: HTMLElement, opts: SketchOptions) {
   loader.setMeshoptDecoder(MeshoptDecoder);
   loader.load(opts.url, (gltf) => {
     const root = gltf.scene;
-    root.traverse((o: any) => { if (o.isMesh) { o.material = normalMat; o.frustumCulled = false; } });
+    root.traverse((o: any) => {
+      if (o.isMesh) {
+        if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals(); // some exports arrive without normals
+        o.material = normalMat; o.frustumCulled = false;
+      }
+    });
     // Centre and frame it.
     const box = new THREE.Box3().setFromObject(root);
     const size = box.getSize(new THREE.Vector3()); const centre = box.getCenter(new THREE.Vector3());
