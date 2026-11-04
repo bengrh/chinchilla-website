@@ -52,6 +52,8 @@ Equipment question: a designer deciding whether to call cares about capacity (sh
 
 Ben's curveball after design pass 1: he loves https://2019.makemepulse.com/ (an illustrated, narrative, scroll-guided WebGL journey) and wants some kind of creative play and playful navigation with subtle animation. Instagram becomes the deep portfolio; the site is a curated, playful experience. Take it with a grain of salt, his words.
 
+Update later on 2026-11-04: Ben rejected both lab prototypes (the WebGL toolpath surface and the pinned scroll journey). The precedent he says is more in line with Chinchilla is https://artificialia.digital (Bridgette Ashton): a white field of cut-out ceramic objects arranged like specimens, objects are the navigation, click one and it opens in place with a short caption (title, year, material, size) and BACK; a two-circle menu; nothing animates on its own. Quiet, museum-like, object-first. Read: a cabinet of curiosities, not a showreel. Direction to test, pending Ben's confirmation: the home page as a field of cut-out pieces and samples on paper, each opening in place.
+
 Working position: play as a layer, not the structure. Pages stay real HTML (speed, search, phones); the play lives on the home page journey, in a signature parametric element that is literally the studio's craft, and in transitions. Options ranked in the 2026-11-04 conversation; prototype on a `/lab` page before committing. The full makemepulse-style world is out: months of work and it fights the speed and search goals.
 
 ## The explainer (replaces "DFMA")
