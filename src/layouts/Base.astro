@@ -11,6 +11,7 @@ interface Props {
   ogImage?: ImageMetadata;
   models?: boolean; // load <model-viewer>; unused while the 3D library is parked
   hideBrand?: boolean; // the home page carries the wordmark in its hero instead
+  pageClass?: string; // class on <body>, e.g. chapter-page
 }
 const site = 'Chinchilla Design';
 const {
@@ -19,6 +20,7 @@ const {
   ogImage = defaultOg,
   models = false,
   hideBrand = false,
+  pageClass,
 } = Astro.props;
 const fullTitle = title === site ? `${site} | Design and fabrication in wood, Vancouver` : `${title} | ${site}`;
 const og = await getImage({ src: ogImage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
@@ -75,7 +77,7 @@ const schema = {
     </script>
     <slot name="head" />
   </head>
-  <body>
+  <body class={pageClass}>
     <Backdrop />
     <header class="site-header">
       <div class="wrap">

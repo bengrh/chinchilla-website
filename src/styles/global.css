@@ -181,3 +181,36 @@ p { margin: 0 0 1em; max-width: 64ch; }
 .form input:focus, .form select:focus, .form textarea:focus { outline: none; border-color: #fff; }
 .form textarea { min-height: 140px; resize: vertical; }
 .form button { justify-self: start; margin-top: 8px; }
+
+/* Journey chapters (docs/JOURNEY.md): fixed scene behind, beats of text in front */
+body.chapter-page #dotGrid { display: none; }
+.chapter { position: relative; }
+.chapter-stage { position: fixed; inset: 0; z-index: 0; background: var(--ch-haze, var(--bg)); }
+.chapter-canvas, .chapter-poster { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.chapter-poster { object-fit: cover; opacity: 1; transition: opacity 1s var(--ease); }
+.chapter-canvas { opacity: 0; transition: opacity 1s var(--ease); }
+.chapter[data-scene="on"] .chapter-poster { opacity: 0; }
+.chapter[data-scene="on"] .chapter-canvas { opacity: 1; }
+.beats { position: relative; z-index: 1; }
+.beat { min-height: 100vh; display: flex; align-items: flex-end; padding: 0 0 12vh; }
+.beat-open { min-height: calc(100vh - 80px); }
+.beat-open h1 { max-width: 12ch; }
+.beat-text { position: relative; max-width: 38ch; }
+.beat-text::before { content: ""; position: absolute; inset: -48px -80px -56px -80px; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse at 35% 65%, color-mix(in srgb, var(--ch-haze, var(--bg)) 85%, transparent), transparent 72%); }
+.beat .eyebrow { color: var(--ch-accent, var(--accent)); }
+.beat .ch-num { margin-right: 0.6em; }
+.beat h2 { font-size: clamp(1.7rem, 3.2vw, 2.7rem); color: #f4f1ea; }
+.beat p:not(.eyebrow) { color: #d9d4ca; font-size: clamp(1rem, 1.3vw, 1.15rem); }
+.chapter .proof { position: relative; z-index: 1; background: var(--bg); padding: clamp(64px, 9vw, 140px) 0; }
+.chapter .proof::before { content: ""; position: absolute; left: 0; right: 0; top: -160px; height: 160px; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--bg)); }
+.next-door { position: relative; z-index: 1; background: var(--bg); padding: 0 0 clamp(64px, 9vw, 140px); }
+.next-door a { display: inline-flex; align-items: center; gap: clamp(20px, 3vw, 40px); text-decoration: none; }
+.next-door .circle { width: clamp(88px, 12vw, 150px); aspect-ratio: 1; border-radius: 50%; border: 1px solid rgba(255,255,255,0.35); display: grid; place-items: center;
+  font-family: var(--mono); font-size: 0.9rem; letter-spacing: 0.12em; transition: border-color .5s var(--ease), background .5s var(--ease), color .5s var(--ease); }
+.next-door a:hover .circle { border-color: #fff; background: #fff; color: #0a0a0a; }
+.next-door strong { display: block; font-size: clamp(2rem, 6vw, 5rem); font-weight: 700; letter-spacing: -0.05em; line-height: 0.95; }
+.next-door .eyebrow { margin-bottom: 8px; }
+.chapter-stage::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0,0,0,0.45) 100%); }

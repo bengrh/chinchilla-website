@@ -1,0 +1,94 @@
+---
+// One chapter of the journey: a fixed scene behind, the beats of text in front, the proof
+// projects and the door to the next chapter. The scene mounts only where it can run; otherwise
+// the poster stays. See docs/JOURNEY.md.
+import Base from './Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  id: 'idea' | 'development' | 'build';
+  number: string;
+  name: string;
+  title: string;
+  description: string;
+  palette: { ground: string; object: string; accent: string; haze: string };
+  poster?: string;
+  proof: string[];
+  next?: { href: string; number: string; name: string };
+}
+const { id, number, name, title, description, palette, poster, proof, next } = Astro.props;
+const all = await getCollection('projects');
+const proofProjects = proof.map((slug) => all.find((p) => p.id === slug)).filter(Boolean) as typeof all;
+---
+<Base title={title} description={description} pageClass="chapter-page">
+  <div
+    class="chapter"
+    data-chapter={id}
+    data-scene="poster"
+    data-palette={JSON.stringify(palette)}
+    style={`--ch-ground:${palette.ground};--ch-accent:${palette.accent};--ch-haze:${palette.haze}`}
+  >
+    <div class="chapter-stage" aria-hidden="true">
+      {poster && <img class="chapter-poster" src={poster} alt="" />}
+      <canvas class="chapter-canvas"></canvas>
+    </div>
+
+    <div class="beats">
+      <header class="beat beat-open">
+        <div class="wrap">
+          <div class="beat-text">
+            <p class="eyebrow"><span class="ch-num">{number}</span> {name}</p>
+            <h1><slot name="heading" /></h1>
+          </div>
+        </div>
+      </header>
+      <slot />
+    </div>
+
+    <section class="proof">
+      <div class="wrap">
+        <p class="eyebrow">The proof</p>
+        <div class="grid cols-2">{proofProjects.map((p) => <ProjectCard project={p} />)}</div>
+      </div>
+    </section>
+
+    {next && (
+      <section class="next-door">
+        <div class="wrap">
+          <a href={next.href}>
+            <span class="circle"><span>{next.number}</span></span>
+            <span class="door-label"><span class="eyebrow">Next</span><strong>{next.name}</strong></span>
+          </a>
+        </div>
+      </section>
+    )}
+  </div>
+</Base>
+
+<script>
+  import { canRun, mountChapter } from '../scenes/runtime';
+  const scenes: Record<string, () => Promise<{ build: any }>> = {
+    development: () => import('../scenes/development'),
+  };
+  const el = document.querySelector<HTMLElement>('.chapter');
+  if (el) {
+    const load = scenes[el.dataset.chapter || ''];
+    if (!load || !canRun()) {
+      el.dataset.scene = 'off';
+    } else {
+      el.dataset.scene = 'loading';
+      load()
+        .then((mod) =>
+          mountChapter({
+            canvas: el.querySelector('canvas')!,
+            scrollRoot: el.querySelector<HTMLElement>('.beats')!,
+            palette: JSON.parse(el.dataset.palette || '{}'),
+            build: mod.build,
+          }),
+        )
+        .then(() => { el.dataset.scene = 'on'; })
+        .catch((err) => { console.error('chapter scene failed', err); el.dataset.scene = 'off'; });
+    }
+  }
+</script>
