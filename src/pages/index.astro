@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+const featured = (await getCollection('projects', (p) => p.data.featured)).sort((a, b) => a.data.order - b.data.order);
+const marquee = featured.slice(0, 8);
+
+// The giant wordmark with the character reveal, as on the original site.
+const headline = 'Chinchilla Design';
+let n = 0;
+const split = headline.split(' ').map((w) => ({ chars: [...w].map((c) => ({ c, d: 0.1 + 0.02 * n++ })) }));
+const tagline = "We design and build things in wood you didn't know were possible.";
+
+const different = [
+  ['A new language in wood', 'Parametric design and CNC are not a faster way to make the same things. They are a way to make different things.'],
+  ['In from the first concept', 'Material, fabrication logic and real feasibility while the idea is still forming, not after it is locked.'],
+  ['One studio, sketch to install', 'The person who understood the idea is the person building it. Nothing is lost in a handoff.'],
+];
+---
+<Base title="Chinchilla Design" hideBrand>
+  <!-- Old single-page anchors (#projects, #about, #contact) map to the new pages. -->
+  <script is:inline>
+    (function () {
+      var m = { '#projects': '/projects', '#work': '/projects', '#services': '/process', '#about': '/studio', '#team': '/studio', '#contact': '/contact' };
+      var to = m[location.hash.toLowerCase()];
+      if (to) location.replace(to);
+    })();
+  </script>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1 class="split wordmark" aria-label={headline}>
+        {split.map((w, i) => (
+          <><span class="w">{w.chars.map(({ c, d }) => <span class="ch" style={`animation-delay:${d.toFixed(2)}s`}>{c}</span>)}</span>{i < split.length - 1 ? ' ' : ''}</>
+        ))}
+      </h1>
+      <p class="hero-sub fade-up">{tagline}</p>
+    </div>
+  </section>
+
+  <section class="marquee">
+    <div class="marquee-container">
+      {[0, 1].map((copy) => (
+        <div class="marquee-track" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {marquee.map((p) => (
+            <a class="marquee-card" href={`/projects/${p.id}`} tabindex={copy === 1 ? -1 : undefined} aria-label={copy === 0 ? p.data.title : undefined}>
+              <Image src={p.data.hero} alt="" widths={[320, 560]} sizes="280px" loading={copy === 0 ? 'eager' : 'lazy'} />
+            </a>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="intro">
+    <p class="intro-text">A <span class="hl">design partner</span>, not just a fabricator. We develop ambitious ideas with you from the first sketch, then <span class="hl">build them ourselves</span>.</p>
+  </section>
+
+  <section class="section tight" id="work">
+    <div class="wrap">
+      <p class="eyebrow">Selected work</p>
+      <div class="grid cols-2">
+        {featured.map((p, i) => <ProjectCard project={p} eager={i < 2} />)}
+      </div>
+      <p style="margin-top:clamp(32px,4vw,56px)"><a class="btn" href="/projects">All projects</a></p>
+    </div>
+  </section>
+
+  <section class="section" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <p class="eyebrow">How we are different</p>
+      <p class="statement">The earlier we are in, <em>the more of the idea survives</em> contact with material, budget and schedule.</p>
+      <div class="three" style="margin-top:clamp(32px,4vw,56px)">
+        {different.map(([h, p]) => <div><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+      <p style="margin-top:clamp(32px,4vw,56px)"><a class="btn" href="/process">How a project runs</a></p>
+    </div>
+  </section>
+
+  <section class="section" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <p class="eyebrow">Bring us in early</p>
+      <h2 style="max-width:18ch">You can picture the piece. We can help you build it.</h2>
+      <a class="btn solid" href="/contact">Start a conversation</a>
+    </div>
+  </section>
+</Base>

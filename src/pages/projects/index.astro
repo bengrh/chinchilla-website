@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order || b.data.year - a.data.year,
+);
+const categories = [...new Set(projects.map((p) => p.data.category))];
+---
+<Base
+  title="Work"
+  description="Selected projects by Chinchilla Design: sculpture, furniture, architectural features and installations in wood, designed and built in North Vancouver."
+>
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Work</p>
+      <h1>Projects</h1>
+      <p class="lede">{categories.join(' · ')}</p>
+      <div class="grid cols-2" style="margin-top:clamp(32px,4vw,56px)">
+        {projects.map((p, i) => <ProjectCard project={p} eager={i < 2} />)}
+      </div>
+    </div>
+  </section>
+</Base>

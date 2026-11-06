@@ -1,18 +1,8 @@
-# OS files
+node_modules/
+dist/
+.astro/
+.netlify/
 .DS_Store
 Thumbs.db
-Desktop.ini
-NUL
-
-# HEIC originals (keep JPG versions)
-*.heic
-
-# Editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Node (if added later)
-node_modules/
+*.log
 .env

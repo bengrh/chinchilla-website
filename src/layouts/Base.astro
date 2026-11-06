@@ -1,0 +1,111 @@
+---
+import '../styles/global.css';
+import Menu from '../components/Menu.astro';
+import Backdrop from '../components/Backdrop.astro';
+import { getImage } from 'astro:assets';
+import defaultOg from '../content/projects/singing-hollow/hero.jpg';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: ImageMetadata;
+  models?: boolean; // load <model-viewer>; unused while the 3D library is parked
+  hideBrand?: boolean; // the home page carries the wordmark in its hero instead
+  pageClass?: string; // class on <body>, e.g. chapter-page
+}
+const site = 'Chinchilla Design';
+const {
+  title,
+  description = 'Chinchilla Design is a Vancouver design and fabrication studio that helps architects, designers and clients take on complex projects in wood. We develop ambitious ideas with you from the first sketch, then build them ourselves.',
+  ogImage = defaultOg,
+  models = false,
+  hideBrand = false,
+  pageClass,
+} = Astro.props;
+const fullTitle = title === site ? `${site} | Design and fabrication in wood, Vancouver` : `${title} | ${site}`;
+const og = await getImage({ src: ogImage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const nav = [
+  ['/projects', 'Work'],
+  ['/process', 'Process'],
+  ['/studio', 'Studio'],
+  ['/contact', 'Contact'],
+];
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: site,
+  url: 'https://chinchilla.design/',
+  email: 'ben@chinchilla.design',
+  address: { '@type': 'PostalAddress', addressLocality: 'North Vancouver', addressRegion: 'BC', addressCountry: 'CA' },
+  sameAs: ['https://www.instagram.com/chinchilla.design.vancouver/'],
+  description,
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(og.src, Astro.site)} />
+    <meta property="og:locale" content="en_CA" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="geo.region" content="CA-BC" />
+    <meta name="geo.placename" content="North Vancouver" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    {models && <script is:inline type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>}
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-V2MNQ235HZ"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V2MNQ235HZ');
+    </script>
+    <slot name="head" />
+  </head>
+  <body class={pageClass}>
+    <Backdrop />
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/" style={hideBrand ? 'visibility:hidden' : undefined} aria-hidden={hideBrand ? 'true' : undefined} tabindex={hideBrand ? -1 : undefined}>Chinchilla Design</a>
+      </div>
+    </header>
+    <Menu />
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="/">Chinchilla Design</a>
+          <p>Design and fabrication in wood.<br />North Vancouver, BC.</p>
+        </div>
+        <div>
+          <div><a href="mailto:ben@chinchilla.design">ben@chinchilla.design</a></div>
+          <div><a href="https://www.instagram.com/chinchilla.design.vancouver/" rel="noopener" target="_blank">Instagram</a></div>
+        </div>
+        <div>
+          {nav.map(([href, label]) => <div><a href={href}>{label}</a></div>)}
+        </div>
+        <div class="bottom">
+          <span>&copy; {new Date().getFullYear()} Chinchilla Design</span>
+          <span>Vancouver, BC</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

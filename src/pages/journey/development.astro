@@ -1,0 +1,59 @@
+---
+// Chapter 02: The development. Copy drawn from the Process page (docs/OVERHAUL-PLAN.md,
+// "The explainer"); square brackets mark facts only Ben can supply.
+import Chapter from '../../layouts/Chapter.astro';
+const palette = { ground: '#2a211a', object: '#b59a78', accent: '#f97316', haze: '#16110d' };
+---
+<Chapter
+  id="development"
+  number="02"
+  name="The development"
+  title="The development"
+  description="How Chinchilla Design develops an idea into a buildable piece: one model that is the drawing, the shop drawing and the machine program, tuned with you before anything is cut."
+  palette={palette}
+  poster="/journey/posters/development.jpg"
+  proof={['stalactite-table', 'lath-bench']}
+  next={{ href: '/journey/build', number: '03', name: 'The build' }}
+>
+  <Fragment slot="heading">The model is the design.</Fragment>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat-text">
+        <p class="eyebrow">One model</p>
+        <h2>The drawing, the shop drawing and the machine program are the same file.</h2>
+        <p>Every piece we develop lives in one parametric model. The same geometry that you review is the geometry the drawings come from and the geometry the machines cut. Nothing is redrawn on the way to the shop, so nothing drifts.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat-text">
+        <p class="eyebrow">The parameter</p>
+        <h2>Change one number and the whole piece changes with it.</h2>
+        <p>The Stalactite Table is a field of blocks hung from a single rule. The depth of the steps, the rhythm of the field and the way it thins toward the edges were tuned with the designer in the model, and the cut list followed every change. [Ben: confirm the field was tuned with Fay in the model before cutting.]</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat-text">
+        <p class="eyebrow">Samples</p>
+        <h2>Test it before committing material.</h2>
+        <p>Physical samples of form, joinery, texture and finish before full production. A texture you can hold beats a render. Changes are still cheap at this stage, and we make them with you, with honest numbers while there is still room to move.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="beat">
+    <div class="wrap">
+      <div class="beat-text">
+        <p class="eyebrow">A new language</p>
+        <h2>Not a faster way to make the same things. A way to make different things.</h2>
+        <p>Parametric design and CNC open up forms, textures and assemblies whose language and scope would be near impossible any other way. We are not replacing carvers with robots. We are using the tools to open up what wood can be asked to do.</p>
+      </div>
+    </div>
+  </section>
+</Chapter>

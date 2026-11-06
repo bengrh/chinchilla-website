@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Contact" description="Start a conversation with Chinchilla Design about a project in wood. North Vancouver, BC.">
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h1>What should we make?</h1>
+      <p class="lede">Tell us about the project, however early it is. The earlier the better.</p>
+      <div class="project-head">
+        <div>
+          <p><a href="mailto:ben@chinchilla.design">ben@chinchilla.design</a></p>
+          <p>North Vancouver, BC</p>
+          <p><a href="https://www.instagram.com/chinchilla.design.vancouver/" rel="noopener" target="_blank">Instagram</a></p>
+        </div>
+        <!-- Netlify Forms: detected at deploy time. Submissions show in the Netlify dashboard and can be forwarded by email. -->
+        <form class="form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thanks">
+          <input type="hidden" name="form-name" value="contact" />
+          <p hidden><label>Leave this empty <input name="bot-field" /></label></p>
+          <label>Name <input name="name" required autocomplete="name" /></label>
+          <label>Email <input name="email" type="email" required autocomplete="email" /></label>
+          <label>I am
+            <select name="role">
+              <option>An interior designer</option>
+              <option>An architect</option>
+              <option>A homeowner or private client</option>
+              <option>A business or developer</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>The project <textarea name="message" required placeholder="What it is, where it is, and when you'd like it."></textarea></label>
+          <button class="btn" type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
